@@ -10,8 +10,6 @@ using System.Text;
 
 namespace UnitTests
 {
-    
-    
     /// <summary>
     ///This is a test class for TCAPITest and is intended
     ///to contain all TCAPITest Unit Tests
@@ -79,7 +77,7 @@ namespace UnitTests
         ///A test for StoreStatement
         ///</summary>
         ///
-        [TestMethod()]
+        //[TestMethod()]
         public void StoreStatementTest()
         {
             TCAPI target = new TCAPI();
@@ -96,13 +94,13 @@ namespace UnitTests
         /// <summary>
         ///A test for VoidStatements
         ///</summary>
-        //[TestMethod()]
+        // [TestMethod()]
         public void VoidStatementsTest()
         {
             TCAPI target = new TCAPI();
             target.Authentification = new BasicHTTPAuth("test", "password");
             target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
-            // target.AdminActor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
+            target.AdminActor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             string[] statementIdsToVoid = { "a84cc4d6-69ee-4eb5-ac4c-d3d6a5077070" }; // TODO: Initialize to an appropriate value
             target.VoidStatements(statementIdsToVoid);
         }
@@ -319,7 +317,7 @@ namespace UnitTests
             target.Authentification = new BasicHTTPAuth("test", "password");
             target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
             target.TCAPICallback = new TCAPICallback();
-            Statement[] statements = new Statement[5];
+            Statement[] statements = new Statement[60];
             for (int i = 0; i < statements.Length; i++)
             {
                 int j = i % 3;
@@ -341,7 +339,8 @@ namespace UnitTests
         }
 
         /// <summary>
-        ///A test for StoreStatements
+        /// A test for StoreStatements
+        /// This method takes a long time to run.
         ///</summary>
         //[TestMethod()]
         public void StoreStatementsConnectionCloseTest()

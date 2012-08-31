@@ -29,6 +29,7 @@ namespace UnitTests
         /// is entirely up to you.</remarks>
         public void StatementsStored(Statement[] statements)
         {
+            Console.Write(statements);
         }
 
         /// <summary>

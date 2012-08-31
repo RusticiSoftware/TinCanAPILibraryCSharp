@@ -30,7 +30,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Logic
         private int statementPostInterval;
         private IAuthenticationConfiguration authentification;
         private IOfflineStorage offlineStorage;
-        //private Actor adminActor;
+        private Actor adminActor;
         private ITCAPICallback tcapiCallback;
         private Queue<Statement> queue = new Queue<Statement>();
         private int queueSize = 50;
@@ -69,7 +69,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Logic
             set { authentification = value; }
         }
 
-        /*
         /// <summary>
         /// Represents the administrator actor.  Used in voiding statements
         /// </summary>
@@ -78,7 +77,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Logic
             get { return adminActor; }
             set { adminActor = value; }
         }
-        */
 
         /// <summary>
         /// Offline Storage interface to save statements that fail to post
@@ -170,7 +168,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Logic
                 Statement voided = new Statement();
                 voided.Object = new TargetedStatement(statementIdsToVoid[i]);
                 voided.Verb = StatementVerb.Voided.ToString();
-                // voided.Actor = adminActor;
+                voided.Actor = adminActor;
                 statementsToVoid[i] = voided;
             }
             string postData = converter.SerializeToJSON(statementsToVoid);

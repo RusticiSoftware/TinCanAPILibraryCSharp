@@ -144,11 +144,11 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
 
         private static void BeginRequest(IAsyncResult result)
         {
-            WriteRequestState oldState = (WriteRequestState)result.AsyncState;
+            WriteRequestState state = (WriteRequestState)result.AsyncState;
             try
             {
-                WebRequest request = oldState.Request;
-                oldState.DataStream.Close();
+                WebRequest request = state.Request;
+                state.DataStream.Close();
 
                 WebResponse response = request.GetResponse(); Stream returnStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(returnStream);
@@ -157,13 +157,14 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 try
                 {
                     TinCanJsonConverter converter = new TinCanJsonConverter();
-                    statements = (Statement[])converter.DeserializeJSON(oldState.PostData, typeof(Statement[]));
+                    statements = (Statement[])converter.DeserializeJSON(state.PostData, typeof(Statement[]));
+                    state.Callback.StatementsStored(statements);
                 }
                 catch (Exception e)  // If it fails to convert back to a statement the TCAPICallback doesn't provide default behavior.
                 {
-                    oldState.Callback.PostFailException(e);
+                    state.Callback.PostFailException(e);
                 }
-                oldState.Callback.StatementsStored(statements);
+                //state.Callback.StatementsStored(statements);
             }
             catch (Exception e)
             {
@@ -171,13 +172,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 try
                 {
                     TinCanJsonConverter converter = new TinCanJsonConverter();
-                    statements = (Statement[])converter.DeserializeJSON(oldState.PostData, typeof(Statement[]));
+                    statements = (Statement[])converter.DeserializeJSON(state.PostData, typeof(Statement[]));
                 }
                 catch (Exception ex) // Again, if it can't make a statement
                 {
-                    oldState.Callback.PostFailException(ex);
+                    state.Callback.PostFailException(ex);
                 }
-                oldState.Callback.StatementsFailed(statements, e);
+                state.Callback.StatementsFailed(statements, e);
             }
         }
 
