@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using RusticiSoftware.TinCanAPILibrary.Json;
 using RusticiSoftware.TinCanAPILibrary.TypeConverters;
-using RusticiSoftware.TinCanAPILibrary.Logic;
+using RusticiSoftware.TinCanAPILibrary.Model;
 
 namespace RusticiSoftware.TinCanAPILibrary
 {

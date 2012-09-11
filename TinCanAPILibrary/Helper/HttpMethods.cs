@@ -6,7 +6,7 @@ using System.IO;
 using System.Web;
 using System.Collections.Specialized;
 using RusticiSoftware.TinCanAPILibrary.Exceptions;
-using RusticiSoftware.TinCanAPILibrary.Logic;
+using RusticiSoftware.TinCanAPILibrary.Model;
 
 namespace RusticiSoftware.TinCanAPILibrary.Helper
 {

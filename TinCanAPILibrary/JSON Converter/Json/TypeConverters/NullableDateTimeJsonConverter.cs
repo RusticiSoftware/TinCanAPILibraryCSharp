@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using RusticiSoftware.TinCanAPILibrary.Json;
-using RusticiSoftware.TinCanAPILibrary.Logic;
+using RusticiSoftware.TinCanAPILibrary.Model;
 using System.Globalization;
 using RusticiSoftware.TinCanAPILibrary.Helper;
 using RusticiSoftware.ScormContentPlayer.Util;

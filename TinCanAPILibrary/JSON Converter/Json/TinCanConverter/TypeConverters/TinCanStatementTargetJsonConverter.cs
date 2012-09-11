@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 using RusticiSoftware.TinCanAPILibrary.Json;
-using RusticiSoftware.TinCanAPILibrary.Logic;
+using RusticiSoftware.TinCanAPILibrary.Model;
 
 namespace RusticiSoftware.TinCanAPILibrary
 {
     public class TinCanStatementTargetJsonConverter : JsonTypeConverter
     {
-        private Type myType = typeof(TinCanAPILibrary.Logic.StatementTarget);
+        private Type myType = typeof(TinCanAPILibrary.Model.StatementTarget);
         public Type GetTargetClass()
         {
             return myType;

@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.Collections;
 using RusticiSoftware.TinCanAPILibrary.Json;
-using RusticiSoftware.TinCanAPILibrary.Logic;
+using RusticiSoftware.TinCanAPILibrary.Model;
 
 namespace RusticiSoftware.TinCanAPILibrary
 {
@@ -35,7 +35,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             //on the Java side we need to register default converters for concrete subclasses of 
             //interfaces and abstract classes registered with a custom converter
 
-            this.RegisterTypeConverter(typeof(TinCanAPILibrary.Logic.StatementTarget), new TinCanStatementTargetJsonConverter());
+            this.RegisterTypeConverter(typeof(TinCanAPILibrary.Model.StatementTarget), new TinCanStatementTargetJsonConverter());
             this.RegisterDefaultConverter(typeof(TinCanActivity));
             this.RegisterDefaultConverter(typeof(TargetedStatement));
 

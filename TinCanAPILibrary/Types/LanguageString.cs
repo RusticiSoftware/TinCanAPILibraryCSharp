@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RusticiSoftware.TinCanAPILibrary.Logic
+namespace RusticiSoftware.TinCanAPILibrary.Model
 {
     /// <summary>
     /// Internal representation of SCORM Metadata elements that derived from vocabulary elements. The elements of

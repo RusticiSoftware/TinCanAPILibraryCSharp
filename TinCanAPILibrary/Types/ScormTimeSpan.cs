@@ -5,7 +5,7 @@ using System.Text;
 using RusticiSoftware.TinCanAPILibrary.Helper;
 using RusticiSoftware.TinCanAPILibrary.Exceptions;
 
-namespace RusticiSoftware.TinCanAPILibrary.Logic
+namespace RusticiSoftware.TinCanAPILibrary.Model
 {
     /// <summary>
     /// Internal representation of a time span as defined by SCORM
