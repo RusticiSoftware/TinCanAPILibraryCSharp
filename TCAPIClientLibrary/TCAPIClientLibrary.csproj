@@ -1,0 +1,118 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4EAD55E0-ACE5-487C-81A3-23AE31EE389A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TCAPIClientLibrary</RootNamespace>
+    <AssemblyName>TCAPIClientLibrary</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.0.5.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Desktop\TinCanAPILibrary\TinCanAPILibrary\bin\Debug\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Exceptions\ConflictException.cs" />
+    <Compile Include="Exceptions\InvalidArgumentException.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
+    <Compile Include="Exceptions\PreconditionFailedException.cs" />
+    <Compile Include="Exceptions\UnauthorizedException.cs" />
+    <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="Helper\CommonFunctions.cs" />
+    <Compile Include="Helper\Constants.cs" />
+    <Compile Include="Helper\HttpMethods.cs" />
+    <Compile Include="Helper\ParserUtil.cs" />
+    <Compile Include="Helper\ValidationHelper.cs" />
+    <Compile Include="JSON Converter\JsonConverter.cs" />
+    <Compile Include="JSON Converter\JsonTypeConverter.cs" />
+    <Compile Include="JSON Converter\JSON\JsonConverterBase.cs" />
+    <Compile Include="JSON Converter\JSON\TinCanConverter\TinCanJsonConverter.cs" />
+    <Compile Include="JSON Converter\JSON\TinCanConverter\TypeConverters\ActivityDefinitionConverter.cs" />
+    <Compile Include="JSON Converter\JSON\TinCanConverter\TypeConverters\LanguageMapConverter.cs" />
+    <Compile Include="JSON Converter\JSON\TinCanConverter\TypeConverters\TinCanActorJsonConverter.cs" />
+    <Compile Include="JSON Converter\JSON\TinCanConverter\TypeConverters\TinCanStatementTargetJsonConverter.cs" />
+    <Compile Include="JSON Converter\JSON\TinCanConverter\TypeConverters\TypeFieldJsonHelper.cs" />
+    <Compile Include="JSON Converter\JSON\TypeConverters\NullableBooleanJsonConverter.cs" />
+    <Compile Include="JSON Converter\JSON\TypeConverters\NullableDateTimeJsonConverter.cs" />
+    <Compile Include="JSON Converter\JSON\TypeConverters\NullableDoubleJsonConverter.cs" />
+    <Compile Include="JSON Converter\JSON\TypeConverters\NullableIntegerJsonConverter.cs" />
+    <Compile Include="JSON Converter\JSON\TypeConverters\NullableScormTimeSpanJsonConverter.cs" />
+    <Compile Include="Model\Activity.cs" />
+    <Compile Include="Model\ActivityDefinition.cs" />
+    <Compile Include="Model\ActivityProfile.cs" />
+    <Compile Include="Model\ActivityState.cs" />
+    <Compile Include="Model\Actor.cs" />
+    <Compile Include="Model\ActorProfile.cs" />
+    <Compile Include="Model\AgentAccount.cs" />
+    <Compile Include="Model\BasicHTTPAuth.cs" />
+    <Compile Include="Model\Context.cs" />
+    <Compile Include="Model\ContextActivities.cs" />
+    <Compile Include="Model\Extensible.cs" />
+    <Compile Include="Model\Group.cs" />
+    <Compile Include="Model\IAuthenticationConfiguration.cs" />
+    <Compile Include="Model\Interaction.cs" />
+    <Compile Include="Model\InteractionComponentName.cs" />
+    <Compile Include="Model\InteractionComponents.cs" />
+    <Compile Include="Model\InteractionDefinition.cs" />
+    <Compile Include="Model\InteractionTypeValue.cs" />
+    <Compile Include="Model\IOfflineStorage.cs" />
+    <Compile Include="Model\ITCAPI.cs" />
+    <Compile Include="Model\ITCAPICallback.cs" />
+    <Compile Include="Model\IValidatable.cs" />
+    <Compile Include="Model\LanguageMap.cs" />
+    <Compile Include="Model\OAuthAuthentication.cs" />
+    <Compile Include="Model\Person.cs" />
+    <Compile Include="Model\Result.cs" />
+    <Compile Include="Model\Score.cs" />
+    <Compile Include="Model\State.cs" />
+    <Compile Include="Model\Statement.cs" />
+    <Compile Include="Model\StatementQueryObject.cs" />
+    <Compile Include="Model\StatementResult.cs" />
+    <Compile Include="Model\StatementTarget.cs" />
+    <Compile Include="Model\StatementVerb.cs" />
+    <Compile Include="Model\TargetedStatement.cs" />
+    <Compile Include="Model\TinCanActivity.cs" />
+    <Compile Include="Model\TinCanActivityType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TCAPI.cs" />
+    <Compile Include="Types\LanguageString.cs" />
+    <Compile Include="Types\NullableTypes\NullableBoolean.cs" />
+    <Compile Include="Types\NullableTypes\NullableDateTime.cs" />
+    <Compile Include="Types\NullableTypes\NullableDouble.cs" />
+    <Compile Include="Types\NullableTypes\NullableInteger.cs" />
+    <Compile Include="Types\NullableTypes\NullableScormTimeSpan.cs" />
+    <Compile Include="Types\ScormTimeSpan.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
