@@ -18,7 +18,8 @@ namespace UnitTests
     [TestClass()]
     public class TCAPITest
     {
-
+        private const string INCONCLUSIVE = "The results of this test should be viewed on the LRS itself.";
+        private const string INCONCLUSIVE_CONSOLE = "The expected results of this test should be compared to the console output.";
 
         private TestContext testContextInstance;
         public static TCAPITest instance;
@@ -74,7 +75,7 @@ namespace UnitTests
             instance = this;
         }
 
-        #region Individual Unit Tests (No Asserts)
+        #region Individual Unit Tests (No meaningful Asserts)
         /// <summary>
         ///A test for StoreStatement
         ///</summary>
@@ -88,7 +89,7 @@ namespace UnitTests
             statements[1] = new Statement(new Actor("Abraham", "mailto:abraham@example.co.uk"), StatementVerb.Experienced, new TinCanActivity("TinCanClientLibrary"));
             statements[2] = new Statement(new Actor("DaBoss", "mailto:wutwut@notarealbanana.sup"), StatementVerb.Experienced, new TinCanActivity("test activity"));
             target.StoreStatements(statements);
-            Console.WriteLine();
+            Assert.Inconclusive(INCONCLUSIVE);
         }
 
         /// <summary>
@@ -99,8 +100,9 @@ namespace UnitTests
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             target.AdminActor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
-            string[] statementIdsToVoid = { "a84cc4d6-69ee-4eb5-ac4c-d3d6a5077070" }; // TODO: Initialize to an appropriate value
+            string[] statementIdsToVoid = { "a84cc4d6-69ee-4eb5-ac4c-d3d6a5077070" };
             target.VoidStatements(statementIdsToVoid);
+            Assert.Inconclusive(INCONCLUSIVE);
         }
 
         /// <summary>
@@ -109,10 +111,12 @@ namespace UnitTests
         //[TestMethod()]
         public void GetStatementTest()
         {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Statement actual;
             actual = target.GetStatement("b6cc80c6-6fb3-47d0-a311-d032a86435e2");
-            Console.Write(actual.ToString());
+            Console.Write(converter.SerializeToJSON(actual));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
 
         /// <summary>
@@ -121,18 +125,14 @@ namespace UnitTests
         //[TestMethod()]
         public void GetStatementsTest()
         {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
-            StatementQueryObject queryObject = new StatementQueryObject(); // TODO: Initialize to an appropriate value
+            StatementQueryObject queryObject = new StatementQueryObject();
+            queryObject.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             StatementResult actual;
             actual = target.GetStatements(queryObject);
-            Console.Write(actual);
-            /*
-            while (!String.IsNullOrEmpty(actual.More))
-            {
-                actual = target.GetStatements(actual.More);
-                Console.Write(actual);
-            }
-             * */
+            Console.Write(converter.SerializeToJSON(actual));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
 
         /// <summary>
@@ -149,8 +149,9 @@ namespace UnitTests
             ActorProfile previousProfile = new ActorProfile();
             previousProfile.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             previousProfile.ProfileId = "Jaffer";
-            bool overwrite = true; // TODO: Initialize to an appropriate value
+            bool overwrite = true;
             target.SaveActorProfile(actorProfile, previousProfile, overwrite);
+            Assert.Inconclusive(INCONCLUSIVE);
         }
 
         /// <summary>
@@ -159,12 +160,14 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActorProfileTest()
         {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
-            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
-            string profileId = "Jaffer"; // TODO: Initialize to an appropriate value
+            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
+            string profileId = "Jaffer";
             ActorProfile actual;
             actual = target.GetActorProfile(actor, profileId);
-            Console.Write(actual);
+            Console.Write(converter.SerializeToJSON(actual));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
 
         /// <summary>
@@ -173,11 +176,13 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActorTest()
         {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Actor partialActor = new Actor();
             partialActor.Mbox = new String[] { "mailto:akintundex@gmail.com" };
             Actor fullActor = target.GetActor(partialActor);
-            Console.Write(fullActor);
+            Console.Write(converter.SerializeToJSON(fullActor));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
 
         /// <summary>
@@ -186,12 +191,14 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActorProfileIdsTest()
         {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
-            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
-            NullableDateTime since = null; // TODO: Initialize to an appropriate value
+            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
+            NullableDateTime since = null;
             string[] actual;
             actual = target.GetActorProfileIds(actor, since);
-            Console.Write(actual);
+            Console.Write(converter.SerializeToJSON(actual));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
 
         /// <summary>
@@ -201,9 +208,10 @@ namespace UnitTests
         public void DeleteActorProfileTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
-            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
-            string profileId = "Jaffer"; // TODO: Initialize to an appropriate value
+            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
+            string profileId = "Jaffer";
             target.DeleteActorProfile(actor, profileId);
+            Assert.Inconclusive(INCONCLUSIVE);
         }
 
         /// <summary>
@@ -215,6 +223,7 @@ namespace UnitTests
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
             target.DeleteAllActorProfile(actor);
+            Assert.Inconclusive(INCONCLUSIVE);
         }
 
         /// <summary>
@@ -223,14 +232,16 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActivityStateIdsTest()
         {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
-            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
+            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             string activityId = "example.com";
-            string registrationId = null; // TODO: Initialize to an appropriate value
-            NullableDateTime since = null; // TODO: Initialize to an appropriate value
+            string registrationId = null;
+            NullableDateTime since = null;
             string[] actual;
             actual = target.GetActivityStateIds(activityId, actor, registrationId, since);
-            Console.Write(actual);
+            Console.Write(converter.SerializeToJSON(actual));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
 
         /// <summary>
@@ -245,9 +256,10 @@ namespace UnitTests
             activityState.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             activityState.Contents = "This is a test input.";
             activityState.StateId = "Bananas";
-            bool overwrite = false; // TODO: Initialize to an appropriate value
-            ActivityState previousState = null; // TODO: Initialize to an appropriate value
+            bool overwrite = false;
+            ActivityState previousState = null;
             target.SaveActivityState(activityState, overwrite, previousState);
+            Assert.Inconclusive(INCONCLUSIVE);
         }
 
         /// <summary>
@@ -256,14 +268,16 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActivityStateTest()
         {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
-            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
+            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             string activityId = "example.com";
-            string registrationId = null; // TODO: Initialize to an appropriate value
+            string registrationId = null;
             string stateId = "Bananas";
             ActivityState actual;
             actual = target.GetActivityState(activityId, actor, stateId, registrationId);
-            Console.Write(actual);
+            Console.Write(converter.SerializeToJSON(actual));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
 
         /// <summary>
@@ -273,39 +287,12 @@ namespace UnitTests
         public void DeleteActivityStateTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
-            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
+            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             string activityId = "example.com";
-            string registrationId = null; // TODO: Initialize to an appropriate value
+            string registrationId = null;
             string stateId = "Bananas";
             target.DeleteActivityState(activityId, actor, stateId, registrationId);
-        }
-
-        /// <summary>
-        /// A test for StoreStatements
-        /// This method takes a long time to run.
-        ///</summary>
-        //[TestMethod()]
-        public void StoreStatementsConnectionCloseTest()
-        {
-            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"), new TCAPICallback(), new OfflineStorage());
-            Statement statement = null;
-            for (int i = 0; i < 300; i++)
-            {
-                int j = i % 3;
-                switch (j)
-                {
-                    case 0:
-                        statement = new Statement(new Actor("Jaffer", "mailto:akintundex@gmail.com"), StatementVerb.Experienced, new TinCanActivity("test activity"));
-                        break;
-                    case 1:
-                        statement = new Statement(new Actor("Abraham", "mailto:abraham@example.co.uk"), StatementVerb.Experienced, new TinCanActivity("TinCanClientLibrary"));
-                        break;
-                    case 2:
-                        statement = new Statement(new Actor("DaBoss", "mailto:wutwut@notarealbanana.sup"), StatementVerb.Experienced, new TinCanActivity("test activity"));
-                        break;
-                }
-                target.StoreStatement(statement, false);
-            }
+            Assert.Inconclusive(INCONCLUSIVE);
         }
 
         /// <summary>
@@ -315,13 +302,14 @@ namespace UnitTests
         public void SaveActivityProfileTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
-            ActivityProfile profile = new ActivityProfile(); // TODO: Initialize to an appropriate value
+            ActivityProfile profile = new ActivityProfile();
             profile.ProfileId = "Bananas";
             profile.ActivityId = "example.com";
             profile.Contents = "These are contents";
-            bool overwrite = false; // TODO: Initialize to an appropriate value
-            ActivityProfile previous = null; // TODO: Initialize to an appropriate value
+            bool overwrite = false;
+            ActivityProfile previous = null;
             target.SaveActivityProfile(profile, overwrite, previous);
+            Assert.Inconclusive(INCONCLUSIVE);
         }
 
         /// <summary>
@@ -330,12 +318,14 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActivityProfileTest()
         {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             string activityId = "example.com";
             string profileId = "Bananas";
             ActivityProfile actual;
             actual = target.GetActivityProfile(activityId, profileId);
-            Console.Write(actual);
+            Console.Write(converter.SerializeToJSON(actual));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
 
         /// <summary>
@@ -344,12 +334,14 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActivityProfileIdsTest()
         {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             string activityId = "example.com";
             NullableDateTime since = null;
             string[] actual;
             actual = target.GetActivityProfileIds(activityId, since);
-            Console.Write(actual);
+            Console.Write(converter.SerializeToJSON(actual));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
 
         /// <summary>
@@ -359,9 +351,10 @@ namespace UnitTests
         public void DeleteActivityProfileTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
-            string activityId = "example.com"; // TODO: Initialize to an appropriate value
-            string profileId = "Bananas"; // TODO: Initialize to an appropriate value
+            string activityId = "example.com";
+            string profileId = "Bananas";
             target.DeleteActivityProfile(activityId, profileId);
+            Assert.Inconclusive(INCONCLUSIVE);
         }
 
         /// <summary>
@@ -373,6 +366,7 @@ namespace UnitTests
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             string activityId = "example.com";
             target.DeleteAllActivityProfile(activityId);
+            Assert.Inconclusive(INCONCLUSIVE);
         }
 
         /// <summary>
@@ -381,19 +375,21 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActivityTest()
         {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             string activityId = "http://scorm.com/pong/beatTj"; // TODO: Initialize to an appropriate value
             Activity actual;
             actual = target.GetActivity(activityId);
-            Console.Write(actual);
+            Console.Write(converter.SerializeToJSON(actual));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
         #endregion
 
-        #region Joint Unit Tests (with Asserts)
+        #region Joint Unit Tests (with meaningful Asserts!)
         /// <summary>
         ///A test for StoreStatements
         ///</summary>
-        [TestMethod()]
+        //[TestMethod()]
         public void StoreStatementsAsyncTest()
         {
             TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"), new TCAPICallback(), new OfflineStorage(), 1000, 2);
@@ -404,7 +400,7 @@ namespace UnitTests
                 switch (j)
                 {
                     case 0:
-                        statements[i] = new Statement(new Actor("Musufasa", "mailto:musufasa@gmail.com"), StatementVerb.Experienced, new TinCanActivity("test activity"));
+                        statements[i] = new Statement(new Actor("Mufasa", "mailto:Mufasa@gmail.com"), StatementVerb.Experienced, new TinCanActivity("test activity"));
                         break;
                     case 1:
                         statements[i] = new Statement(new Actor("Carl", "mailto:carl@example.co.uk"), StatementVerb.Experienced, new TinCanActivity("TinCanClientLibrary"));
@@ -425,18 +421,171 @@ namespace UnitTests
             target.Dispose(); // Releases the thread timer handle
             // If all statements successfully flush out of the buffer AND no exceptions are thrown (which should repopulate the buffer)
             // then the test was successful and the final statementSize should be null, indicating an empty queue.
-            Assert.IsTrue(statementSize == null);
+            // The default implementation returns a null object.  However you may also return a size-0 array, all checks ensure both.
+            Assert.IsTrue(statementSize == null || statementSize.Length == 0);
         }
 
         /// <summary>
-        /// A test for pushing and storing Actor Profiles, then     deleting them.
+        /// A test for pushing and storing Actor Profiles, then deleting them.
         /// </summary>
         /// <remarks>This test should use a dummy actor, not a real one!</remarks>
         [TestMethod()]
         public void ActorProfileTest()
         {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
+            TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"));
+            Actor actor = new Actor("Mufasa", "mailto:mufasa@gmail.com");
+
+            String[] profileIds = { "The Lion King", "The Fallen King", "The New King" };
+            String[] profileContents = { 
+                "Mufasa rules his country as a proud and fair king of lions, celebrating his recently newborn son Simba.",
+                "Scar kills Mufasa, simply muttering the words 'Long Live the King'", 
+                "Simba finally realizes he must follow in his fathers footsteps to save the kingdom from the evil Scar." };
+
+            // Clear all existing profiles.
+            target.DeleteAllActorProfile(actor);
+
+            NullableDateTime since = null;
+            string[] actual;
+            actual = target.GetActorProfileIds(actor, since);
+            Assert.AreEqual(0, actual.Length); // Again, this test should be run on a fake actor.
+            /* Save a new actor profile */
+            ActorProfile p1 = new ActorProfile();
+            p1.Actor = actor;
+            p1.ProfileId = profileIds[0];
+            p1.Contents = profileContents[0];
+            ActorProfile pp = new ActorProfile();
+            pp.ProfileId = profileIds[0];
+            pp.Actor = actor;
+            target.SaveActorProfile(p1, pp, true);
+            actual = target.GetActorProfileIds(actor, since);
+            Assert.AreEqual(1, actual.Length); // There should be just one profile for now.
+            p1.ProfileId = profileIds[1];
+            p1.Contents = profileContents[1];
+            pp.ProfileId = profileIds[1];
+            target.SaveActorProfile(p1, pp, true);
+            actual = target.GetActorProfileIds(actor, since);
+            Assert.AreEqual(2, actual.Length);
+            p1.ProfileId = profileIds[2];
+            p1.Contents = profileContents[2];
+            pp.ProfileId = profileIds[2];
+            target.SaveActorProfile(p1, pp, true);
+            actual = target.GetActorProfileIds(actor);
+            Assert.AreEqual(3, actual.Length);
+
+            // Ensure all the posted data matches
+
+            ActorProfile pResult = target.GetActorProfile(actor, profileIds[0]);
+            Assert.AreEqual(profileContents[0], pResult.Contents);
+
+            pResult = target.GetActorProfile(actor, profileIds[1]);
+            Assert.AreEqual(profileContents[1], pResult.Contents);
+
+            pResult = target.GetActorProfile(actor, profileIds[2]);
+            Assert.AreEqual(profileContents[2], pResult.Contents);
+
+            target.DeleteActorProfile(actor, profileIds[0]);
+            actual = target.GetActorProfileIds(actor);
+            Assert.AreEqual(2, actual.Length);
+            target.DeleteAllActorProfile(actor);
+            actual = target.GetActorProfileIds(actor);
+            Assert.AreEqual(0, actual.Length);
         }
+        #endregion
+
+        #region Arrr
+        /*
+        /// <summary>
+        ///A test for SaveActorProfile
+        ///</summary>
+        //[TestMethod()]
+        public void SaveActorProfileTest()
+        {
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
+            ActorProfile actorProfile = new ActorProfile();
+            actorProfile.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
+            actorProfile.ProfileId = "Jaffer";
+            actorProfile.Contents = "This is some test";
+            ActorProfile previousProfile = new ActorProfile();
+            previousProfile.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
+            previousProfile.ProfileId = "Jaffer";
+            bool overwrite = true;
+            target.SaveActorProfile(actorProfile, previousProfile, overwrite);
+            Assert.Inconclusive(INCONCLUSIVE);
+        }
+
+        /// <summary>
+        ///A test for GetActorProfile
+        ///</summary>
+        //[TestMethod()]
+        public void GetActorProfileTest()
+        {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
+            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
+            string profileId = "Jaffer";
+            ActorProfile actual;
+            actual = target.GetActorProfile(actor, profileId);
+            Console.Write(converter.SerializeToJSON(actual));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
+        }
+
+        /// <summary>
+        ///A test for GetActor
+        ///</summary>
+        //[TestMethod()]
+        public void GetActorTest()
+        {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
+            Actor partialActor = new Actor();
+            partialActor.Mbox = new String[] { "mailto:akintundex@gmail.com" };
+            Actor fullActor = target.GetActor(partialActor);
+            Console.Write(converter.SerializeToJSON(fullActor));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
+        }
+
+        /// <summary>
+        ///A test for GetActorProfileIds
+        ///</summary>
+        //[TestMethod()]
+        public void GetActorProfileIdsTest()
+        {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
+            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
+            NullableDateTime since = null;
+            string[] actual;
+            actual = target.GetActorProfileIds(actor, since);
+            Console.Write(converter.SerializeToJSON(actual));
+            Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
+        }
+
+        /// <summary>
+        ///A test for DeleteActorProfile
+        ///</summary>
+        //[TestMethod()]
+        public void DeleteActorProfileTest()
+        {
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
+            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
+            string profileId = "Jaffer";
+            target.DeleteActorProfile(actor, profileId);
+            Assert.Inconclusive(INCONCLUSIVE);
+        }
+
+        /// <summary>
+        ///A test for DeleteAllActorProfile
+        ///</summary>
+        //[TestMethod()]
+        public void DeleteAllActorProfileTest()
+        {
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
+            Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
+            target.DeleteAllActorProfile(actor);
+            Assert.Inconclusive(INCONCLUSIVE);
+        }
+        */
         #endregion
     }
 }
-`

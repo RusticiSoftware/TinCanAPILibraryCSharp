@@ -10,9 +10,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         void StoreStatement(Statement statement);
         void StoreStatements(Statement[] statements);
         void VoidStatements(String[] statementIdsToVoid);
-        void StoreStatement(Statement statement, bool overwrite);
-        void StoreStatements(Statement[] statements, bool overwrite);
-        void VoidStatements(String[] statementIdsToVoid, bool overwrite);
+        void StoreStatement(Statement statement, bool synchronous);
+        void StoreStatements(Statement[] statements, bool synchronous);
+        void VoidStatements(String[] statementIdsToVoid, bool synchronous);
         void Flush();
 
         Statement GetStatement(String statementId);

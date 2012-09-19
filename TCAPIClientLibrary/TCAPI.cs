@@ -386,7 +386,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
-            string putData = converter.SerializeToJSON(actorProfile.Contents);
+            string putData = actorProfile.Contents;
             nvc["profileId"] = actorProfile.ProfileId;
             nvc["actor"] = converter.SerializeToJSON(previousProfile.Actor);
             nvc["overwrite"] = overwrite.ToString();
