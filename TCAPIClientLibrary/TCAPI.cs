@@ -40,6 +40,9 @@ namespace RusticiSoftware.TinCanAPILibrary
         private readonly ITCAPICallback tcapiCallback;
         private int maxBatchSize = 50;
         private Timer asyncPostTimer;
+        private AsyncPostCallback asyncPostCallback;
+        private Object flushLock = new Object();
+        private bool isAsyncFlushing;
         #endregion
 
         #region Properties
@@ -165,8 +168,8 @@ namespace RusticiSoftware.TinCanAPILibrary
             this.statementPostInterval = statementPostInterval;
             this.maxBatchSize = maxBatchSize;
 
-            // Assign a callback so that the asynchronous flush will successfully loop.
-            (tcapiCallback as TCAPICallback).AddPostSuccessEventHandler(PostSuccess);
+            this.asyncPostCallback = new AsyncPostCallback(this.PostSuccess);
+            this.isAsyncFlushing = false;
 
             asyncPostTimer = new Timer();
             asyncPostTimer.Elapsed += new ElapsedEventHandler(AsyncPostTimerElapsed);
@@ -200,19 +203,12 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <param name="statements">An array of statements to store</param>
         public void StoreStatements(Statement[] statements)
         {
-            Queue<Statement> postQueue;
-            while (statements.Length > 0)
-            {
-                Statement[] batch = new Statement[maxBatchSize];
-                for (int i = 0; i < statements.Length || i < 10; i++)
-                {
-                }
-                foreach (Statement s in statements)
-                    s.Validate();
-                TinCanJsonConverter converter = new TinCanJsonConverter();
-                string postData = converter.SerializeToJSON(statements);
-                HttpMethods.PostRequest(postData, endpoint + STATEMENTS, authentification);
-            }
+            Statement[] batch = new Statement[maxBatchSize];
+            foreach (Statement s in statements)
+                s.Validate();
+            TinCanJsonConverter converter = new TinCanJsonConverter();
+            string postData = converter.SerializeToJSON(statements);
+            HttpMethods.PostRequest(postData, endpoint + STATEMENTS, authentification);
         }
 
         /// <summary>
@@ -769,17 +765,21 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// </summary>
         public void Flush()
         {
-            this.asyncPostTimer.Stop();
-            lock (offlineStorage) // Incase the Async Flush is running concurrently, await a lock on offlineStorage to prevent InvalidOperationException
+            if (!isAsyncFlushing)
             {
-                Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);
-                while (statements != null || statements.Length > 0)
+                lock (flushLock) // Incase the Async Flush is running concurrently, await a lock on offlineStorage to prevent InvalidOperationException
                 {
-                    StoreStatements(statements);
-                    statements = offlineStorage.GetQueuedStatements(maxBatchSize);
+                    this.asyncPostTimer.Stop();
+                    Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);
+                    while (statements != null && statements.Length > 0)
+                    {
+                        StoreStatements(statements);
+                        offlineStorage.RemoveStatementsFromQueue(maxBatchSize);
+                        statements = offlineStorage.GetQueuedStatements(maxBatchSize);
+                    }
                 }
+                this.asyncPostTimer.Start();
             }
-            this.asyncPostTimer.Start();
         }
 
         public string GetOAuthAuthorizationUrl(string redirectUrl)
@@ -810,10 +810,10 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <summary>
         /// This method is fired by the TCAPICallback every time FlushAsync succeeds.
         /// </summary>
-        public void PostSuccess()
+        private void PostSuccess(int count)
         {
             // First, remove the first maxBatchSize elements from the queue as they succeeded
-            offlineStorage.RemoveStatementsFromQueue(maxBatchSize);
+            offlineStorage.RemoveStatementsFromQueue(count);
             // Then relaunch FlushAsync
             FlushAsync();
         }
@@ -832,8 +832,9 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             if (asyncPostTimer.Enabled) // Freeze the post timer while flushing occurs.
                 asyncPostTimer.Stop();
-            // Place a mutex lock on offlineStorage while the Async Method is pushing the statements.  Once that's done the lock will release and this should prevent clashes between Flush and FlushAsync
-            lock (offlineStorage)
+            this.isAsyncFlushing = true;
+            // Place a mutex lock on flushLock while the Async Method is pushing the statements.  Once that's done the lock will release and this should prevent clashes between Flush and FlushAsync
+            lock (flushLock)
             {
                 Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);
                 if (statements != null && statements.Length > 0)
@@ -841,7 +842,10 @@ namespace RusticiSoftware.TinCanAPILibrary
                     StoreStatementsAsync(statements);
                 }
                 else // If no statements remain, resume the timer
+                {
                     asyncPostTimer.Start();
+                    this.isAsyncFlushing = false;
+                }
             }
         }
 
@@ -849,7 +853,25 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
             string postData = converter.SerializeToJSON(statements);
-            HttpMethods.PostRequestAsync(postData, endpoint + STATEMENTS, authentification, tcapiCallback);
+            HttpMethods.PostRequestAsync(postData, endpoint + STATEMENTS, authentification, tcapiCallback, asyncPostCallback);
+        }
+        #endregion
+
+        #region AsyncPostCallback
+        public class AsyncPostCallback
+        {
+            public delegate void AsyncPostSuccess(int count);
+            private event AsyncPostSuccess eventPostSuccess;
+
+            public AsyncPostCallback(AsyncPostSuccess handler)
+            {
+                eventPostSuccess += handler;
+            }
+
+            public void AsyncPostComplete(Statement[] statements)
+            {
+                eventPostSuccess(statements.Length);
+            }
         }
         #endregion
     }

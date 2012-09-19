@@ -11,8 +11,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     {
         #region Fields
         private TCAPI tcapi;
-        public delegate void AsyncPostSuccess();
-        private event AsyncPostSuccess eventPostSuccess;
         #endregion
 
         #region Properties
@@ -25,11 +23,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             set { tcapi = value; }
         }
         #endregion
-
-        public void AddPostSuccessEventHandler(AsyncPostSuccess asyncPostSuccess)
-        {
-            eventPostSuccess += asyncPostSuccess;
-        }
         /// <summary>
         /// Handles the case in which the statements fail to post
         /// </summary>
@@ -46,7 +39,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <param name="statements"></param>
         public void StatementsStored(Statement[] statements)
         {
-            eventPostSuccess();
         }
 
         /// <summary>

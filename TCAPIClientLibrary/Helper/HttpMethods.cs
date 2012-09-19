@@ -7,6 +7,7 @@ using System.Web;
 using System.Collections.Specialized;
 using RusticiSoftware.TinCanAPILibrary.Exceptions;
 using RusticiSoftware.TinCanAPILibrary.Model;
+using RusticiSoftware.TinCanAPILibrary;
 
 namespace RusticiSoftware.TinCanAPILibrary.Helper
 {
@@ -17,8 +18,18 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         {
             WebRequest request;
             Stream dataStream;
-            ITCAPICallback callback;
+            ITCAPICallback tcapiCallback;
             String postData;
+            TCAPI.AsyncPostCallback asyncPostCallback;
+
+            /// <summary>
+            /// Handle to AsyncPostCallback
+            /// </summary>
+            public TCAPI.AsyncPostCallback AsyncPostCallback
+            {
+                get { return asyncPostCallback; }
+                set { asyncPostCallback = value; }
+            }
 
             /// <summary>
             /// The original post request
@@ -34,8 +45,8 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
             /// </summary>
             public ITCAPICallback Callback
             {
-                get { return callback; }
-                set { callback = value; }
+                get { return tcapiCallback; }
+                set { tcapiCallback = value; }
             }
 
             /// <summary>
@@ -120,7 +131,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// <param name="authentification">An IAuthentificationConfiguration.  Only Basic is currently supported.</param>
         /// <param name="endpoint">The endpoint to send the statement to</param>
         /// <param name="callback">An ITCAPI object to handle callbacks</param>
-        public static void PostRequestAsync(string postData, string endpoint, IAuthenticationConfiguration authentification, ITCAPICallback callback)
+        public static void PostRequestAsync(string postData, string endpoint, IAuthenticationConfiguration authentification, ITCAPICallback callback, TCAPI.AsyncPostCallback asyncPostCallback)
         {
             char[] postDataCharArray = postData.ToCharArray();
             //WebClient webClient = new WebClient();
@@ -140,6 +151,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
             state.Callback = callback;
             state.DataStream = dataStream;
             state.PostData = postData;
+            state.AsyncPostCallback = asyncPostCallback;
 
             dataStream.BeginWrite(Encoding.ASCII.GetBytes(postDataCharArray), 0, Encoding.ASCII.GetByteCount(postDataCharArray), BeginRequest, state);
         }
@@ -161,6 +173,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                     TinCanJsonConverter converter = new TinCanJsonConverter();
                     statements = (Statement[])converter.DeserializeJSON(state.PostData, typeof(Statement[]));
                     state.Callback.StatementsStored(statements);
+                    state.AsyncPostCallback.AsyncPostComplete(statements);
                 }
                 catch (Exception e)  // If it fails to convert back to a statement the TCAPICallback doesn't provide default behavior.
                 {

@@ -389,10 +389,10 @@ namespace UnitTests
         /// <summary>
         ///A test for StoreStatements
         ///</summary>
-        //[TestMethod()]
+        [TestMethod()]
         public void StoreStatementsAsyncTest()
         {
-            TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"), new TCAPICallback(), new OfflineStorage(), 1000, 2);
+            TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"), new TCAPICallback(), new OfflineStorage(), 60000, 2);
             Statement[] statements = new Statement[6];
             for (int i = 0; i < statements.Length; i++)
             {
@@ -409,8 +409,9 @@ namespace UnitTests
                         statements[i] = new Statement(new Actor("DiBiase", "mailto:DiBiase@notarealbanana.sup"), StatementVerb.Experienced, new TinCanActivity("test activity"));
                         break;
                 }
-            }
+            }   
             target.StoreStatements(statements, false);
+            target.Flush();
             Statement[] statementSize;
             while ((statementSize = target.OfflineStorage.GetQueuedStatements(1)) != null
                 && (statementSize.Length > 0))
@@ -429,7 +430,7 @@ namespace UnitTests
         /// A test for pushing and storing Actor Profiles, then deleting them.
         /// </summary>
         /// <remarks>This test should use a dummy actor, not a real one!</remarks>
-        [TestMethod()]
+        //[TestMethod()]
         public void ActorProfileTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
