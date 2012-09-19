@@ -95,7 +95,7 @@ namespace UnitTests
         /// <summary>
         ///A test for VoidStatements
         ///</summary>
-        // [TestMethod()]
+        //[TestMethod()]
         public void VoidStatementsTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
@@ -389,10 +389,10 @@ namespace UnitTests
         /// <summary>
         ///A test for StoreStatements
         ///</summary>
-        //[TestMethod()]
+        [TestMethod()]
         public void StoreStatementsAsyncTest()
         {
-            TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"), new TCAPICallback(), new OfflineStorage(), 60000, 2);
+            TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"), new TCAPICallback(), new OfflineStorage(), 750, 2);
             Statement[] statements = new Statement[6];
             for (int i = 0; i < statements.Length; i++)
             {
@@ -565,7 +565,7 @@ namespace UnitTests
         /// <summary>
         /// Tests all the methods associated with Activity Profile
         /// </summary>
-        [TestMethod()]
+        //[TestMethod()]
         public void ActivityProfileTest()
         {
             TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"));

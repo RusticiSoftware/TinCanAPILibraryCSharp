@@ -796,13 +796,11 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// </summary>
         public void Dispose()
         {
-            /*
             if (asyncPostTimer != null)
             {
                 asyncPostTimer.Stop();
                 asyncPostTimer.Dispose();
             }
-            */
         }
         #endregion
 
