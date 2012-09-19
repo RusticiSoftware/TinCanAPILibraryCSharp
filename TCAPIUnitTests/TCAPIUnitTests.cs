@@ -7,6 +7,7 @@ using System.Net;
 using System.IO;
 using RusticiSoftware.TinCanAPILibrary.Helper;
 using System.Text;
+using System.Threading;
 
 namespace UnitTests
 {
@@ -73,6 +74,7 @@ namespace UnitTests
             instance = this;
         }
 
+        #region Individual Unit Tests (No Asserts)
         /// <summary>
         ///A test for StoreStatement
         ///</summary>
@@ -80,9 +82,7 @@ namespace UnitTests
         //[TestMethod()]
         public void StoreStatementTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Statement[] statements = new Statement[3];
             statements[0] = new Statement(new Actor("Jaffer", "mailto:akintundex@gmail.com"), StatementVerb.Experienced, new TinCanActivity("test activity"));
             statements[1] = new Statement(new Actor("Abraham", "mailto:abraham@example.co.uk"), StatementVerb.Experienced, new TinCanActivity("TinCanClientLibrary"));
@@ -97,9 +97,7 @@ namespace UnitTests
         // [TestMethod()]
         public void VoidStatementsTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             target.AdminActor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             string[] statementIdsToVoid = { "a84cc4d6-69ee-4eb5-ac4c-d3d6a5077070" }; // TODO: Initialize to an appropriate value
             target.VoidStatements(statementIdsToVoid);
@@ -111,9 +109,7 @@ namespace UnitTests
         //[TestMethod()]
         public void GetStatementTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Statement actual;
             actual = target.GetStatement("b6cc80c6-6fb3-47d0-a311-d032a86435e2");
             Console.Write(actual.ToString());
@@ -125,9 +121,7 @@ namespace UnitTests
         //[TestMethod()]
         public void GetStatementsTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             StatementQueryObject queryObject = new StatementQueryObject(); // TODO: Initialize to an appropriate value
             StatementResult actual;
             actual = target.GetStatements(queryObject);
@@ -147,10 +141,7 @@ namespace UnitTests
         //[TestMethod()]
         public void SaveActorProfileTest()
         {
-            TinCanJsonConverter converter = new TinCanJsonConverter();
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             ActorProfile actorProfile = new ActorProfile();
             actorProfile.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             actorProfile.ProfileId = "Jaffer";
@@ -165,12 +156,10 @@ namespace UnitTests
         /// <summary>
         ///A test for GetActorProfile
         ///</summary>
-        [TestMethod()]
+        //[TestMethod()]
         public void GetActorProfileTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
             string profileId = "Jaffer"; // TODO: Initialize to an appropriate value
             ActorProfile actual;
@@ -184,9 +173,7 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActorTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Actor partialActor = new Actor();
             partialActor.Mbox = new String[] { "mailto:akintundex@gmail.com" };
             Actor fullActor = target.GetActor(partialActor);
@@ -199,9 +186,7 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActorProfileIdsTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
             NullableDateTime since = null; // TODO: Initialize to an appropriate value
             string[] actual;
@@ -215,9 +200,7 @@ namespace UnitTests
         //[TestMethod()]
         public void DeleteActorProfileTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
             string profileId = "Jaffer"; // TODO: Initialize to an appropriate value
             target.DeleteActorProfile(actor, profileId);
@@ -229,9 +212,7 @@ namespace UnitTests
         //[TestMethod()]
         public void DeleteAllActorProfileTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
             target.DeleteAllActorProfile(actor);
         }
@@ -242,9 +223,7 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActivityStateIdsTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
             string activityId = "example.com";
             string registrationId = null; // TODO: Initialize to an appropriate value
@@ -260,9 +239,7 @@ namespace UnitTests
         //[TestMethod()]
         public void SaveActivityStateTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             ActivityState activityState = new ActivityState();
             activityState.ActivityId = "example.com";
             activityState.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
@@ -279,9 +256,7 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActivityStateTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
             string activityId = "example.com";
             string registrationId = null; // TODO: Initialize to an appropriate value
@@ -297,45 +272,12 @@ namespace UnitTests
         //[TestMethod()]
         public void DeleteActivityStateTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Actor actor = new Actor("Jaffer", "mailto:akintundex@gmail.com"); // TODO: Initialize to an appropriate value
             string activityId = "example.com";
             string registrationId = null; // TODO: Initialize to an appropriate value
             string stateId = "Bananas";
             target.DeleteActivityState(activityId, actor, stateId, registrationId);
-        }
-
-        /// <summary>
-        ///A test for StoreStatements
-        ///</summary>
-        //[TestMethod()]
-        public void StoreStatementsAsyncTest()
-        {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
-            target.TCAPICallback = new TCAPICallback();
-            Statement[] statements = new Statement[60];
-            for (int i = 0; i < statements.Length; i++)
-            {
-                int j = i % 3;
-                switch (j)
-                {
-                    case 0:
-                        statements[i] = new Statement(new Actor("Jaffer", "mailto:akintundex@gmail.com"), StatementVerb.Experienced, new TinCanActivity("test activity"));
-                        break;
-                    case 1:
-                        statements[i] = new Statement(new Actor("Abraham", "mailto:abraham@example.co.uk"), StatementVerb.Experienced, new TinCanActivity("TinCanClientLibrary"));
-                        break;
-                    case 2:
-                        statements[i] = new Statement(new Actor("DaBoss", "mailto:wutwut@notarealbanana.sup"), StatementVerb.Experienced, new TinCanActivity("test activity"));
-                        break;
-                }
-            }
-            target.StoreStatements(statements, false);
-            Console.Write("Hi");
         }
 
         /// <summary>
@@ -345,10 +287,7 @@ namespace UnitTests
         //[TestMethod()]
         public void StoreStatementsConnectionCloseTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
-            target.TCAPICallback = new TCAPICallback();
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"), new TCAPICallback(), new OfflineStorage());
             Statement statement = null;
             for (int i = 0; i < 300; i++)
             {
@@ -367,7 +306,6 @@ namespace UnitTests
                 }
                 target.StoreStatement(statement, false);
             }
-            Console.Write("Hi");
         }
 
         /// <summary>
@@ -376,9 +314,7 @@ namespace UnitTests
         //[TestMethod()]
         public void SaveActivityProfileTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             ActivityProfile profile = new ActivityProfile(); // TODO: Initialize to an appropriate value
             profile.ProfileId = "Bananas";
             profile.ActivityId = "example.com";
@@ -394,9 +330,7 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActivityProfileTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             string activityId = "example.com";
             string profileId = "Bananas";
             ActivityProfile actual;
@@ -410,9 +344,7 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActivityProfileIdsTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             string activityId = "example.com";
             NullableDateTime since = null;
             string[] actual;
@@ -426,9 +358,7 @@ namespace UnitTests
         //[TestMethod()]
         public void DeleteActivityProfileTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             string activityId = "example.com"; // TODO: Initialize to an appropriate value
             string profileId = "Bananas"; // TODO: Initialize to an appropriate value
             target.DeleteActivityProfile(activityId, profileId);
@@ -440,9 +370,7 @@ namespace UnitTests
         //[TestMethod()]
         public void DeleteAllActivityProfileTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             string activityId = "example.com";
             target.DeleteAllActivityProfile(activityId);
         }
@@ -453,13 +381,62 @@ namespace UnitTests
         //[TestMethod()]
         public void GetActivityTest()
         {
-            TCAPI target = new TCAPI();
-            target.Authentification = new BasicHTTPAuth("test", "password");
-            target.Endpoint = "http://cloud.scorm.com/ScormEngineInterface/TCAPI/public";
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             string activityId = "http://scorm.com/pong/beatTj"; // TODO: Initialize to an appropriate value
             Activity actual;
             actual = target.GetActivity(activityId);
             Console.Write(actual);
         }
+        #endregion
+
+        #region Joint Unit Tests (with Asserts)
+        /// <summary>
+        ///A test for StoreStatements
+        ///</summary>
+        [TestMethod()]
+        public void StoreStatementsAsyncTest()
+        {
+            TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"), new TCAPICallback(), new OfflineStorage(), 1000, 2);
+            Statement[] statements = new Statement[6];
+            for (int i = 0; i < statements.Length; i++)
+            {
+                int j = i % 3;
+                switch (j)
+                {
+                    case 0:
+                        statements[i] = new Statement(new Actor("Musufasa", "mailto:musufasa@gmail.com"), StatementVerb.Experienced, new TinCanActivity("test activity"));
+                        break;
+                    case 1:
+                        statements[i] = new Statement(new Actor("Carl", "mailto:carl@example.co.uk"), StatementVerb.Experienced, new TinCanActivity("TinCanClientLibrary"));
+                        break;
+                    case 2:
+                        statements[i] = new Statement(new Actor("DiBiase", "mailto:DiBiase@notarealbanana.sup"), StatementVerb.Experienced, new TinCanActivity("test activity"));
+                        break;
+                }
+            }
+            target.StoreStatements(statements, false);
+            Statement[] statementSize;
+            while ((statementSize = target.OfflineStorage.GetQueuedStatements(1)) != null
+                && (statementSize.Length > 0))
+            {
+                Thread.Sleep(500);
+                Console.WriteLine("Waiting");
+            }
+            target.Dispose(); // Releases the thread timer handle
+            // If all statements successfully flush out of the buffer AND no exceptions are thrown (which should repopulate the buffer)
+            // then the test was successful and the final statementSize should be null, indicating an empty queue.
+            Assert.IsTrue(statementSize == null);
+        }
+
+        /// <summary>
+        /// A test for pushing and storing Actor Profiles, then     deleting them.
+        /// </summary>
+        /// <remarks>This test should use a dummy actor, not a real one!</remarks>
+        [TestMethod()]
+        public void ActorProfileTest()
+        {
+        }
+        #endregion
     }
 }
+`

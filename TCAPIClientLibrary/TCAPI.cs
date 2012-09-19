@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Web;
+using System.Timers;
 using System.Collections.Specialized;
 using RusticiSoftware.TinCanAPILibrary.Exceptions;
 using RusticiSoftware.TinCanAPILibrary.Helper;
@@ -14,6 +15,10 @@ namespace RusticiSoftware.TinCanAPILibrary
 {
     /// <summary>
     /// The TCAPI Object which handles the bulk of the logic and communication
+    /// Note the read only properties, which must be assigned in the constructor
+    /// are the asynchronous support variables.  If a TCAPI with no AsyncSupport is created,
+    /// batching statements for async launch will just populate the offlinestorage indefinitely,
+    /// unless a manual call to Flush happens.
     /// </summary>
     public class TCAPI : ITCAPI
     {
@@ -27,14 +32,14 @@ namespace RusticiSoftware.TinCanAPILibrary
         #endregion
 
         #region Fields
-        private String endpoint;
+        private readonly String endpoint;
         private int statementPostInterval;
         private IAuthenticationConfiguration authentification;
-        private IOfflineStorage offlineStorage;
+        private readonly IOfflineStorage offlineStorage;
         private Actor adminActor;
-        private ITCAPICallback tcapiCallback;
-        private Queue<Statement> queue = new Queue<Statement>();
+        private readonly ITCAPICallback tcapiCallback;
         private int maxBatchSize = 50;
+        private Timer asyncPostTimer;
         #endregion
 
         #region Properties
@@ -44,7 +49,14 @@ namespace RusticiSoftware.TinCanAPILibrary
         public int StatementPostInterval
         {
             get { return statementPostInterval; }
-            set { statementPostInterval = value; }
+            set 
+            {
+                asyncPostTimer.Stop();
+                statementPostInterval = value;
+                asyncPostTimer.Interval = this.statementPostInterval;
+                asyncPostTimer.Enabled = this.statementPostInterval > 0;
+                asyncPostTimer.Start();
+            }
         }
         /// <summary>
         /// URL Endpoint to send statements to
@@ -52,14 +64,6 @@ namespace RusticiSoftware.TinCanAPILibrary
         public String Endpoint
         {
             get { return endpoint; }
-            set
-            {
-                if (value.EndsWith("/"))
-                {
-                    value = value.Substring(0, value.Length - 1);
-                }
-                endpoint = value; 
-            }
         }
         /// <summary>
         /// The authentification object used to build authorization headers
@@ -85,7 +89,6 @@ namespace RusticiSoftware.TinCanAPILibrary
         public IOfflineStorage OfflineStorage
         {
             get { return offlineStorage; }
-            set { offlineStorage = value; }
         }
 
         /// <summary>
@@ -94,7 +97,6 @@ namespace RusticiSoftware.TinCanAPILibrary
         public ITCAPICallback TCAPICallback
         {
             get { return tcapiCallback; }
-            set { tcapiCallback = value; }
         }
 
         /// <summary>
@@ -106,7 +108,74 @@ namespace RusticiSoftware.TinCanAPILibrary
             set { maxBatchSize = value; }
         }
         #endregion
-        
+
+        #region Constructor
+        /// <summary>
+        /// Constructs a TCAPI object with no asynchronous support.
+        /// </summary>
+        /// <param name="endpoint">The endpoint for the TCAPI</param>
+        /// <param name="authentification">The authentification object</param>
+        public TCAPI(string endpoint, IAuthenticationConfiguration authentification)
+        {
+            this.endpoint = endpoint;
+            this.Authentification = authentification;
+            this.tcapiCallback = null;
+            this.offlineStorage = null;
+        }
+
+        /// <summary>
+        /// Construct a TCAPI object with asynchronous support with a default post interval of 500ms and a default maxBatchSize of 10.
+        /// </summary>
+        /// <param name="endpoint">The LRS endpoint</param>
+        /// <param name="authentification">Authentification object</param>
+        /// <param name="tcapiCallback">Asynchornous callback object</param>
+        /// <param name="offlineStorage">Offline Storage object</param>
+        public TCAPI(string endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage)
+            : this(endpoint, authentification, tcapiCallback, offlineStorage, 500, 10)
+        {
+        }
+
+        /// <summary>
+        /// Construct a TCAPI object with asynchronous support and a default maxBatchSize of 10.
+        /// </summary>
+        /// <param name="endpoint">The LRS endpoint</param>
+        /// <param name="authentification">Authentification object</param>
+        /// <param name="tcapiCallback">Asynchornous callback object</param>
+        /// <param name="offlineStorage">Offline Storage object</param>
+        /// <param name="statementPostInterval">Interval for asynchronous operations to take place, in seconds</param>
+        public TCAPI(string endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval)
+            : this(endpoint, authentification, tcapiCallback, offlineStorage, statementPostInterval, 10)
+        {
+        }
+
+        /// <summary>
+        /// Construct a TCAPI object with asynchronous support.
+        /// </summary>
+        /// <param name="endpoint">The LRS endpoint</param>
+        /// <param name="authentification">Authentification object</param>
+        /// <param name="tcapiCallback">Asynchornous callback object</param>
+        /// <param name="offlineStorage">Offline Storage object</param>
+        /// <param name="statementPostInterval">Interval for asynchronous operations to take place, in milliseconds</param>
+        public TCAPI(string endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval, int maxBatchSize)
+        {
+            this.endpoint = endpoint;
+            this.authentification = authentification;
+            this.tcapiCallback = tcapiCallback;
+            this.offlineStorage = offlineStorage;
+            this.statementPostInterval = statementPostInterval;
+            this.maxBatchSize = maxBatchSize;
+
+            // Assign a callback so that the asynchronous flush will successfully loop.
+            (tcapiCallback as TCAPICallback).AddPostSuccessEventHandler(PostSuccess);
+
+            asyncPostTimer = new Timer();
+            asyncPostTimer.Elapsed += new ElapsedEventHandler(AsyncPostTimerElapsed);
+            asyncPostTimer.Interval = this.statementPostInterval;
+            asyncPostTimer.Enabled = this.statementPostInterval > 0;
+            asyncPostTimer.AutoReset = true;
+        }
+        #endregion
+
         #region Public Methods
         /// <summary>
         /// Stores a single statement
@@ -146,13 +215,6 @@ namespace RusticiSoftware.TinCanAPILibrary
             }
         }
 
-        private void StoreStatementsAsync(Statement[] statements)
-        {
-            TinCanJsonConverter converter = new TinCanJsonConverter();
-            string postData = converter.SerializeToJSON(statements);
-            HttpMethods.PostRequestAsync(postData, endpoint + STATEMENTS, authentification, tcapiCallback);
-        }
-
         /// <summary>
         /// Stores multiple statements asynchronously
         /// </summary>
@@ -167,9 +229,8 @@ namespace RusticiSoftware.TinCanAPILibrary
             foreach (Statement s in statements)
             {
                 s.Validate();
-                queue.Enqueue(s);
             }
-            Flush();
+            offlineStorage.AddToStatementQueue(statements);
         }
 
         /// <summary>
@@ -206,19 +267,16 @@ namespace RusticiSoftware.TinCanAPILibrary
                 return;
             }
             TinCanJsonConverter converter = new TinCanJsonConverter();
+            Statement[] statements = new Statement[statementIdsToVoid.Length];
             for (int i = 0; i < statementIdsToVoid.Length; i++)
             {
                 Statement voided = new Statement();
                 voided.Object = new TargetedStatement(statementIdsToVoid[i]);
                 voided.Verb = StatementVerb.Voided.ToString();
-                // voided.Actor = adminActor;
-                queue.Enqueue(voided);
+                voided.Actor = adminActor;
+                statements[i] = voided;
             }
-            Flush();
-            /*
-            string postData = converter.SerializeToJSON(statementsToVoid);
-            HttpMethods.PostRequestAsync(postData, endpoint + STATEMENTS, authentification, callback);
-            */
+            offlineStorage.AddToStatementQueue(statements);
         }
 
         /// <summary>
@@ -447,7 +505,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         public ActivityState GetActivityState(string activityId, Actor actor, string stateId)
         {
             return GetActivityState(activityId, actor, stateId, null);
-        }        
+        }
         
         /// <summary>
         /// Retrieves a specific activity state
@@ -706,14 +764,22 @@ namespace RusticiSoftware.TinCanAPILibrary
         }
 
         /// <summary>
-        /// Asynchronously pushes the statement queue whenever it fills up or overflows
+        /// Synchronously flushes the async queue, emptying the buffer completely.
+        /// Any failed statements get pushed back into the buffer by default (and then throw their exception).
         /// </summary>
         public void Flush()
         {
-            if (queue.Count >= maxBatchSize)
+            this.asyncPostTimer.Stop();
+            lock (offlineStorage) // Incase the Async Flush is running concurrently, await a lock on offlineStorage to prevent InvalidOperationException
             {
-                StoreStatementsAsync(queue.ToArray());
+                Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);
+                while (statements != null || statements.Length > 0)
+                {
+                    StoreStatements(statements);
+                    statements = offlineStorage.GetQueuedStatements(maxBatchSize);
+                }
             }
+            this.asyncPostTimer.Start();
         }
 
         public string GetOAuthAuthorizationUrl(string redirectUrl)
@@ -724,6 +790,66 @@ namespace RusticiSoftware.TinCanAPILibrary
         public OAuthAuthentication UpdateOAuthTokenCredentials(string temporaryCredentialsId, string verifierCode)
         {
             throw new NotImplementedException();
+        }
+        /// <summary>
+        /// Disposes the resources held by the TCAPI
+        /// </summary>
+        public void Dispose()
+        {
+            /*
+            if (asyncPostTimer != null)
+            {
+                asyncPostTimer.Stop();
+                asyncPostTimer.Dispose();
+            }
+            */
+        }
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// This method is fired by the TCAPICallback every time FlushAsync succeeds.
+        /// </summary>
+        public void PostSuccess()
+        {
+            // First, remove the first maxBatchSize elements from the queue as they succeeded
+            offlineStorage.RemoveStatementsFromQueue(maxBatchSize);
+            // Then relaunch FlushAsync
+            FlushAsync();
+        }
+        #endregion
+
+        #region Private Methods
+        private void AsyncPostTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            FlushAsync();
+        }
+
+        /// <summary>
+        /// Runs multiple HTTPPostRequests serially and asynchronously.
+        /// </summary>
+        private void FlushAsync()
+        {
+            if (asyncPostTimer.Enabled) // Freeze the post timer while flushing occurs.
+                asyncPostTimer.Stop();
+            // Place a mutex lock on offlineStorage while the Async Method is pushing the statements.  Once that's done the lock will release and this should prevent clashes between Flush and FlushAsync
+            lock (offlineStorage)
+            {
+                Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);
+                if (statements != null && statements.Length > 0)
+                {
+                    StoreStatementsAsync(statements);
+                }
+                else // If no statements remain, resume the timer
+                    asyncPostTimer.Start();
+            }
+        }
+
+        private void StoreStatementsAsync(Statement[] statements)
+        {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
+            string postData = converter.SerializeToJSON(statements);
+            HttpMethods.PostRequestAsync(postData, endpoint + STATEMENTS, authentification, tcapiCallback);
         }
         #endregion
     }

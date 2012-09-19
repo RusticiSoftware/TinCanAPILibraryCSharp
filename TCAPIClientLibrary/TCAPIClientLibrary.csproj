@@ -33,10 +33,13 @@
       <HintPath>..\..\..\..\..\Desktop\TinCanAPILibrary\TinCanAPILibrary\bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\ConflictException.cs" />
+    <Compile Include="Exceptions\ConnectionFailedException.cs" />
     <Compile Include="Exceptions\InvalidArgumentException.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\PreconditionFailedException.cs" />
@@ -69,6 +72,7 @@
     <Compile Include="Model\ActorProfile.cs" />
     <Compile Include="Model\AgentAccount.cs" />
     <Compile Include="Model\BasicHTTPAuth.cs" />
+    <Compile Include="Model\TCAPICallback.cs" />
     <Compile Include="Model\Context.cs" />
     <Compile Include="Model\ContextActivities.cs" />
     <Compile Include="Model\Extensible.cs" />
@@ -85,6 +89,7 @@
     <Compile Include="Model\IValidatable.cs" />
     <Compile Include="Model\LanguageMap.cs" />
     <Compile Include="Model\OAuthAuthentication.cs" />
+    <Compile Include="Model\OfflineStorage.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="Model\Result.cs" />
     <Compile Include="Model\Score.cs" />

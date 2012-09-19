@@ -60,6 +60,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
 
         #region Constants
         public const int REATTEMPT_COUNT = 1;
+        public const int ASYNC_TIMEOUT = 20000;
         #endregion
 
         /// <summary>
@@ -129,6 +130,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
             request.Method = "POST";
             request.ContentType = "application/json";
             request.ContentLength = Encoding.ASCII.GetByteCount(postDataCharArray);
+            request.Timeout = ASYNC_TIMEOUT;
             // Needs OAuth support which will certainly change this line
             request.Headers["Authorization"] = authentification.GetAuthorization();
 
@@ -321,6 +323,11 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                         throw new PreconditionFailedException("Error 412" + response);
                     case HttpStatusCode.InternalServerError:
                         throw new InternalServerErrorException("An unknown error occured (500)." + response);
+                    case HttpStatusCode.BadGateway:
+                    case HttpStatusCode.GatewayTimeout:
+                    case HttpStatusCode.RequestTimeout:
+                    case HttpStatusCode.ServiceUnavailable:
+                        throw new ConnectionFailedException("Bad connection " + ((HttpWebResponse)httpResponse).StatusCode + ".  " + response);
                 }
             }
         }
