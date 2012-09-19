@@ -411,7 +411,7 @@ namespace UnitTests
                 }
             }   
             target.StoreStatements(statements, false);
-            target.Flush();
+            //target.Flush();
             Statement[] statementSize;
             while ((statementSize = target.OfflineStorage.GetQueuedStatements(1)) != null
                 && (statementSize.Length > 0))
