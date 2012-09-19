@@ -767,7 +767,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             if (!isAsyncFlushing)
             {
-                lock (flushLock) // Incase the Async Flush is running concurrently, await a lock on offlineStorage to prevent InvalidOperationException
+                lock (flushLock) // Incase the Async Flush is running concurrently, await a lock on flushLock to prevent InvalidOperationException
                 {
                     this.asyncPostTimer.Stop();
                     Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);

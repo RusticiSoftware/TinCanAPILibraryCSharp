@@ -389,7 +389,7 @@ namespace UnitTests
         /// <summary>
         ///A test for StoreStatements
         ///</summary>
-        [TestMethod()]
+        //[TestMethod()]
         public void StoreStatementsAsyncTest()
         {
             TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"), new TCAPICallback(), new OfflineStorage(), 60000, 2);
@@ -449,7 +449,9 @@ namespace UnitTests
             NullableDateTime since = null;
             string[] actual;
             actual = target.GetActorProfileIds(actor, since);
-            Assert.AreEqual(0, actual.Length); // Again, this test should be run on a fake actor.
+
+            Assert.AreEqual(0, actual.Length);
+
             /* Save a new actor profile */
             ActorProfile p1 = new ActorProfile();
             p1.Actor = actor;
@@ -460,18 +462,23 @@ namespace UnitTests
             pp.Actor = actor;
             target.SaveActorProfile(p1, pp, true);
             actual = target.GetActorProfileIds(actor, since);
-            Assert.AreEqual(1, actual.Length); // There should be just one profile for now.
+
+            Assert.AreEqual(1, actual.Length);
+
             p1.ProfileId = profileIds[1];
             p1.Contents = profileContents[1];
             pp.ProfileId = profileIds[1];
             target.SaveActorProfile(p1, pp, true);
             actual = target.GetActorProfileIds(actor, since);
+
             Assert.AreEqual(2, actual.Length);
+
             p1.ProfileId = profileIds[2];
             p1.Contents = profileContents[2];
             pp.ProfileId = profileIds[2];
             target.SaveActorProfile(p1, pp, true);
             actual = target.GetActorProfileIds(actor);
+
             Assert.AreEqual(3, actual.Length);
 
             // Ensure all the posted data matches
@@ -487,9 +494,128 @@ namespace UnitTests
 
             target.DeleteActorProfile(actor, profileIds[0]);
             actual = target.GetActorProfileIds(actor);
+
             Assert.AreEqual(2, actual.Length);
+
             target.DeleteAllActorProfile(actor);
             actual = target.GetActorProfileIds(actor);
+
+            Assert.AreEqual(0, actual.Length);
+        }
+
+        /// <summary>
+        /// Tests all the methods associated with Activity State
+        /// </summary>
+        /// <remarks>Again, use a dummy activity, not a real one.</remarks>
+        //[TestMethod()]
+        public void ActivityStateTest()
+        {
+            TinCanJsonConverter converter = new TinCanJsonConverter();
+            TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"));
+            Actor actor = new Actor("Mufasa", "mailto:mufasa@gmail.com");
+            string[] stateIds = { "The Lion King", "The Fallen King", "The New King" };
+            string[] stateContents = {
+                "Mufasa rules his country as a proud and fair king of lions, celebrating his recently newborn son Simba.",
+                "Scar kills Mufasa, simply muttering the words 'Long Live the King'", 
+                "Simba finally realizes he must follow in his fathers footsteps to save the kingdom from the evil Scar." };
+
+            string activityId = "example.com/TheLionKing";
+            string[] results = target.GetActivityStateIds(activityId, actor);
+
+            Assert.AreEqual(0, results.Length);
+
+            ActivityState state = new ActivityState();
+            state.ActivityId = activityId;
+            state.Actor = actor;
+            state.StateId = stateIds[0];
+            state.Contents = stateContents[0];
+            target.SaveActivityState(state);
+
+            state.StateId = stateIds[1];
+            state.Contents = stateContents[1];
+            target.SaveActivityState(state);
+
+            state.StateId = stateIds[2];
+            state.Contents = stateContents[2];
+            target.SaveActivityState(state);
+
+            results = target.GetActivityStateIds(activityId, actor);
+
+            Assert.AreEqual(3, results.Length);
+
+            ActivityState asResult = target.GetActivityState(activityId, actor, stateIds[0]);
+            Assert.AreEqual(stateContents[0], asResult.Contents);
+
+            asResult = target.GetActivityState(activityId, actor, stateIds[1]);
+            Assert.AreEqual(stateContents[1], asResult.Contents);
+
+            asResult = target.GetActivityState(activityId, actor, stateIds[2]);
+            Assert.AreEqual(stateContents[2], asResult.Contents);
+
+            target.DeleteActivityState(activityId, actor, stateIds[0]);
+            results = target.GetActivityStateIds(activityId, actor);
+
+            Assert.AreEqual(2, results.Length);
+            target.DeleteActivityState(activityId, actor, stateIds[1]);
+            target.DeleteActivityState(activityId, actor, stateIds[2]);
+
+            results = target.GetActivityStateIds(activityId, actor);
+        }
+
+        /// <summary>
+        /// Tests all the methods associated with Activity Profile
+        /// </summary>
+        [TestMethod()]
+        public void ActivityProfileTest()
+        {
+            TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"));
+            Actor actor = new Actor("Mufasa", "mailto:mufasa@gmail.com");
+            string[] profileIds = { "The Lion King", "The Fallen King", "The New King" };
+            string[] profileContents = {
+                "Mufasa rules his country as a proud and fair king of lions, celebrating his recently newborn son Simba.",
+                "Scar kills Mufasa, simply muttering the words 'Long Live the King'", 
+                "Simba finally realizes he must follow in his fathers footsteps to save the kingdom from the evil Scar." };
+            string activityId = "example.com/TheLionKing";
+            string[] actual;
+            actual = target.GetActivityProfileIds(activityId);
+
+            Assert.AreEqual(0, actual.Length);
+
+            ActivityProfile profile = new ActivityProfile();
+            profile.ActivityId = activityId;
+            profile.ProfileId = profileIds[0];
+            profile.Contents = profileContents[0];
+
+            target.SaveActivityProfile(profile);
+
+            profile.ProfileId = profileIds[1];
+            profile.Contents = profileContents[1];
+
+            target.SaveActivityProfile(profile);
+
+            profile.ProfileId = profileIds[2];
+            profile.Contents = profileContents[2];
+
+            target.SaveActivityProfile(profile);
+
+            actual = target.GetActivityProfileIds(activityId);
+            Assert.AreEqual(3, actual.Length);
+
+            ActivityProfile apResult = target.GetActivityProfile(activityId, profileIds[0]);
+            Assert.AreEqual(profileContents[0], apResult.Contents);
+
+            apResult = target.GetActivityProfile(activityId, profileIds[1]);
+            Assert.AreEqual(profileContents[1], apResult.Contents);
+
+            apResult = target.GetActivityProfile(activityId, profileIds[2]);
+            Assert.AreEqual(profileContents[2], apResult.Contents);
+
+            target.DeleteActivityProfile(activityId, profileIds[0]);
+            actual = target.GetActivityProfileIds(activityId);
+            Assert.AreEqual(2, actual.Length);
+
+            target.DeleteAllActivityProfile(activityId);
+            actual = target.GetActivityProfileIds(activityId);
             Assert.AreEqual(0, actual.Length);
         }
         #endregion
