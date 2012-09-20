@@ -57,8 +57,11 @@ namespace RusticiSoftware.TinCanAPILibrary
                 asyncPostTimer.Stop();
                 statementPostInterval = value;
                 asyncPostTimer.Interval = this.statementPostInterval;
-                asyncPostTimer.Enabled = this.statementPostInterval > 0;
-                asyncPostTimer.Start();
+                if (!isAsyncFlushing)
+                {
+                    asyncPostTimer.Enabled = this.statementPostInterval > 0;
+                    asyncPostTimer.Start();
+                }
             }
         }
         /// <summary>
@@ -354,7 +357,6 @@ namespace RusticiSoftware.TinCanAPILibrary
             nvc["actor"] = converter.SerializeToJSON(actor);
             nvc["profileId"] = profileId;
             getResult = HttpMethods.GetRequest(nvc, endpoint + ACTOR_PROFILE, authentification);
-            Console.Write(getResult);
             result.ProfileId = profileId;
             result.Actor = actor;
             result.Contents = getResult;
@@ -629,7 +631,6 @@ namespace RusticiSoftware.TinCanAPILibrary
             nvc["profileId"] = profileId;
             nvc["activityId"] = activityId;
             getResult = HttpMethods.GetRequest(nvc, endpoint + ACTIVITY_PROFILE, authentification);
-            Console.Write(getResult);
             result.ProfileId = profileId;
             result.Contents = getResult;
             result.ActivityId = activityId;
@@ -754,7 +755,6 @@ namespace RusticiSoftware.TinCanAPILibrary
             NameValueCollection nvc = new NameValueCollection();
             nvc["activityId"] = activityId;
             getResult = HttpMethods.GetRequest(nvc, endpoint + ACTIVITY, authentification);
-            Console.Write(getResult);
             result = (Activity)converter.DeserializeJSON(getResult, typeof(Activity));
             return result;
         }
