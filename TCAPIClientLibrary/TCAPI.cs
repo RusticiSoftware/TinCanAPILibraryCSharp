@@ -249,8 +249,7 @@ namespace RusticiSoftware.TinCanAPILibrary
                 voided.Actor = adminActor;
                 statementsToVoid[i] = voided;
             }
-            string postData = converter.SerializeToJSON(statementsToVoid);
-            HttpMethods.PostRequest(postData, endpoint + STATEMENTS, authentification);
+            StoreStatements(statementsToVoid);
         }
 
         /// <summary>
@@ -765,21 +764,19 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// </summary>
         public void Flush()
         {
-            if (!isAsyncFlushing)
-            {
+            Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);
+            if (statements != null && statements.Length > 0)
                 lock (flushLock) // Incase the Async Flush is running concurrently, await a lock on flushLock to prevent InvalidOperationException
                 {
                     this.asyncPostTimer.Stop();
-                    Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);
                     while (statements != null && statements.Length > 0)
                     {
                         StoreStatements(statements);
-                        offlineStorage.RemoveStatementsFromQueue(maxBatchSize);
+                        offlineStorage.RemoveStatementsFromQueue(statements.Length);
                         statements = offlineStorage.GetQueuedStatements(maxBatchSize);
                     }
                 }
-                this.asyncPostTimer.Start();
-            }
+            asyncPostTimer.Start();
         }
 
         public string GetOAuthAuthorizationUrl(string redirectUrl)
@@ -820,7 +817,15 @@ namespace RusticiSoftware.TinCanAPILibrary
         #region Private Methods
         private void AsyncPostTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            FlushAsync();
+            try
+            {
+                FlushAsync();
+            }
+            catch (Exception ex)
+            {
+                asyncPostTimer.Start();
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -828,22 +833,22 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// </summary>
         private void FlushAsync()
         {
+            Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);
+            if (statements == null || statements.Length == 0)
+                return;
             if (asyncPostTimer.Enabled) // Freeze the post timer while flushing occurs.
                 asyncPostTimer.Stop();
             this.isAsyncFlushing = true;
             // Place a mutex lock on flushLock while the Async Method is pushing the statements.  Once that's done the lock will release and this should prevent clashes between Flush and FlushAsync
             lock (flushLock)
             {
-                Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);
-                if (statements != null && statements.Length > 0)
+                while ((statements = offlineStorage.GetQueuedStatements(maxBatchSize)) != null && statements.Length > 0)
                 {
-                    StoreStatementsAsync(statements);
+                    StoreStatements(statements);
+                    offlineStorage.RemoveStatementsFromQueue(statements.Length);
                 }
-                else // If no statements remain, resume the timer
-                {
-                    asyncPostTimer.Start();
-                    this.isAsyncFlushing = false;
-                }
+                asyncPostTimer.Start();
+                this.isAsyncFlushing = false;
             }
         }
 

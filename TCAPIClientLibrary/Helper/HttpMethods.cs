@@ -93,12 +93,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 request.ContentLength = Encoding.ASCII.GetByteCount(postDataCharArray);
                 // Needs OAuth support which will certainly change this line
                 request.Headers["Authorization"] = authentification.GetAuthorization();
-
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(Encoding.ASCII.GetBytes(postDataCharArray), 0, Encoding.ASCII.GetByteCount(postDataCharArray));
-                dataStream.Close();
                 try
                 {
+                    Stream dataStream = request.GetRequestStream();
+                    dataStream.Write(Encoding.ASCII.GetBytes(postDataCharArray), 0, Encoding.ASCII.GetByteCount(postDataCharArray));
+                    dataStream.Close();
+
                     WebResponse response = request.GetResponse();
                     Stream returnStream = response.GetResponseStream();
                     StreamReader reader = new StreamReader(returnStream);
@@ -117,6 +117,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                             ThrowHttpException(e);
                         else
                             continue; // Reattempt on an internal server error
+                    }
+                    catch (ConnectionFailedException)
+                    {
+                        if (attempt == REATTEMPT_COUNT)
+                            ThrowHttpException(e);
+                        else
+                            continue;
                     }
                 }
                 break; // upon success, break
@@ -318,29 +325,36 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         {
             using (WebResponse r = e.Response)
             {
-                HttpWebResponse httpResponse = (HttpWebResponse)r;
-                Stream responseStream = r.GetResponseStream();
-                StreamReader reader = new StreamReader(responseStream);
-                string response = reader.ReadToEnd();
-                switch (((HttpWebResponse)httpResponse).StatusCode)
+                if (r != null)
                 {
-                    case HttpStatusCode.BadRequest:
-                        throw new InvalidArgumentException("Error 400 " + response);
-                    case HttpStatusCode.Unauthorized:
-                        throw new UnauthorizedException("Error 401" + response);
-                    case HttpStatusCode.NotFound:
-                        throw new NotFoundException("Error 404" + response);
-                    case HttpStatusCode.Conflict:
-                        throw new ConflictException("Error 409" + response);
-                    case HttpStatusCode.PreconditionFailed:
-                        throw new PreconditionFailedException("Error 412" + response);
-                    case HttpStatusCode.InternalServerError:
-                        throw new InternalServerErrorException("An unknown error occured (500)." + response);
-                    case HttpStatusCode.BadGateway:
-                    case HttpStatusCode.GatewayTimeout:
-                    case HttpStatusCode.RequestTimeout:
-                    case HttpStatusCode.ServiceUnavailable:
-                        throw new ConnectionFailedException("Bad connection " + ((HttpWebResponse)httpResponse).StatusCode + ".  " + response);
+                    HttpWebResponse httpResponse = (HttpWebResponse)r;
+                    Stream responseStream = r.GetResponseStream();
+                    StreamReader reader = new StreamReader(responseStream);
+                    string response = reader.ReadToEnd();
+                    switch (((HttpWebResponse)httpResponse).StatusCode)
+                    {
+                        case HttpStatusCode.BadRequest:
+                            throw new InvalidArgumentException("Error 400 " + response);
+                        case HttpStatusCode.Unauthorized:
+                            throw new UnauthorizedException("Error 401" + response);
+                        case HttpStatusCode.NotFound:
+                            throw new NotFoundException("Error 404" + response);
+                        case HttpStatusCode.Conflict:
+                            throw new ConflictException("Error 409" + response);
+                        case HttpStatusCode.PreconditionFailed:
+                            throw new PreconditionFailedException("Error 412" + response);
+                        case HttpStatusCode.InternalServerError:
+                            throw new InternalServerErrorException("An unknown error occured (500)." + response);
+                        case HttpStatusCode.BadGateway:
+                        case HttpStatusCode.GatewayTimeout:
+                        case HttpStatusCode.RequestTimeout:
+                        case HttpStatusCode.ServiceUnavailable:
+                            throw new ConnectionFailedException("Bad connection " + ((HttpWebResponse)httpResponse).StatusCode + ".  " + response);
+                    }
+                }
+                else
+                {
+                    throw new ConnectionFailedException("No internet connection.");
                 }
             }
         }
