@@ -8,6 +8,5 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     {
         void StatementsFailed(Statement[] failedBatch, Exception e);
         void StatementsStored(Statement[] statements);
-        void PostFailException(Exception e);
     }
 }

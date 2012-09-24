@@ -40,15 +40,5 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         public void StatementsStored(Statement[] statements)
         {
         }
-
-        /// <summary>
-        /// This method catches generic exceptions (not WebExceptions).  In case this is occuring,
-        /// it is most likely that the thread is terminating quickly and the conversion of statements from string to statement also failed.
-        /// </summary>
-        /// <param name="e">The thrown exception</param>
-        public void PostFailException(Exception e)
-        {
-            throw e;
-        }
     }
 }

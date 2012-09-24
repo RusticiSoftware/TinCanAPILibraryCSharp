@@ -145,7 +145,7 @@ namespace UnitTests
             ActorProfile actorProfile = new ActorProfile();
             actorProfile.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             actorProfile.ProfileId = "Jaffer";
-            actorProfile.Contents = "This is some test";
+            actorProfile.Body = "This is some test";
             ActorProfile previousProfile = new ActorProfile();
             previousProfile.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             previousProfile.ProfileId = "Jaffer";
@@ -254,7 +254,7 @@ namespace UnitTests
             ActivityState activityState = new ActivityState();
             activityState.ActivityId = "example.com";
             activityState.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
-            activityState.Contents = "This is a test input.";
+            activityState.Body = "This is a test input.";
             activityState.StateId = "Bananas";
             bool overwrite = false;
             ActivityState previousState = null;
@@ -305,7 +305,7 @@ namespace UnitTests
             ActivityProfile profile = new ActivityProfile();
             profile.ProfileId = "Bananas";
             profile.ActivityId = "example.com";
-            profile.Contents = "These are contents";
+            profile.Body = "These are contents";
             bool overwrite = false;
             ActivityProfile previous = null;
             target.SaveActivityProfile(profile, overwrite, previous);
@@ -389,7 +389,7 @@ namespace UnitTests
         /// <summary>
         ///A test for StoreStatements
         ///</summary>
-        [TestMethod()]
+        //[TestMethod()]
         public void StoreStatementsAsyncTest()
         {
             TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"), new TCAPICallback(), new OfflineStorage(), 750, 2);
@@ -456,7 +456,7 @@ namespace UnitTests
             ActorProfile p1 = new ActorProfile();
             p1.Actor = actor;
             p1.ProfileId = profileIds[0];
-            p1.Contents = profileContents[0];
+            p1.Body = profileContents[0];
             ActorProfile pp = new ActorProfile();
             pp.ProfileId = profileIds[0];
             pp.Actor = actor;
@@ -466,7 +466,7 @@ namespace UnitTests
             Assert.AreEqual(1, actual.Length);
 
             p1.ProfileId = profileIds[1];
-            p1.Contents = profileContents[1];
+            p1.Body = profileContents[1];
             pp.ProfileId = profileIds[1];
             target.SaveActorProfile(p1, pp, true);
             actual = target.GetActorProfileIds(actor, since);
@@ -474,7 +474,7 @@ namespace UnitTests
             Assert.AreEqual(2, actual.Length);
 
             p1.ProfileId = profileIds[2];
-            p1.Contents = profileContents[2];
+            p1.Body = profileContents[2];
             pp.ProfileId = profileIds[2];
             target.SaveActorProfile(p1, pp, true);
             actual = target.GetActorProfileIds(actor);
@@ -484,13 +484,13 @@ namespace UnitTests
             // Ensure all the posted data matches
 
             ActorProfile pResult = target.GetActorProfile(actor, profileIds[0]);
-            Assert.AreEqual(profileContents[0], pResult.Contents);
+            Assert.AreEqual(profileContents[0], pResult.Body);
 
             pResult = target.GetActorProfile(actor, profileIds[1]);
-            Assert.AreEqual(profileContents[1], pResult.Contents);
+            Assert.AreEqual(profileContents[1], pResult.Body);
 
             pResult = target.GetActorProfile(actor, profileIds[2]);
-            Assert.AreEqual(profileContents[2], pResult.Contents);
+            Assert.AreEqual(profileContents[2], pResult.Body);
 
             target.DeleteActorProfile(actor, profileIds[0]);
             actual = target.GetActorProfileIds(actor);
@@ -507,7 +507,7 @@ namespace UnitTests
         /// Tests all the methods associated with Activity State
         /// </summary>
         /// <remarks>Again, use a dummy activity, not a real one.</remarks>
-        //[TestMethod()]
+        [TestMethod()]
         public void ActivityStateTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -528,15 +528,26 @@ namespace UnitTests
             state.ActivityId = activityId;
             state.Actor = actor;
             state.StateId = stateIds[0];
-            state.Contents = stateContents[0];
+            state.Body = stateContents[1];
+
+            /*
+            ActivityState previous = new ActivityState();
+            previous.ActivityId = activityId;
+            previous.Actor = actor;
+            previous.StateId = stateIds[0];
+            previous.Body = stateContents[0];
+
+            target.SaveActivityState(state, false, previous);
+            */
+
             target.SaveActivityState(state);
 
             state.StateId = stateIds[1];
-            state.Contents = stateContents[1];
+            state.Body = stateContents[1];
             target.SaveActivityState(state);
 
             state.StateId = stateIds[2];
-            state.Contents = stateContents[2];
+            state.Body = stateContents[2];
             target.SaveActivityState(state);
 
             results = target.GetActivityStateIds(activityId, actor);
@@ -544,13 +555,13 @@ namespace UnitTests
             Assert.AreEqual(3, results.Length);
 
             ActivityState asResult = target.GetActivityState(activityId, actor, stateIds[0]);
-            Assert.AreEqual(stateContents[0], asResult.Contents);
+            Assert.AreEqual(stateContents[0], asResult.Body);
 
             asResult = target.GetActivityState(activityId, actor, stateIds[1]);
-            Assert.AreEqual(stateContents[1], asResult.Contents);
+            Assert.AreEqual(stateContents[1], asResult.Body);
 
             asResult = target.GetActivityState(activityId, actor, stateIds[2]);
-            Assert.AreEqual(stateContents[2], asResult.Contents);
+            Assert.AreEqual(stateContents[2], asResult.Body);
 
             target.DeleteActivityState(activityId, actor, stateIds[0]);
             results = target.GetActivityStateIds(activityId, actor);
@@ -584,17 +595,17 @@ namespace UnitTests
             ActivityProfile profile = new ActivityProfile();
             profile.ActivityId = activityId;
             profile.ProfileId = profileIds[0];
-            profile.Contents = profileContents[0];
+            profile.Body = profileContents[0];
 
             target.SaveActivityProfile(profile);
 
             profile.ProfileId = profileIds[1];
-            profile.Contents = profileContents[1];
+            profile.Body = profileContents[1];
 
             target.SaveActivityProfile(profile);
 
             profile.ProfileId = profileIds[2];
-            profile.Contents = profileContents[2];
+            profile.Body = profileContents[2];
 
             target.SaveActivityProfile(profile);
 
@@ -602,13 +613,13 @@ namespace UnitTests
             Assert.AreEqual(3, actual.Length);
 
             ActivityProfile apResult = target.GetActivityProfile(activityId, profileIds[0]);
-            Assert.AreEqual(profileContents[0], apResult.Contents);
+            Assert.AreEqual(profileContents[0], apResult.Body);
 
             apResult = target.GetActivityProfile(activityId, profileIds[1]);
-            Assert.AreEqual(profileContents[1], apResult.Contents);
+            Assert.AreEqual(profileContents[1], apResult.Body);
 
             apResult = target.GetActivityProfile(activityId, profileIds[2]);
-            Assert.AreEqual(profileContents[2], apResult.Contents);
+            Assert.AreEqual(profileContents[2], apResult.Body);
 
             target.DeleteActivityProfile(activityId, profileIds[0]);
             actual = target.GetActivityProfileIds(activityId);

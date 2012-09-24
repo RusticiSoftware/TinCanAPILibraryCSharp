@@ -44,6 +44,7 @@
     <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Helper\CommonFunctions.cs" />
     <Compile Include="Helper\Constants.cs" />
+    <Compile Include="Helper\Encryption.cs" />
     <Compile Include="Helper\HttpMethods.cs" />
     <Compile Include="Helper\ParserUtil.cs" />
     <Compile Include="Helper\ValidationHelper.cs" />

@@ -8,12 +8,15 @@ using System.Collections.Specialized;
 using RusticiSoftware.TinCanAPILibrary.Exceptions;
 using RusticiSoftware.TinCanAPILibrary.Model;
 using RusticiSoftware.TinCanAPILibrary;
+using System.Threading;
 
 namespace RusticiSoftware.TinCanAPILibrary.Helper
 {
     public class HttpMethods
     {
+
         #region Write Request Async State
+        /*
         private class WriteRequestState
         {
             WebRequest request;
@@ -67,11 +70,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 set { request = value; }
             }
         }
+        */
         #endregion
 
         #region Constants
         public const int REATTEMPT_COUNT = 1;
-        public const int ASYNC_TIMEOUT = 20000;
+        // public const int ASYNC_TIMEOUT = 20000;
+        public const int RETRY_TIMEOUT = 200;
         #endregion
 
         /// <summary>
@@ -83,54 +88,94 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// <returns>A response string</returns>
         public static string PostRequest(string postData, string endpoint, IAuthenticationConfiguration authentification)
         {
+            return PostRequest(postData, endpoint, authentification, null);
+        }
+
+        /// <summary>
+        /// Sends a POST request.
+        /// </summary>
+        /// <param name="postData">A string of data to post</param>
+        /// <param name="authentification">An IAuthentificationConfiguration.  Only Basic is currently supported.</param>
+        /// <param name="endpoint">The endpoint to send the statement to</param>
+        /// <param name="callback">The asynchronous callback</param>
+        /// <returns>The returned stream</returns>
+        /// <remarks>Providing null for the callback means this is intended to be synchronous.  Any exceptions will be thrown and must be handled in the main thread.</remarks>
+        public static string PostRequest(string postData, string endpoint, IAuthenticationConfiguration authentification, TCAPI.AsyncPostCallback callback)
+        {
             string result = null;
+            byte[] postDataByteArray = Encoding.UTF8.GetBytes(postData);
+
             for (int attempt = 0; attempt <= REATTEMPT_COUNT; attempt++)
             {
-                char[] postDataCharArray = postData.ToCharArray();
+
                 WebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
                 request.Method = "POST";
                 request.ContentType = "application/json";
-                request.ContentLength = Encoding.ASCII.GetByteCount(postDataCharArray);
-                // Needs OAuth support which will certainly change this line
-                request.Headers["Authorization"] = authentification.GetAuthorization();
+                request.ContentLength = postDataByteArray.Length;
+                AddAuthHeader(request.Headers, authentification);
+
                 try
                 {
-                    Stream dataStream = request.GetRequestStream();
-                    dataStream.Write(Encoding.ASCII.GetBytes(postDataCharArray), 0, Encoding.ASCII.GetByteCount(postDataCharArray));
-                    dataStream.Close();
-
-                    WebResponse response = request.GetResponse();
-                    Stream returnStream = response.GetResponseStream();
-                    StreamReader reader = new StreamReader(returnStream);
-                    result = reader.ReadToEnd();
-                    response.Close();
+                    result = SendRequest(request, postDataByteArray);
                 }
                 catch (WebException e)
                 {
-                    try
+                    if (attempt < REATTEMPT_COUNT)
                     {
-                        ThrowHttpException(e);
-                    }
-                    catch (InternalServerErrorException)
-                    {
-                        if (attempt > REATTEMPT_COUNT)
+                        try
+                        {
                             ThrowHttpException(e);
-                        else
-                            continue; // Reattempt on an internal server error
-                    }
-                    catch (ConnectionFailedException)
-                    {
-                        if (attempt == REATTEMPT_COUNT)
-                            ThrowHttpException(e);
-                        else
+                        }
+                        catch (InternalServerErrorException)
+                        {
+                            Thread.Sleep(RETRY_TIMEOUT);
                             continue;
+                        }
+                        catch (ConnectionFailedException)
+                        {
+                            Thread.Sleep(RETRY_TIMEOUT);
+                            continue;
+                        }
+                        catch (Exception)
+                        {
+                            // Suppress it for now
+                        }
+                    }
+                    if (callback == null)
+                    {
+                        // Synchronous request, let the implementer decide
+                        throw e;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            ThrowHttpException(e);
+                        }
+                        catch (InternalServerErrorException)
+                        {
+                            // Connectivity Issues
+                            callback.AsyncPostConnectionFailed(e);
+                        }
+                        catch (ConnectionFailedException)
+                        {
+                            // Connectivity Issues
+                            callback.AsyncPostConnectionFailed(e);
+                        }
+                        catch (Exception)
+                        {
+                            // Permanent failure
+                            callback.AsyncPostFailure(e);
+                        }
                     }
                 }
-                break; // upon success, break
+                break;
             }
             return result;
         }
 
+        #region Async Post
+        /*
         /// <summary>
         /// Issues a post request asynchronously
         /// </summary>
@@ -140,14 +185,14 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// <param name="callback">An ITCAPI object to handle callbacks</param>
         public static void PostRequestAsync(string postData, string endpoint, IAuthenticationConfiguration authentification, ITCAPICallback callback, TCAPI.AsyncPostCallback asyncPostCallback)
         {
-            char[] postDataCharArray = postData.ToCharArray();
+            byte[] postDataByteArray = Encoding.UTF8.GetBytes(postData);
             //WebClient webClient = new WebClient();
             WriteRequestState state = new WriteRequestState();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
             request.AllowWriteStreamBuffering = true;
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.ContentLength = Encoding.ASCII.GetByteCount(postDataCharArray);
+            request.ContentLength = postDataByteArray.Length;
             request.Timeout = ASYNC_TIMEOUT;
             // Needs OAuth support which will certainly change this line
             request.Headers["Authorization"] = authentification.GetAuthorization();
@@ -160,7 +205,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
             state.PostData = postData;
             state.AsyncPostCallback = asyncPostCallback;
 
-            dataStream.BeginWrite(Encoding.ASCII.GetBytes(postDataCharArray), 0, Encoding.ASCII.GetByteCount(postDataCharArray), BeginRequest, state);
+            dataStream.BeginWrite(postDataByteArray, 0, postDataByteArray.Length, BeginRequest, state);
         }
 
         private static void BeginRequest(IAsyncResult result)
@@ -203,46 +248,73 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 state.Callback.StatementsFailed(statements, e);
             }
         }
+        */
+        #endregion
 
         /// <summary>
-        /// Sends a PUT request
+        /// Sends a PUT request with the default content-type of "application/json"
         /// </summary>
         /// <param name="putData">The data to PUT to the server</param>
         /// <param name="queryParameters">A name-value pair collection of query parameters</param>
         /// <returns>The response string</returns>
         public static string PutRequest(string putData, NameValueCollection queryParameters, string endpoint, IAuthenticationConfiguration authentification)
         {
-            string result = null;
-            using (WebClient webClient = new WebClient())
-            {
-                if (queryParameters != null)
-                    endpoint += ToQueryString(queryParameters);
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
-                request.Method = "PUT";
-                request.ContentType = "application/json";
-                request.ContentLength = Encoding.ASCII.GetByteCount(putData.ToCharArray());
-                // Needs OAuth support which will certainly change this line
-                request.Headers["Authorization"] = authentification.GetAuthorization();
+            return PutRequest(putData, queryParameters, endpoint, authentification, "application/json");
+        }
 
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(Encoding.ASCII.GetBytes(putData.ToCharArray()), 0, Encoding.ASCII.GetByteCount(putData.ToCharArray()));
-                dataStream.Close();
-                WebResponse response;
+        /// <summary>
+        /// Sends a PUT request
+        /// </summary>
+        /// <param name="putData">The data to PUT to the server</param>
+        /// <param name="queryParameters">A name-value pair collection of query parameters</param>
+        /// <param name="headers">Additional headers</param>
+        /// <returns>The response string</returns>
+        public static string PutRequest(string putData, NameValueCollection queryParameters, string endpoint, IAuthenticationConfiguration authentification, string contentType)
+        {
+            string result = null;
+            if (queryParameters != null)
+                endpoint += ToQueryString(queryParameters);
+            for (int attempt = 0; attempt < REATTEMPT_COUNT; attempt++)
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
+                byte[] putDataByteArray = Encoding.UTF8.GetBytes(putData);
+                request.Method = "PUT";
+                request.ContentType = contentType;
+                request.ContentLength = putDataByteArray.Length;
+                AddAuthHeader(request.Headers, authentification);
+
                 try
                 {
-                    response = request.GetResponse();
-                    Stream returnStream = request.GetResponse().GetResponseStream();
-                    StreamReader reader = new StreamReader(returnStream);
-                    result = reader.ReadToEnd();
-                    response.Close();
+                    result = SendRequest(request, putDataByteArray);
+                }
+                catch (InternalServerErrorException e)
+                {
+                    if (attempt < REATTEMPT_COUNT)
+                    {
+                        Thread.Sleep(RETRY_TIMEOUT);
+                        continue;
+                    }
+                    throw e;
+                }
+                catch (ConnectionFailedException e)
+                {
+
+                    if (attempt < REATTEMPT_COUNT)
+                    {
+                        Thread.Sleep(RETRY_TIMEOUT);
+                        continue;
+                    }
+                    throw e;
                 }
                 catch (WebException e)
                 {
                     ThrowHttpException(e);
                 }
+                break;
             }
             return result;
         }
+
         /// <summary>
         /// Sends a GET request
         /// </summary>
@@ -253,24 +325,91 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
             string result = null;
             if (getData != null)
                 endpoint += ToQueryString(getData);
-            WebRequest request = WebRequest.Create(endpoint);
-            request.Method = "GET";
-            // OAuth support needs to be added here
-            request.Headers["Authorization"] = authentification.GetAuthorization();
-
-            try
+            for (int attempt = 0; attempt <= REATTEMPT_COUNT; attempt++)
             {
-                WebResponse response = request.GetResponse();
-                Stream returnStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(returnStream);
-                result = reader.ReadToEnd();
-                response.Close();
-            }
-            catch (WebException e)
-            {
-                ThrowHttpException(e);
-            }
+                WebRequest request = WebRequest.Create(endpoint);
+                request.Method = "GET";
+                AddAuthHeader(request.Headers, authentification);
 
+                try
+                {
+                    result = SendRequest(request);
+                }
+                catch (InternalServerErrorException e)
+                {
+                    if (attempt < REATTEMPT_COUNT)
+                    {
+                        Thread.Sleep(RETRY_TIMEOUT);
+                        continue;
+                    }
+                    throw e;
+                }
+                catch (ConnectionFailedException e)
+                {
+
+                    if (attempt < REATTEMPT_COUNT)
+                    {
+                        Thread.Sleep(RETRY_TIMEOUT);
+                        continue;
+                    }
+                    throw e;
+                }
+                catch (WebException e)
+                {
+                    ThrowHttpException(e);
+                }
+                break;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Sends a GET request
+        /// </summary>
+        /// <param name="getData">A name-value pair collection of query parameters</param>
+        /// <param name="whc">Allows for retrieval of the webheaders if they are needed.</param>
+        /// <returns>The response string</returns>
+        public static string GetRequest(NameValueCollection getData, string endpoint, IAuthenticationConfiguration authentification, out WebHeaderCollection whc)
+        {
+            string result = null;
+            whc = null;
+            if (getData != null)
+                endpoint += ToQueryString(getData);
+            for (int attempt = 0; attempt <= REATTEMPT_COUNT; attempt++)
+            {
+                WebRequest request = WebRequest.Create(endpoint);
+                request.Method = "GET";
+                AddAuthHeader(request.Headers, authentification);
+
+                try
+                {
+                    result = SendRequest(request, null, out whc);
+                }
+                catch (InternalServerErrorException e)
+                {
+                    if (attempt < REATTEMPT_COUNT)
+                    {
+                        Thread.Sleep(RETRY_TIMEOUT);
+                        continue;
+                    }
+                    throw e;
+                }
+                catch (ConnectionFailedException e)
+                {
+
+                    if (attempt < REATTEMPT_COUNT)
+                    {
+                        Thread.Sleep(RETRY_TIMEOUT);
+                        continue;
+                    }
+                    throw e;
+                }
+                catch (WebException e)
+                {
+                    ThrowHttpException(e);
+                }
+                break;
+            }
             return result;
         }
 
@@ -283,25 +422,116 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         {
             string result = null;
             string end = endpoint + ToQueryString(deleteData);
-            WebRequest request = WebRequest.Create(endpoint + ToQueryString(deleteData));
-            request.Method = "DELETE";
-            // OAuth support needs to be added here
-            request.Headers["Authorization"] = authentification.GetAuthorization();
+            for (int attempt = 0; attempt <= REATTEMPT_COUNT; attempt++)
+            {
+                WebRequest request = WebRequest.Create(endpoint + ToQueryString(deleteData));
+                request.Method = "DELETE";
+                AddAuthHeader(request.Headers, authentification);
 
+                try
+                {
+                    result = SendRequest(request);
+                }
+                catch (InternalServerErrorException e)
+                {
+                    if (attempt < REATTEMPT_COUNT)
+                    {
+                        Thread.Sleep(RETRY_TIMEOUT);
+                        continue;
+                    }
+                    throw e;
+                }
+                catch (ConnectionFailedException e)
+                {
+
+                    if (attempt < REATTEMPT_COUNT)
+                    {
+                        Thread.Sleep(RETRY_TIMEOUT);
+                        continue;
+                    }
+                    throw e;
+                }
+                catch (WebException e)
+                {
+                    ThrowHttpException(e);
+                }
+                break;
+            }
+            return result;
+        }
+
+        private static string SendRequest(WebRequest request)
+        {
+            return SendRequest(request, null);
+        }
+
+        private static string SendRequest(WebRequest request, byte[] data)
+        {
+            string result = string.Empty;
             try
             {
+                if (data != null)
+                {
+                    Stream dataStream = request.GetRequestStream();
+                    dataStream.Write(data, 0, data.Length);
+                    dataStream.Close();
+                }
+
                 WebResponse response = request.GetResponse();
                 Stream returnStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(returnStream);
                 result = reader.ReadToEnd();
                 response.Close();
+                returnStream.Close();
+                reader.Close();
             }
             catch (WebException e)
             {
                 ThrowHttpException(e);
             }
-
             return result;
+        }
+
+        private static string SendRequest(WebRequest request, byte[] data, out WebHeaderCollection whc)
+        {
+            string result = string.Empty;
+            whc = null;
+            try
+            {
+                if (data != null)
+                {
+                    Stream dataStream = request.GetRequestStream();
+                    dataStream.Write(data, 0, data.Length);
+                    dataStream.Close();
+                }
+
+                WebResponse response = request.GetResponse();
+                Stream returnStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(returnStream);
+                result = reader.ReadToEnd();
+
+                whc = response.Headers;
+
+                response.Close();
+                returnStream.Close();
+                reader.Close();
+            }
+            catch (WebException e)
+            {
+                ThrowHttpException(e);
+            }
+            return result;
+        }
+
+        private static void AddAuthHeader(WebHeaderCollection nvc, IAuthenticationConfiguration auth)
+        {
+            if (auth is BasicHTTPAuth)
+            {
+                nvc["Authorization"] = auth.GetAuthorization();
+            }
+            else if (auth is OAuthAuthentication)
+            {
+            }
         }
 
         private static string ToQueryString(NameValueCollection nvc)

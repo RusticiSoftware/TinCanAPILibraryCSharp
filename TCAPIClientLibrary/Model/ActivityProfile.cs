@@ -9,12 +9,19 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     {
         string activityId;
         string profileId;
-        string contents;
+        string body;
+        string contentType;
 
-        public string Contents
+        public string ContentType
         {
-            get { return contents; }
-            set { contents = value; }
+            get { return contentType; }
+            set { contentType = value; }
+        }
+
+        public string Body
+        {
+            get { return body; }
+            set { body = value; }
         }
 
         public string ProfileId

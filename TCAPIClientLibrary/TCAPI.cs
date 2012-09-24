@@ -10,6 +10,7 @@ using RusticiSoftware.TinCanAPILibrary.Helper;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
 using RusticiSoftware.TinCanAPILibrary.Model;
+using RusticiSoftware.TCAPIClientLibrary.Helper;
 
 namespace RusticiSoftware.TinCanAPILibrary
 {
@@ -171,7 +172,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             this.statementPostInterval = statementPostInterval;
             this.maxBatchSize = maxBatchSize;
 
-            this.asyncPostCallback = new AsyncPostCallback(this.PostSuccess);
+            this.asyncPostCallback = new AsyncPostCallback(this.PostSuccess, this.PostFailed, this.PostConnectionFailed);
             this.isAsyncFlushing = false;
 
             asyncPostTimer = new Timer();
@@ -206,12 +207,17 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <param name="statements">An array of statements to store</param>
         public void StoreStatements(Statement[] statements)
         {
+            StoreStatements(statements, null);
+        }
+
+        public void StoreStatements(Statement[] statements, AsyncPostCallback callback)
+        {
             Statement[] batch = new Statement[maxBatchSize];
             foreach (Statement s in statements)
                 s.Validate();
             TinCanJsonConverter converter = new TinCanJsonConverter();
             string postData = converter.SerializeToJSON(statements);
-            HttpMethods.PostRequest(postData, endpoint + STATEMENTS, authentification);
+            HttpMethods.PostRequest(postData, endpoint + STATEMENTS, authentification, callback);
         }
 
         /// <summary>
@@ -355,10 +361,13 @@ namespace RusticiSoftware.TinCanAPILibrary
             NameValueCollection nvc = new NameValueCollection();
             nvc["actor"] = converter.SerializeToJSON(actor);
             nvc["profileId"] = profileId;
-            getResult = HttpMethods.GetRequest(nvc, endpoint + ACTOR_PROFILE, authentification);
+            WebHeaderCollection whc;
+            getResult = HttpMethods.GetRequest(nvc, endpoint + ACTOR_PROFILE, authentification, out whc);
+            if (whc != null)
+                result.ContentType = whc["Content-Type"];
             result.ProfileId = profileId;
             result.Actor = actor;
-            result.Contents = getResult;
+            result.Body = getResult;
             return result;
         }
 
@@ -383,11 +392,14 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
-            string putData = actorProfile.Contents;
+            string putData = actorProfile.Body;
             nvc["profileId"] = actorProfile.ProfileId;
             nvc["actor"] = converter.SerializeToJSON(previousProfile.Actor);
             nvc["overwrite"] = overwrite.ToString();
-            HttpMethods.PutRequest(putData, nvc, endpoint + ACTOR_PROFILE, authentification);
+            if (previousProfile != null)
+                nvc["previousProfile"] = Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previousProfile.Body)).ToString();
+            string contentType = actorProfile.ContentType;
+            HttpMethods.PutRequest(putData, nvc, endpoint + ACTOR_PROFILE, authentification, contentType);
         }
 
         /// <summary>
@@ -523,11 +535,14 @@ namespace RusticiSoftware.TinCanAPILibrary
             nvc["stateId"] = stateId;
             if (!String.IsNullOrEmpty(registrationId))
                 nvc["registrationId"] = registrationId;
-            getResult = HttpMethods.GetRequest(nvc, endpoint + ACTIVITY_STATE, authentification);
-            result.Contents = getResult;
+            WebHeaderCollection whc;
+            getResult = HttpMethods.GetRequest(nvc, endpoint + ACTIVITY_STATE, authentification, out whc);
+            if (whc != null)
+                result.ContentType = whc["Content-Type"];
+            result.Body = getResult;
             result.ActivityId = activityId;
             result.Actor = actor;
-            result.Registration = registrationId;
+            result.RegistrationId = registrationId;
             result.StateId = stateId;
             return result;
         }
@@ -572,16 +587,17 @@ namespace RusticiSoftware.TinCanAPILibrary
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
             string putData;
-            putData = activityState.Contents;
+            putData = activityState.Body;
             nvc["overwrite"] = overwrite.ToString();
             nvc["activityId"] = activityState.ActivityId;
             nvc["stateId"] = activityState.StateId;
             nvc["actor"] = converter.SerializeToJSON(activityState.Actor);
-            if (activityState.Registration != null)
-                nvc["registrationId"] = activityState.Registration;
+            if (activityState.RegistrationId != null)
+                nvc["registrationId"] = activityState.RegistrationId;
             if (previousState != null)
-                nvc["previousState"] = previousState.Contents;
-            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_STATE, authentification);
+                nvc["previousState"] = Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previousState.Body)).ToString();
+            string contentType = activityState.ContentType;
+            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_STATE, authentification, contentType);
         }
 
         /// <summary>
@@ -629,9 +645,12 @@ namespace RusticiSoftware.TinCanAPILibrary
             NameValueCollection nvc = new NameValueCollection();
             nvc["profileId"] = profileId;
             nvc["activityId"] = activityId;
-            getResult = HttpMethods.GetRequest(nvc, endpoint + ACTIVITY_PROFILE, authentification);
+            WebHeaderCollection whc;
+            getResult = HttpMethods.GetRequest(nvc, endpoint + ACTIVITY_PROFILE, authentification, out whc);
+            if (whc != null)
+                result.ContentType = whc["Content-Type"];
             result.ProfileId = profileId;
-            result.Contents = getResult;
+            result.Body = getResult;
             result.ActivityId = activityId;
             return result;
         }
@@ -676,13 +695,14 @@ namespace RusticiSoftware.TinCanAPILibrary
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
             string putData;
-            putData = profile.Contents;
+            putData = profile.Body;
             nvc["overwrite"] = overwrite.ToString();
             nvc["activityId"] = profile.ActivityId;
             nvc["profileId"] = profile.ProfileId;
             if (previous != null)
-                nvc["previousState"] = previous.Contents;
-            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_PROFILE, authentification);
+                nvc["previousState"] = Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previous.Body)).ToString();
+            string contentType = profile.ContentType;
+            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_PROFILE, authentification, contentType);
         }
 
         /// <summary>
@@ -764,21 +784,21 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// </summary>
         public void Flush()
         {
+            this.asyncPostTimer.Stop();
             Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);
             if (statements != null && statements.Length > 0)
                 lock (flushLock) // Incase the Async Flush is running concurrently, await a lock on flushLock to prevent InvalidOperationException
                 {
-                    this.asyncPostTimer.Stop();
-                    while (statements != null && statements.Length > 0)
+                    while ((statements = offlineStorage.GetQueuedStatements(maxBatchSize)) != null && statements.Length > 0)
                     {
                         StoreStatements(statements);
                         offlineStorage.RemoveStatementsFromQueue(statements.Length);
-                        statements = offlineStorage.GetQueuedStatements(maxBatchSize);
                     }
                 }
             asyncPostTimer.Start();
         }
 
+        #region OAuth
         public string GetOAuthAuthorizationUrl(string redirectUrl)
         {
             throw new NotImplementedException();
@@ -788,6 +808,8 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             throw new NotImplementedException();
         }
+        #endregion
+
         /// <summary>
         /// Disposes the resources held by the TCAPI
         /// </summary>
@@ -803,14 +825,21 @@ namespace RusticiSoftware.TinCanAPILibrary
 
         #region Events
         /// <summary>
-        /// This method is fired by the TCAPICallback every time FlushAsync succeeds.
+        /// This method is fired by the AsyncPostCallback every time FlushAsync succeeds.
         /// </summary>
-        private void PostSuccess(int count)
+        private void PostSuccess(Statement[] statements)
         {
-            // First, remove the first maxBatchSize elements from the queue as they succeeded
-            offlineStorage.RemoveStatementsFromQueue(count);
-            // Then relaunch FlushAsync
-            FlushAsync();
+            offlineStorage.RemoveStatementsFromQueue(statements.Length);
+        }
+
+        private void PostFailed(Statement[] statements, Exception e)
+        {
+            offlineStorage.RemoveStatementsFromQueue(statements.Length);
+        }
+
+        private void PostConnectionFailed(Exception e)
+        {
+
         }
         #endregion
 
@@ -844,7 +873,8 @@ namespace RusticiSoftware.TinCanAPILibrary
             {
                 while ((statements = offlineStorage.GetQueuedStatements(maxBatchSize)) != null && statements.Length > 0)
                 {
-                    StoreStatements(statements);
+                    asyncPostCallback.Statements = statements;
+                    StoreStatements(statements, asyncPostCallback);
                     offlineStorage.RemoveStatementsFromQueue(statements.Length);
                 }
                 asyncPostTimer.Start();
@@ -852,28 +882,53 @@ namespace RusticiSoftware.TinCanAPILibrary
             }
         }
 
+        /*
         private void StoreStatementsAsync(Statement[] statements)
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
             string postData = converter.SerializeToJSON(statements);
             HttpMethods.PostRequestAsync(postData, endpoint + STATEMENTS, authentification, tcapiCallback, asyncPostCallback);
         }
+        */
         #endregion
 
         #region AsyncPostCallback
         public class AsyncPostCallback
         {
-            public delegate void AsyncPostSuccess(int count);
+            public delegate void AsyncPostSuccess(Statement[] statements);
+            public delegate void AsyncPostFailed(Statement[] statements, Exception e);
+            public delegate void AsyncPostConnectionFailure(Exception e);
             private event AsyncPostSuccess eventPostSuccess;
-
-            public AsyncPostCallback(AsyncPostSuccess handler)
+            private event AsyncPostFailed eventPostFailed;
+            private event AsyncPostConnectionFailure eventConnectionFailed;
+            private Statement[] statements;
+            
+            public Statement[] Statements
             {
-                eventPostSuccess += handler;
+                get { return statements; }
+                set { statements = value; }
             }
 
-            public void AsyncPostComplete(Statement[] statements)
+            public AsyncPostCallback(AsyncPostSuccess handler, AsyncPostFailed failHandler, AsyncPostConnectionFailure connectHandler)
             {
-                eventPostSuccess(statements.Length);
+                eventPostSuccess += handler;
+                eventPostFailed += failHandler;
+                eventConnectionFailed += connectHandler;
+            }
+
+            public void AsyncPostComplete()
+            {
+                eventPostSuccess(statements);
+            }
+
+            public void AsyncPostFailure(Exception e)
+            {
+                eventPostFailed(statements, e);
+            }
+
+            public void AsyncPostConnectionFailed(Exception e)
+            {
+                eventConnectionFailed(e);
             }
         }
         #endregion

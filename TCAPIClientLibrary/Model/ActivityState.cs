@@ -8,9 +8,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     {
         string activityId;
         Actor actor;
-        string registration;
-        string contents;
+        string registrationId;
+        string body;
+        string contentType;
         string stateId;
+
+        public const string DEFAULT_HEADER = "text/plain";
 
         public string StateId
         {
@@ -18,10 +21,10 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             set { stateId = value; }
         }
 
-        public string Contents
+        public string Body
         {
-            get { return this.contents; }
-            set { this.contents = value; }
+            get { return this.body; }
+            set { this.body = value; }
         }
 
         public string ActivityId
@@ -36,10 +39,38 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             set { actor = value; }
         }
 
-        public string Registration
+        public string RegistrationId
         {
-            get { return registration; }
-            set { registration = value; }
+            get { return registrationId; }
+            set { registrationId = value; }
+        }
+
+        public string ContentType
+        {
+            get { return contentType; }
+            set { contentType = value; }
+        }
+
+        public ActivityState()
+        {}
+
+        public ActivityState(string activityId, string stateId, Actor actor, string body)
+            : this(activityId, stateId, actor, body, DEFAULT_HEADER)
+        {}
+
+        public ActivityState(string activityId, string stateId, Actor actor, string body, string contentType)
+            : this(activityId, stateId, actor, body, contentType, null)
+        {
+        }
+
+        public ActivityState(string activityId, string stateId, Actor actor, string body, string contentType, string regristrationId)
+        {
+            this.activityId = activityId;
+            this.stateId = stateId;
+            this.actor = actor;
+            this.body = body;
+            this.contentType = contentType;
+            this.registrationId = registrationId;
         }
     }
 }

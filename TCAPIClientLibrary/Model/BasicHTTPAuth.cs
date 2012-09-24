@@ -68,7 +68,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #region Private Methods
         private void GenerateAuthHeader()
         {
-            byte[] dataToEncode = ASCIIEncoding.ASCII.GetBytes(username + ":" + password);
+            byte[] dataToEncode = Encoding.UTF8.GetBytes(username + ":" + password);
             authHeaderValue = "Basic " + Convert.ToBase64String(dataToEncode);
         }
         #endregion

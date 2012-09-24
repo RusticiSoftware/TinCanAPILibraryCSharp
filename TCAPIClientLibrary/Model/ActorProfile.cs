@@ -9,7 +9,14 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     {
         Actor actor;
         string profileId;
-        string contents;
+        string body;
+        string contentType;
+
+        public string ContentType
+        {
+            get { return contentType; }
+            set { contentType = value; }
+        }
 
         public string ProfileId
         {
@@ -22,10 +29,10 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             set { actor = value; }
         }
 
-        public string Contents
+        public string Body
         {
-            get { return this.contents; }
-            set { this.contents = value; }
+            get { return this.body; }
+            set { this.body = value; }
         }
     }
 }
