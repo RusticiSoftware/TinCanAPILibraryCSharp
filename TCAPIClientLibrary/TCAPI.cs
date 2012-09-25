@@ -396,10 +396,11 @@ namespace RusticiSoftware.TinCanAPILibrary
             nvc["profileId"] = actorProfile.ProfileId;
             nvc["actor"] = converter.SerializeToJSON(previousProfile.Actor);
             nvc["overwrite"] = overwrite.ToString();
+            string previousSha1 = string.Empty;
             if (previousProfile != null)
-                nvc["previousProfile"] = Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previousProfile.Body)).ToString();
+                previousSha1 = BitConverter.ToString(Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previousProfile.Body))).Replace("-", "");
             string contentType = actorProfile.ContentType;
-            HttpMethods.PutRequest(putData, nvc, endpoint + ACTOR_PROFILE, authentification, contentType);
+            HttpMethods.PutRequest(putData, nvc, endpoint + ACTOR_PROFILE, authentification, contentType, previousSha1);
         }
 
         /// <summary>
@@ -587,6 +588,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
             string putData;
+            string previousSha1 = string.Empty;
             putData = activityState.Body;
             nvc["overwrite"] = overwrite.ToString();
             nvc["activityId"] = activityState.ActivityId;
@@ -595,9 +597,9 @@ namespace RusticiSoftware.TinCanAPILibrary
             if (activityState.RegistrationId != null)
                 nvc["registrationId"] = activityState.RegistrationId;
             if (previousState != null)
-                nvc["previousState"] = Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previousState.Body)).ToString();
+                previousSha1 = BitConverter.ToString(Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previousState.Body))).Replace("-", "");
             string contentType = activityState.ContentType;
-            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_STATE, authentification, contentType);
+            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_STATE, authentification, contentType, previousSha1);
         }
 
         /// <summary>
@@ -694,15 +696,15 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
-            string putData;
+            string putData, previousSha1 = string.Empty;
             putData = profile.Body;
             nvc["overwrite"] = overwrite.ToString();
             nvc["activityId"] = profile.ActivityId;
             nvc["profileId"] = profile.ProfileId;
             if (previous != null)
-                nvc["previousState"] = Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previous.Body)).ToString();
+                previousSha1 = BitConverter.ToString(Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previous.Body))).Replace("-", "");
             string contentType = profile.ContentType;
-            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_PROFILE, authentification, contentType);
+            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_PROFILE, authentification, contentType, previousSha1);
         }
 
         /// <summary>

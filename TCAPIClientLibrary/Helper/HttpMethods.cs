@@ -271,6 +271,18 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// <returns>The response string</returns>
         public static string PutRequest(string putData, NameValueCollection queryParameters, string endpoint, IAuthenticationConfiguration authentification, string contentType)
         {
+            return PutRequest(putData, queryParameters, endpoint, authentification, contentType, string.Empty);
+        }
+        
+        /// <summary>
+        /// Sends a PUT request
+        /// </summary>
+        /// <param name="putData">The data to PUT to the server</param>
+        /// <param name="queryParameters">A name-value pair collection of query parameters</param>
+        /// <param name="headers">Additional headers</param>
+        /// <returns>The response string</returns>
+        public static string PutRequest(string putData, NameValueCollection queryParameters, string endpoint, IAuthenticationConfiguration authentification, string contentType, string eTag)
+        {
             string result = null;
             if (queryParameters != null)
                 endpoint += ToQueryString(queryParameters);
@@ -281,6 +293,8 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 request.Method = "PUT";
                 request.ContentType = contentType;
                 request.ContentLength = putDataByteArray.Length;
+                if (!String.IsNullOrEmpty(eTag))
+                    request.Headers["If-Match"] = "\"" + eTag + "\"";
                 AddAuthHeader(request.Headers, authentification);
 
                 try
