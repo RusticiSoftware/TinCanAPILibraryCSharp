@@ -867,9 +867,9 @@ namespace RusticiSoftware.TinCanAPILibrary
             Statement[] statements = offlineStorage.GetQueuedStatements(maxBatchSize);
             if (statements == null || statements.Length == 0)
                 return;
+            this.isAsyncFlushing = true;
             if (asyncPostTimer.Enabled) // Freeze the post timer while flushing occurs.
                 asyncPostTimer.Stop();
-            this.isAsyncFlushing = true;
             // Place a mutex lock on flushLock while the Async Method is pushing the statements.  Once that's done the lock will release and this should prevent clashes between Flush and FlushAsync
             lock (flushLock)
             {
