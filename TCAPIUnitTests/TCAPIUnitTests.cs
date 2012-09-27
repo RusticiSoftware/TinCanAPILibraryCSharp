@@ -80,14 +80,13 @@ namespace UnitTests
         ///A test for StoreStatement
         ///</summary>
         ///
-        //[TestMethod()]
+        [TestMethod()]
         public void StoreStatementTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
-            Statement[] statements = new Statement[3];
+            target.MaxBatchSize = 1;
+            Statement[] statements = new Statement[1];
             statements[0] = new Statement(new Actor("Jaffer", "mailto:akintundex@gmail.com"), StatementVerb.Experienced, new TinCanActivity("test activity"));
-            statements[1] = new Statement(new Actor("Abraham", "mailto:abraham@example.co.uk"), StatementVerb.Experienced, new TinCanActivity("TinCanClientLibrary"));
-            statements[2] = new Statement(new Actor("DaBoss", "mailto:wutwut@notarealbanana.sup"), StatementVerb.Experienced, new TinCanActivity("test activity"));
             target.StoreStatements(statements);
             Assert.Inconclusive(INCONCLUSIVE);
         }
@@ -641,7 +640,7 @@ namespace UnitTests
         /// <summary>
         /// Test to ensure ETag collisions are not ignored.
         /// </summary>
-        [TestMethod()]
+        //TestMethod()]
         public void CollisionTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();

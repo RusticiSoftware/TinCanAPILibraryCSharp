@@ -97,7 +97,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                 return false;
             }
 
-            if (def.Type != null && !def.type.Equals(this.type))
+            if (/*def.Type != null &&*/ !def.type.Equals(this.type))
             {
                 this.Type = def.Type;
                 updated = true;

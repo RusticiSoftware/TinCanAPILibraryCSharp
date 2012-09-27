@@ -29,7 +29,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// ObjectType accessor
         /// </summary>
-        public String ObjectType
+        public override String ObjectType
         {
             get { return OBJECT_TYPE; }
         }

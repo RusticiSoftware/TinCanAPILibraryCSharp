@@ -210,20 +210,37 @@ namespace RusticiSoftware.TinCanAPILibrary
             StoreStatements(statements, null);
         }
 
-        public void StoreStatements(Statement[] statements, AsyncPostCallback callback)
+        /// <summary>
+        /// Stores statements synchronously, must be called from a separate thread
+        /// </summary>
+        /// <param name="statements">Statements to store</param>
+        /// <param name="callback">Callback to signal upon completion</param>
+        private void StoreStatements(Statement[] statements, AsyncPostCallback callback)
         {
-            Statement[] batch = new Statement[maxBatchSize];
-            foreach (Statement s in statements)
-                s.Validate();
-            TinCanJsonConverter converter = new TinCanJsonConverter();
-            string postData = converter.SerializeToJSON(statements);
-            HttpMethods.PostRequest(postData, endpoint + STATEMENTS, authentification, callback);
+            // Break the statement into a 2D array.  First index is the number of batches, second is the number of
+            // statements in that batch, which is either maxBatchSize or statements.Length % maxBatchSize 
+            Statement[][] batches = new Statement[(statements.Length - 1) / maxBatchSize + 1][];
+            for (int i = 0; i < batches.Length; i++)
+            {
+                batches[i] = new Statement[statements.Length - (maxBatchSize * (i + 1)) >= 0 ? maxBatchSize : statements.Length % maxBatchSize];
+                Array.Copy(statements, i * maxBatchSize, batches[i], 0, batches[i].Length);
+            }
+            for (int round = 0; round < batches.Length; round++)
+            {
+                foreach (Statement s in batches[round])
+                    s.Validate();
+                TinCanJsonConverter converter = new TinCanJsonConverter();
+                string postData = converter.SerializeToJSON(batches[round]);
+                HttpMethods.PostRequest(postData, endpoint + STATEMENTS, authentification, callback);
+            }
         }
 
         /// <summary>
         /// Stores multiple statements asynchronously
         /// </summary>
         /// <param name="statements">An array of statements to store</param>
+        /// <param name="synchronous">When true, stores statements synchronously.  When false, adds the statements to the queue.</param>
+        /// <remarks></remarks>
         public void StoreStatements(Statement[] statements, bool synchronous)
         {
             if (synchronous)
@@ -246,7 +263,6 @@ namespace RusticiSoftware.TinCanAPILibrary
         public void VoidStatements(string[] statementIdsToVoid)
         {
             Statement[] statementsToVoid = new Statement[statementIdsToVoid.Length];
-            TinCanJsonConverter converter = new TinCanJsonConverter();
             for (int i = 0; i < statementIdsToVoid.Length; i++)
             {
                 Statement voided = new Statement();

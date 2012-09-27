@@ -63,7 +63,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         {
         }
 
-        public ActivityState(string activityId, string stateId, Actor actor, string body, string contentType, string regristrationId)
+        public ActivityState(string activityId, string stateId, Actor actor, string body, string contentType, string registrationId)
         {
             this.activityId = activityId;
             this.stateId = stateId;

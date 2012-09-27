@@ -74,6 +74,11 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             return updated;
         }
 
+        public override int GetHashCode()
+        {
+            return 0;
+        }
+
         protected bool NotNullAndNotEqual<T>(List<T> list1, List<T> list2)
         {
             return list1 != null && list1.Count > 0 && !CommonFunctions.AreListsEqual(list1, list2);

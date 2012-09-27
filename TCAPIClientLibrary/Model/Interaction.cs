@@ -6,6 +6,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 {
     public class Interaction : Activity
     {
-        InteractionDefinition definition;
+        private InteractionDefinition definition;
+
+        public new InteractionDefinition Definition
+        {
+            get { return definition; }
+            set { definition = value; }
+        }
     }
 }

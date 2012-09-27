@@ -9,7 +9,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class Group : Actor
     {
         #region Constants
-        protected static readonly String OBJECT_TYPE = "Group";
+        protected new static readonly String OBJECT_TYPE = "Group";
         #endregion
 
         #region Fields
@@ -17,7 +17,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #endregion
 
         #region Properties
-        public String ObjectType
+        public override String ObjectType
         {
             get { return OBJECT_TYPE; }
         }

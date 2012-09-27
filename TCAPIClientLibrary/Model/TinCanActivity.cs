@@ -18,7 +18,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #endregion
 
         #region Properties
-        public String ObjectType
+        public override String ObjectType
         {
             get { return OBJECT_TYPE; }
         }

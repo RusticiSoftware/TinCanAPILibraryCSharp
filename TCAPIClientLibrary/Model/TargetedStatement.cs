@@ -21,7 +21,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             get { return id; }
             set { id = value; }
         }
-        public string ObjectType
+        public override string ObjectType
         {
             get { return OBJECT_TYPE; }
         }

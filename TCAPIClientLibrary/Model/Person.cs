@@ -8,7 +8,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class Person : Actor
     {
         #region Constants
-        protected static readonly String OBJECT_TYPE = "Person";
+        protected new static readonly String OBJECT_TYPE = "Person";
         #endregion
 
         #region Fields
@@ -76,7 +76,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #endregion
 
         #region Properties
-        public String ObjectType
+        public override String ObjectType
         {
             get { return OBJECT_TYPE; }
         }
