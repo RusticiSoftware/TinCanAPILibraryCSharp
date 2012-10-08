@@ -25,7 +25,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             }
 
             TypeFieldJsonHelper typeFieldHelper = new TypeFieldJsonHelper();
-            Type targetType = typeFieldHelper.GetTypeFromString(typeField, typeof(Person));
+            Type targetType = typeFieldHelper.GetTypeFromString(typeField, typeof(Actor));
 
             //Avoid infinite loop here, if type is this base class
             if (targetType.Equals(typeof(Actor))) {
@@ -47,6 +47,12 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             public TinCanActor_JsonTarget(){}
             public TinCanActor_JsonTarget(Actor actor) : base(actor) {}
+        }
+
+        public class TinCan090Actor_JsonTarget() : Model.TinCan090.Actor
+        {
+            public TinCan090Actor_JsonTarget(){}
+            public TinCan090Actor_JsonTarget(Model.TinCan090.Actor actor) : base(actor){}
         }
     }
 }

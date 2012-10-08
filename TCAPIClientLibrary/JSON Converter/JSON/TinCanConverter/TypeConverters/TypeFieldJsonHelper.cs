@@ -19,7 +19,7 @@ namespace RusticiSoftware.TinCanAPILibrary
                 return typeof(Actor);
             }
             if (String.Compare(typeField, "Person", true) == 0) {
-                return typeof(Person);
+                return typeof(Model.TinCan090.Person);
             }
             if (String.Compare(typeField, "Group", true) == 0) {
                 return typeof(Group);

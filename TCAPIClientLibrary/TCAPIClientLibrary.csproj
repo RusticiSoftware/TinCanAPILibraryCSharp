@@ -70,6 +70,8 @@
     <Compile Include="Model\ActorProfile.cs" />
     <Compile Include="Model\AgentAccount.cs" />
     <Compile Include="Model\BasicHTTPAuth.cs" />
+    <Compile Include="Model\Model 0.90\Actor0.90.cs" />
+    <Compile Include="Model\Model 0.90\Person0.90.cs" />
     <Compile Include="Model\TCAPICallback.cs" />
     <Compile Include="Model\Context.cs" />
     <Compile Include="Model\ContextActivities.cs" />
@@ -88,7 +90,6 @@
     <Compile Include="Model\LanguageMap.cs" />
     <Compile Include="Model\OAuthAuthentication.cs" />
     <Compile Include="Model\OfflineStorage.cs" />
-    <Compile Include="Model\Person.cs" />
     <Compile Include="Model\Result.cs" />
     <Compile Include="Model\Score.cs" />
     <Compile Include="Model\State.cs" />

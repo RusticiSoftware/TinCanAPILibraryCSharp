@@ -178,7 +178,7 @@ namespace UnitTests
             TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Actor partialActor = new Actor();
-            partialActor.Mbox = new String[] { "mailto:akintundex@gmail.com" };
+            partialActor.Mbox = "mailto:akintundex@gmail.com";
             Actor fullActor = target.GetActor(partialActor);
             Console.Write(converter.SerializeToJSON(fullActor));
             Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
