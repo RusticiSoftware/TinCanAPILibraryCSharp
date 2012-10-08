@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -12,7 +12,7 @@ using System.Runtime.Remoting.Messaging;
 using RusticiSoftware.TinCanAPILibrary.Model;
 using RusticiSoftware.TCAPIClientLibrary.Helper;
 
-namespace RusticiSoftware.TinCanAPILibrary
+namespace RusticiSoftware.TinCanAPILibrary.TinCan090
 {
     /// <summary>
     /// The TCAPI Object which handles the bulk of the logic and communication
@@ -267,7 +267,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             {
                 Statement voided = new Statement();
                 voided.Object = new TargetedStatement(statementIdsToVoid[i]);
-                voided.Verb = new StatementVerb(PredefinedVerbs.Voided);
+                voided.Verb = StatementVerb.Voided.ToString();
                 voided.Actor = adminActor;
                 statementsToVoid[i] = voided;
             }
@@ -292,7 +292,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             {
                 Statement voided = new Statement();
                 voided.Object = new TargetedStatement(statementIdsToVoid[i]);
-                voided.Verb = new StatementVerb(PredefinedVerbs.Voided);
+                voided.Verb = StatementVerb.Voided.ToString();
                 voided.Actor = adminActor;
                 statements[i] = voided;
             }
@@ -899,15 +899,6 @@ namespace RusticiSoftware.TinCanAPILibrary
                 this.isAsyncFlushing = false;
             }
         }
-
-        /*
-        private void StoreStatementsAsync(Statement[] statements)
-        {
-            TinCanJsonConverter converter = new TinCanJsonConverter();
-            string postData = converter.SerializeToJSON(statements);
-            HttpMethods.PostRequestAsync(postData, endpoint + STATEMENTS, authentification, tcapiCallback, asyncPostCallback);
-        }
-        */
         #endregion
 
         #region AsyncPostCallback
@@ -952,3 +943,4 @@ namespace RusticiSoftware.TinCanAPILibrary
         #endregion
     }
 }
+*/

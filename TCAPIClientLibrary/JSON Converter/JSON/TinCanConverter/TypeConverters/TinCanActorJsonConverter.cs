@@ -49,7 +49,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             public TinCanActor_JsonTarget(Actor actor) : base(actor) {}
         }
 
-        public class TinCan090Actor_JsonTarget() : Model.TinCan090.Actor
+        public class TinCan090Actor_JsonTarget : Model.TinCan090.Actor
         {
             public TinCan090Actor_JsonTarget(){}
             public TinCan090Actor_JsonTarget(Model.TinCan090.Actor actor) : base(actor){}

@@ -86,7 +86,7 @@ namespace UnitTests
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             target.MaxBatchSize = 1;
             Statement[] statements = new Statement[1];
-            statements[0] = new Statement(new Actor("Jaffer", "mailto:akintundex@gmail.com"), StatementVerb.Experienced, new TinCanActivity("test activity"));
+            statements[0] = new Statement(new Actor("Jaffer", "mailto:akintundex@gmail.com"), new StatementVerb(PredefinedVerbs.Experienced), new TinCanActivity("test activity"));
             target.StoreStatements(statements);
             Assert.Inconclusive(INCONCLUSIVE);
         }
@@ -399,13 +399,13 @@ namespace UnitTests
                 switch (j)
                 {
                     case 0:
-                        statements[i] = new Statement(new Actor("Mufasa", "mailto:Mufasa@gmail.com"), StatementVerb.Experienced, new TinCanActivity("test activity"));
+                        statements[i] = new Statement(new Actor("Mufasa", "mailto:Mufasa@gmail.com"), new StatementVerb(PredefinedVerbs.Experienced), new TinCanActivity("test activity"));
                         break;
                     case 1:
-                        statements[i] = new Statement(new Actor("Carl", "mailto:carl@example.co.uk"), StatementVerb.Experienced, new TinCanActivity("TinCanClientLibrary"));
+                        statements[i] = new Statement(new Actor("Carl", "mailto:carl@example.co.uk"), new StatementVerb(PredefinedVerbs.Experienced), new TinCanActivity("TinCanClientLibrary"));
                         break;
                     case 2:
-                        statements[i] = new Statement(new Actor("DiBiase", "mailto:DiBiase@notarealbanana.sup"), StatementVerb.Experienced, new TinCanActivity("test activity"));
+                        statements[i] = new Statement(new Actor("DiBiase", "mailto:DiBiase@notarealbanana.sup"), new StatementVerb(PredefinedVerbs.Experienced), new TinCanActivity("test activity"));
                         break;
                 }
             }   

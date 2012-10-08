@@ -26,25 +26,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// String representation of the statement verb
         /// </summary>
-        public virtual String Verb
+        public virtual StatementVerb Verb
         {
             get
             {
-                return verb == StatementVerb.Undefined ? null : verb.ToString().ToLower();
+                return verb;
             }
             set
             {
-                if (value == null)
-                    throw new InvalidArgumentException("Verb may not be null");
-                String normalized = value.ToLower();
-                try
-                {
-                    verb = (StatementVerb)Enum.Parse(typeof(StatementVerb), normalized, true);
-                }
-                catch (Exception)
-                {
-                    throw new InvalidArgumentException("Verb " + normalized + " is not valid");
-                }
+                verb = value;
             }
         }
         /// <summary>
@@ -172,13 +162,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// </summary>
         public virtual void Validate()
         {
-            if (actor == null && verb != StatementVerb.Voided)
+            if (actor == null && verb != null && !verb.IsVoided())
                 throw new ValidationException("Statement " + id + " does not have an actor");
             if (Verb == null)
                 throw new ValidationException("Statement " + id + " does not have a verb");
             if (_object == null)
                 throw new ValidationException("Statement " + id + " does not have an object");
-            if (verb == StatementVerb.Voided)
+            if (verb.IsVoided())
             {
                 bool objectStatementIdentified = (_object is TargetedStatement) && !String.IsNullOrEmpty(((TargetedStatement)_object).Id);
                 if (!objectStatementIdentified)
