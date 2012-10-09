@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RusticiSoftware.TCAPIClientLibrary.Helper
+namespace RusticiSoftware.TinCanAPILibrary.Helper
 {
     public enum TCAPIVersion
     {

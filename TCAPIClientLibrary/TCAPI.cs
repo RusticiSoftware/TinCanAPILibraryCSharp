@@ -10,7 +10,6 @@ using RusticiSoftware.TinCanAPILibrary.Helper;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
 using RusticiSoftware.TinCanAPILibrary.Model;
-using RusticiSoftware.TCAPIClientLibrary.Helper;
 
 namespace RusticiSoftware.TinCanAPILibrary
 {
@@ -149,6 +148,20 @@ namespace RusticiSoftware.TinCanAPILibrary
         }
 
         /// <summary>
+        /// Constructs a TCAPI Object, forcibly setting the version.
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="authentification"></param>
+        /// <param name="version"></param>
+        /// <remarks>Forcing the version is not recommended and should only be used if an issue with the LRS
+        /// </remarks>
+        public TCAPI(string endpoint, IAuthenticationConfiguration authentification, TCAPIVersion version)
+            : this(endpoint, authentification)
+        {
+            this.version = version;
+        }
+
+        /// <summary>
         /// Construct a TCAPI object with asynchronous support with a default post interval of 500ms and a default maxBatchSize of 10.
         /// </summary>
         /// <param name="endpoint">The LRS endpoint</param>
@@ -199,6 +212,12 @@ namespace RusticiSoftware.TinCanAPILibrary
             asyncPostTimer.Enabled = this.statementPostInterval > 0;
             asyncPostTimer.AutoReset = true;
             this.version = DetermineVersioning();
+        }
+
+        public TCAPI(string endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval, int maxBatchSize, TCAPIVersion version)
+            : this(endpoint, authentification, tcapiCallback, offlineStorage, statementPostInterval, maxBatchSize)
+        {
+            this.version = version;
         }
 
         /// <summary>
@@ -915,7 +934,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         }
 
         private WebHeaderCollection GetWebHeaders()
-        {
+        {   
             WebHeaderCollection whc;
             StatementQueryObject qo = new StatementQueryObject();
             qo.Limit = 1;

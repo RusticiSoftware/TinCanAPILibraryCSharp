@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace RusticiSoftware.TCAPIClientLibrary.Helper
+namespace RusticiSoftware.TinCanAPILibrary.Helper
 {
     public class Encryption
     {

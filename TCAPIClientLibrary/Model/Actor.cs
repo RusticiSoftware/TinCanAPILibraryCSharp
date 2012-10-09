@@ -170,5 +170,18 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         }
 
         #endregion
+
+        #region TinCan 0.90 Conversion
+        /// <summary>
+        /// Down-converts to a TinCan 0.90 Actor
+        /// </summary>
+        /// <param name="source">A tincan 0.95 Actor</param>
+        /// <returns>A tincan 0.90 actor</returns>
+        /// <remarks></remarks>
+        public static explicit operator Model.TinCan090.Actor(Actor source)
+        {
+            return new Model.TinCan090.Actor(source.Name, source.Mbox, source.Mbox_sha1sum, source.Openid, source.Account);
+        }
+        #endregion
     }
 }
