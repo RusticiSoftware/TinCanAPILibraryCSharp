@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using System.Text;
@@ -26,15 +26,25 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// <summary>
         /// String representation of the statement verb
         /// </summary>
-        public virtual StatementVerb Verb
+        public virtual String Verb
         {
             get
             {
-                return verb;
+                return verb == StatementVerb.Undefined ? null : verb.ToString().ToLower();
             }
             set
             {
-                verb = value;
+                if (value == null)
+                    throw new InvalidArgumentException("Verb may not be null");
+                String normalized = value.ToLower();
+                try
+                {
+                    verb = (StatementVerb)Enum.Parse(typeof(StatementVerb), normalized, true);
+                }
+                catch (Exception)
+                {
+                    throw new InvalidArgumentException("Verb " + normalized + " is not valid");
+                }
             }
         }
         /// <summary>
@@ -132,6 +142,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             get { return voided; }
             set { voided = value; }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool InProgress
+        {
+            get { return inProgress; }
+            set { inProgress = value; }
+        }
         #endregion
 
         #region Constructor
@@ -152,17 +171,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             this.verb = verb;
             this._object = statementTarget;
         }
-
-        /// <summary>
-        /// Creates a statement with a verb from the predefined verb enumeration.
-        /// </summary>
-        /// <param name="actor">The actor in this statement</param>
-        /// <param name="verb">The PredefinedVerb of this statement</param>
-        /// <param name="statementTarget">The target statement</param>
-        public Statement(Actor actor, PredefinedVerbs verb, StatementTarget statementTarget)
-            : this(actor, new StatementVerb(verb), statementTarget)
-        {
-        }
         #endregion
 
         #region Public Methods
@@ -173,13 +181,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// </summary>
         public virtual void Validate()
         {
-            if (actor == null && verb != null && !verb.IsVoided())
+            if (actor == null && verb != StatementVerb.Voided)
                 throw new ValidationException("Statement " + id + " does not have an actor");
             if (Verb == null)
                 throw new ValidationException("Statement " + id + " does not have a verb");
             if (_object == null)
                 throw new ValidationException("Statement " + id + " does not have an object");
-            if (verb.IsVoided())
+            if (verb == StatementVerb.Voided)
             {
                 bool objectStatementIdentified = (_object is TargetedStatement) && !String.IsNullOrEmpty(((TargetedStatement)_object).Id);
                 if (!objectStatementIdentified)
@@ -261,6 +269,30 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             {
                 throw new InvalidArgumentException("Specified verb \"" + verb + "\" but with a result completion value of " + result.Completion.Value);
             }
+        }
+        #endregion
+
+        #region TinCan 0.95 Promotion
+        /// <summary>
+        /// Promotes a TinCan 0.9 statement to a 0.95 statement.  This can be a lossy conversion.
+        /// </summary>
+        /// <param name="source">A TinCan 0.9 Statement</param>
+        /// <returns>A representation of the statement for TinCan 0.95</returns>
+        public static explicit operator Model.Statement(Statement source)
+        {
+            Model.Statement result = new Model.Statement();
+            result.Id = source.Id;
+            result.Actor = (Model.Actor)source.Actor;
+            result.Verb = new Model.StatementVerb(source.verb);
+            result.InProgress = source.InProgress;
+            result.Object = source.Object;
+            result.Result = source.Result;
+            result.Context = source.Context;
+            result.Timestamp = source.Timestamp;
+            result.Authority = (Model.Actor)source.Authority;
+            result.Voided = source.Voided;
+
+            return result;
         }
         #endregion
     }

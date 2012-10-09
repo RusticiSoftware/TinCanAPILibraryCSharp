@@ -132,6 +132,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             get { return voided; }
             set { voided = value; }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool InProgress
+        {
+            get { return inProgress; }
+            set { inProgress = value; }
+        }
         #endregion
 
         #region Constructor
@@ -261,6 +270,30 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             {
                 throw new InvalidArgumentException("Specified verb \"" + verb + "\" but with a result completion value of " + result.Completion.Value);
             }
+        }
+        #endregion
+
+        #region TinCan 0.90 Downgrade
+        /// <summary>
+        /// Demotes a TinCan 0.95 Statement to TinCan 0.9
+        /// </summary>
+        /// <param name="source">A TinCan 0.95 Statement</param>
+        /// <returns>The TinCan 0.90 representation of the statement</returns>
+        public static explicit operator Model.TinCan090.Statement(Statement source)
+        {
+            Model.TinCan090.Statement result = new Model.TinCan090.Statement();
+            result.Id = source.Id;
+            result.Actor = (Model.TinCan090.Actor)source.Actor;
+            result.Verb = ((Model.TinCan090.StatementVerb)source.GetVerbAsEnum()).ToString().ToLower();
+            result.InProgress = source.InProgress;
+            result.Object = source.Object;
+            result.Result = source.Result;
+            result.Context = source.Context;
+            result.Timestamp = source.Timestamp;
+            result.Authority = (Model.TinCan090.Actor)source.Authority;
+            result.Voided = source.Voided;
+
+            return result;
         }
         #endregion
     }

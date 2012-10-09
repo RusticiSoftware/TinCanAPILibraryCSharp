@@ -287,5 +287,32 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             return (T[])src.Clone();
         }
         #endregion
+
+        #region TinCan 0.95 Promotion
+        /// <summary>
+        /// Promotes a 0.90 actor to a 0.95 actor
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static explicit operator Model.Actor(Actor source)
+        {
+            if (source.account != null && source.account.Length > 0)
+            {
+                return new Model.Actor(source.Name[0], source.Account[0]);
+            }
+            if (source.openid != null && source.openid.Length > 0)
+            {
+                Model.Actor result = new Model.Actor();
+                result.Name = source.Name[0];
+                result.Openid = source.openid[0];
+                return result;
+            }
+            if (source.mbox != null && source.mbox.Length > 0)
+            {
+                return new Model.Actor(source.Name[0], source.Mbox[0]);
+            }
+            return null;
+        }
+        #endregion
     }
 }

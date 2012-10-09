@@ -70,6 +70,17 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             this.display["en-US"] = verb.ToString().ToLower();
         }
 
+        /// <summary>
+        /// Creates a statement verb from the 0.90 set of verbs.
+        /// </summary>
+        /// <param name="verb"></param>
+        /// <remarks>You really shouldn't be using this method.  It's simply used as an easy way to promote the
+        /// verb enum to the verb class.</remarks>
+        public StatementVerb(Model.TinCan090.StatementVerb verb)
+            : this((PredefinedVerbs)Enum.Parse(typeof(PredefinedVerbs), verb.ToString(), true))
+        {
+        }
+
         private bool IsUri(string source) {
           if(!string.IsNullOrEmpty(source) && Uri.IsWellFormedUriString(source, UriKind.RelativeOrAbsolute)){
                 Uri tempValue;
@@ -86,6 +97,25 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Demotes a 0.95 verb to a 0.90 verb.
+        /// </summary>
+        /// <param name="verb">A 0.95 verb.  It MUST have an en-US entry in the display field.</param>
+        /// <returns></returns>
+        /// <remarks>If no en-US entry is in the display map, this method will always fail and throw an exception.
+        /// The core verbs from 0.90 are adl provided verbs in 0.95 to maintain some form of verb mapping.</remarks>
+        public static explicit operator Model.TinCan090.StatementVerb(StatementVerb verb)
+        {
+            try
+            {
+                return (Model.TinCan090.StatementVerb)Enum.Parse(typeof(Model.TinCan090.StatementVerb), verb.display["en-US"], true);
+            }
+            catch (ArgumentException)
+            {
+                throw new InvalidArgumentException("The verb " + verb.display["en-US"] + " has no 0.90 verb representation.");
+            }
         }
     }
 
