@@ -112,6 +112,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 request.Method = "POST";
                 request.ContentType = "application/json";
                 request.ContentLength = postDataByteArray.Length;
+                request.Headers["X-Experience-API-Version"] = "0.95";
                 AddAuthHeader(request.Headers, authentification);
 
                 try

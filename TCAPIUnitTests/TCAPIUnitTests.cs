@@ -86,7 +86,7 @@ namespace UnitTests
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             target.MaxBatchSize = 1;
             Statement[] statements = new Statement[1];
-            statements[0] = new Statement(new Actor("Jaffer", "mailto:akintundex@gmail.com"), new StatementVerb(PredefinedVerbs.Experienced), new TinCanActivity("test activity"));
+            statements[0] = new Statement(new Actor("Jaffer", "mailto:akintundex@gmail.com"), new StatementVerb(PredefinedVerbs.Experienced), new TinCanActivity("http://www.example.com"));
             target.StoreStatements(statements);
             Assert.Inconclusive(INCONCLUSIVE);
         }

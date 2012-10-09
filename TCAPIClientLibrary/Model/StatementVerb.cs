@@ -8,6 +8,17 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         string id;
         LanguageMap display;
 
+        public string Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+        public LanguageMap Display
+        {
+            get { return display; }
+            set { display = value; }
+        }
+
         /// <summary>
         /// Creates a new statement verb with the provided ID and Display fields
         /// </summary>
