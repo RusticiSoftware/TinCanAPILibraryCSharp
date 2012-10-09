@@ -278,6 +278,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// </summary>
         /// <param name="source">A TinCan 0.9 Statement</param>
         /// <returns>A representation of the statement for TinCan 0.95</returns>
+        /// <remarks>This method returns a shallow-copy-like conversion.  Any
+        /// fields that could be used as reference parameters are, and as
+        /// such the two instances of the statement are inextricably linked.</remarks>
         public static explicit operator Model.Statement(Statement source)
         {
             Model.Statement result = new Model.Statement();
