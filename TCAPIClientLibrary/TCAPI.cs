@@ -371,7 +371,16 @@ namespace RusticiSoftware.TinCanAPILibrary
             NameValueCollection nvc = new NameValueCollection();
             nvc["statementId"] = statementId;
             string result = HttpMethods.GetRequest(nvc, endpoint + STATEMENTS, authentification, versionString);
-            Statement statementResult = (Statement)converter.DeserializeJSON(result, typeof(Statement));
+            Statement statementResult = null;
+            switch (version)
+            {
+                case TCAPIVersion.TinCan090:
+                    statementResult = (Statement)((Model.TinCan090.Statement)converter.DeserializeJSON(result, typeof(Model.TinCan090.Statement)));
+                    break;
+                case TCAPIVersion.TinCan095: 
+                    statementResult = (Statement)converter.DeserializeJSON(result, typeof(Statement)); 
+                    break;
+            }
             return statementResult;
         }
 
@@ -385,7 +394,16 @@ namespace RusticiSoftware.TinCanAPILibrary
             NameValueCollection nvc = queryObject.ToNameValueCollection();
             string resultAsJSON = HttpMethods.GetRequest(nvc, endpoint + STATEMENTS, authentification, null);
             TinCanJsonConverter converter = new TinCanJsonConverter();
-            StatementResult result = (StatementResult)converter.DeserializeJSON(resultAsJSON, typeof(StatementResult));
+            StatementResult result = null;
+            switch (version)
+            {
+                case TCAPIVersion.TinCan095:
+                    result = (StatementResult)converter.DeserializeJSON(resultAsJSON, typeof(StatementResult));
+                    break;
+                case TCAPIVersion.TinCan090:
+                    result = (StatementResult)((Model.TinCan090.StatementResult)converter.DeserializeJSON(resultAsJSON, typeof(Model.TinCan090.StatementResult)));
+                    break;
+            }
             return result;
         }
 
@@ -398,7 +416,16 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             string getResult = HttpMethods.GetRequest(null, endpoint + moreUrl, authentification, versionString);
             TinCanJsonConverter converter = new TinCanJsonConverter();
-            StatementResult result = (StatementResult)converter.DeserializeJSON(getResult, typeof(StatementResult));
+            StatementResult result = null;
+            switch (version)
+            {
+                case TCAPIVersion.TinCan095:
+                    result = (StatementResult)converter.DeserializeJSON(getResult, typeof(StatementResult));
+                    break;
+                case TCAPIVersion.TinCan090:
+                    result = (StatementResult)((Model.TinCan090.StatementResult)converter.DeserializeJSON(getResult, typeof(Model.TinCan090.StatementResult)));
+                    break;
+            }
             return result;
         }
 
@@ -412,11 +439,19 @@ namespace RusticiSoftware.TinCanAPILibrary
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
             string getResult;
-            Actor result;
+            Actor result = null;
                 
             nvc["actor"] = converter.SerializeToJSON(partialActor);
             getResult = HttpMethods.GetRequest(nvc, endpoint + ACTORS, authentification, versionString);
-            result = (Actor)converter.DeserializeJSON(getResult, typeof(Actor));
+            switch (version)
+            {
+                case TCAPIVersion.TinCan095:
+                    result = (Actor)converter.DeserializeJSON(getResult, typeof(Actor));
+                    break;
+                case TCAPIVersion.TinCan090:
+                    result = (Actor)((Model.TinCan090.Actor)converter.DeserializeJSON(getResult, typeof(Model.TinCan090.Actor)));
+                    break;
+            }
 
             return result;
         }

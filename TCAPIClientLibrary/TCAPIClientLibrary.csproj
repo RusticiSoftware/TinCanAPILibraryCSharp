@@ -74,6 +74,7 @@
     <Compile Include="Model\Model 0.90\Actor0.90.cs" />
     <Compile Include="Model\Model 0.90\Person0.90.cs" />
     <Compile Include="Model\Model 0.90\Statement0.90.cs" />
+    <Compile Include="Model\Model 0.90\StatementResult0.90.cs" />
     <Compile Include="Model\Model 0.90\StatementVerb0.90.cs" />
     <Compile Include="Model\Model 0.90\TCAPI0.90.cs" />
     <Compile Include="Model\TCAPICallback.cs" />
