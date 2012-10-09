@@ -152,6 +152,17 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             this.verb = verb;
             this._object = statementTarget;
         }
+
+        /// <summary>
+        /// Creates a statement with a verb from the predefined verb enumeration.
+        /// </summary>
+        /// <param name="actor">The actor in this statement</param>
+        /// <param name="verb">The PredefinedVerb of this statement</param>
+        /// <param name="statementTarget">The target statement</param>
+        public Statement(Actor actor, PredefinedVerbs verb, StatementTarget statementTarget)
+            : this(actor, new StatementVerb(verb), statementTarget)
+        {
+        }
         #endregion
 
         #region Public Methods

@@ -86,9 +86,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// <param name="authentification">An IAuthentificationConfiguration.  Only Basic is currently supported.</param>
         /// <param name="endpoint">The endpoint to send the statement to</param>
         /// <returns>A response string</returns>
-        public static string PostRequest(string postData, string endpoint, IAuthenticationConfiguration authentification)
+        public static string PostRequest(string postData, string endpoint, IAuthenticationConfiguration authentification, string x_experience_api_version)
         {
-            return PostRequest(postData, endpoint, authentification, null);
+            return PostRequest(postData, endpoint, authentification, null, x_experience_api_version);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// <param name="callback">The asynchronous callback</param>
         /// <returns>The returned stream</returns>
         /// <remarks>Providing null for the callback means this is intended to be synchronous.  Any exceptions will be thrown and must be handled in the main thread.</remarks>
-        public static string PostRequest(string postData, string endpoint, IAuthenticationConfiguration authentification, TCAPI.AsyncPostCallback callback)
+        public static string PostRequest(string postData, string endpoint, IAuthenticationConfiguration authentification, TCAPI.AsyncPostCallback callback, string x_experience_api_version)
         {
             string result = null;
             byte[] postDataByteArray = Encoding.UTF8.GetBytes(postData);
@@ -112,7 +112,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 request.Method = "POST";
                 request.ContentType = "application/json";
                 request.ContentLength = postDataByteArray.Length;
-                request.Headers["X-Experience-API-Version"] = "0.95";
+                AddExperienceVersionHeader(request.Headers, x_experience_api_version);
                 AddAuthHeader(request.Headers, authentification);
 
                 try
@@ -258,9 +258,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// <param name="putData">The data to PUT to the server</param>
         /// <param name="queryParameters">A name-value pair collection of query parameters</param>
         /// <returns>The response string</returns>
-        public static string PutRequest(string putData, NameValueCollection queryParameters, string endpoint, IAuthenticationConfiguration authentification)
+        public static string PutRequest(string putData, NameValueCollection queryParameters, string endpoint, IAuthenticationConfiguration authentification, string x_experience_api_version)
         {
-            return PutRequest(putData, queryParameters, endpoint, authentification, "application/json");
+            return PutRequest(putData, queryParameters, endpoint, authentification, "application/json", x_experience_api_version);
         }
 
         /// <summary>
@@ -270,9 +270,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// <param name="queryParameters">A name-value pair collection of query parameters</param>
         /// <param name="headers">Additional headers</param>
         /// <returns>The response string</returns>
-        public static string PutRequest(string putData, NameValueCollection queryParameters, string endpoint, IAuthenticationConfiguration authentification, string contentType)
+        public static string PutRequest(string putData, NameValueCollection queryParameters, string endpoint, IAuthenticationConfiguration authentification, string contentType, string x_experience_api_version)
         {
-            return PutRequest(putData, queryParameters, endpoint, authentification, contentType, string.Empty);
+            return PutRequest(putData, queryParameters, endpoint, authentification, contentType, string.Empty, x_experience_api_version);
         }
         
         /// <summary>
@@ -282,7 +282,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// <param name="queryParameters">A name-value pair collection of query parameters</param>
         /// <param name="headers">Additional headers</param>
         /// <returns>The response string</returns>
-        public static string PutRequest(string putData, NameValueCollection queryParameters, string endpoint, IAuthenticationConfiguration authentification, string contentType, string eTag)
+        public static string PutRequest(string putData, NameValueCollection queryParameters, string endpoint, IAuthenticationConfiguration authentification, string contentType, string eTag, string x_experience_api_version)
         {
             string result = null;
             if (queryParameters != null)
@@ -294,6 +294,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 request.Method = "PUT";
                 request.ContentType = contentType;
                 request.ContentLength = putDataByteArray.Length;
+                AddExperienceVersionHeader(request.Headers, x_experience_api_version);
                 if (!String.IsNullOrEmpty(eTag))
                     request.Headers["If-Match"] = "\"" + eTag + "\"";
                 AddAuthHeader(request.Headers, authentification);
@@ -335,7 +336,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// </summary>
         /// <param name="getData">A name-value pair collection of query parameters</param>
         /// <returns>The response string</returns>
-        public static string GetRequest(NameValueCollection getData, string endpoint, IAuthenticationConfiguration authentification)
+        public static string GetRequest(NameValueCollection getData, string endpoint, IAuthenticationConfiguration authentification, string x_experience_api_version)
         {
             string result = null;
             if (getData != null)
@@ -345,6 +346,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 WebRequest request = WebRequest.Create(endpoint);
                 request.Method = "GET";
                 AddAuthHeader(request.Headers, authentification);
+                AddExperienceVersionHeader(request.Headers, x_experience_api_version);
 
                 try
                 {
@@ -384,7 +386,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// <param name="getData">A name-value pair collection of query parameters</param>
         /// <param name="whc">Allows for retrieval of the webheaders if they are needed.</param>
         /// <returns>The response string</returns>
-        public static string GetRequest(NameValueCollection getData, string endpoint, IAuthenticationConfiguration authentification, out WebHeaderCollection whc)
+        public static string GetRequest(NameValueCollection getData, string endpoint, IAuthenticationConfiguration authentification, out WebHeaderCollection whc, string x_experience_api_version)
         {
             string result = null;
             whc = null;
@@ -395,6 +397,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 WebRequest request = WebRequest.Create(endpoint);
                 request.Method = "GET";
                 AddAuthHeader(request.Headers, authentification);
+                AddExperienceVersionHeader(request.Headers, x_experience_api_version);
 
                 try
                 {
@@ -433,7 +436,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// </summary>
         /// <param name="deleteData">A name-value pair collection of query parameters</param>
         /// <returns>The response string</returns>
-        public static string DeleteRequest(NameValueCollection deleteData, string endpoint, IAuthenticationConfiguration authentification)
+        public static string DeleteRequest(NameValueCollection deleteData, string endpoint, IAuthenticationConfiguration authentification, string x_experience_api_version)
         {
             string result = null;
             string end = endpoint + ToQueryString(deleteData);
@@ -442,6 +445,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 WebRequest request = WebRequest.Create(endpoint + ToQueryString(deleteData));
                 request.Method = "DELETE";
                 AddAuthHeader(request.Headers, authentification);
+                AddExperienceVersionHeader(request.Headers, x_experience_api_version);
 
                 try
                 {
@@ -546,6 +550,14 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
             }
             else if (auth is OAuthAuthentication)
             {
+            }
+        }
+
+        private static void AddExperienceVersionHeader(WebHeaderCollection whc, string x_experience_api_version)
+        {
+            if (!String.IsNullOrEmpty(x_experience_api_version))
+            {
+                whc["X-Experience-API-Version"] = x_experience_api_version;
             }
         }
 
