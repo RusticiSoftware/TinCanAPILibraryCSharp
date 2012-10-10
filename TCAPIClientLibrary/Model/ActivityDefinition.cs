@@ -13,9 +13,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// A collection of language codes and their activity name.
         /// </summary>
-        private LanguageMap name;
+        protected LanguageMap name;
 
-        protected LanguageMap Name
+        public LanguageMap Name
         {
             get { return name; }
             set { name = value; }
@@ -23,9 +23,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// A collection of language codes and their activity description.
         /// </summary>
-        private LanguageMap description;
+        protected LanguageMap description;
 
-        protected LanguageMap Description
+        public LanguageMap Description
         {
             get { return description; }
             set { description = value; }
@@ -33,9 +33,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// The type of activity
         /// </summary>
-        private TinCanActivityType type;
+        protected Nullable<TinCanActivityType> type;
 
-        protected TinCanActivityType Type
+        public TinCanActivityType Type
         {
             get { return type; }
             set { type = value; }
@@ -87,6 +87,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 
         public ActivityDefinition(ActivityDefinition activityDefinition)
         {
+            this.Update(activityDefinition);
         }
 
         public virtual bool Update(ActivityDefinition def)
