@@ -43,6 +43,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         {
             this.id = id;
         }
+
+        public TinCanActivity(String id, ActivityDefinition definition)
+        {
+            this.id = id;
+            this.definition = definition;
+        }
         #endregion
 
         #region Public Methods

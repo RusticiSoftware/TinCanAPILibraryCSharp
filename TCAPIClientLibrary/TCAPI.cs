@@ -276,7 +276,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         private void StoreStatements(Statement[] statements, AsyncPostCallback callback)
         {
             // Break the statement into a 2D array.  First index is the number of batches, second is the number of
-            // statements in that batch, which is either maxBatchSize or statements.Length % maxBatchSize 
+            // statements in that batch, which is either maxBatchSize or statements.Length % maxBatchSize
             Statement[][] batches = new Statement[(statements.Length - 1) / maxBatchSize + 1][];
             for (int i = 0; i < batches.Length; i++)
             {
@@ -288,7 +288,19 @@ namespace RusticiSoftware.TinCanAPILibrary
                 foreach (Statement s in batches[round])
                     s.Validate();
                 TinCanJsonConverter converter = new TinCanJsonConverter();
-                string postData = converter.SerializeToJSON(batches[round]);
+                string postData;
+                switch (version)
+                {
+                    case TCAPIVersion.TinCan090:
+                        Model.TinCan090.Statement[] currentBatch = new RusticiSoftware.TinCanAPILibrary.Model.TinCan090.Statement[batches[round].Length];
+                        for (int i = 0; i < currentBatch.Length; i++)
+                            currentBatch[i] = (Model.TinCan090.Statement)batches[round][i];
+                        postData = converter.SerializeToJSON(currentBatch);
+                        break;
+                    default:
+                        postData = converter.SerializeToJSON(batches[round]);
+                        break;
+                }
                 HttpMethods.PostRequest(postData, endpoint + STATEMENTS, authentification, callback, versionString);
             }
         }

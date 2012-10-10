@@ -46,7 +46,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         // provide this to reduce to so serialization doesn't get in an infinite loop
         public class ActivityDefinition_JsonTarget : ActivityDefinition
         {
-            //public ActivityDefinition_JsonTarget() { }
+            public ActivityDefinition_JsonTarget() { }
             public ActivityDefinition_JsonTarget(ActivityDefinition activityDef) : base(activityDef) { }
         }
     }

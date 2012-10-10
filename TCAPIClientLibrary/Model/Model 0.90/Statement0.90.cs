@@ -292,7 +292,8 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             result.Result = source.Result;
             result.Context = source.Context;
             result.Timestamp = source.Timestamp;
-            result.Authority = (Model.Actor)source.Authority;
+            if (source.Authority != null)
+                result.Authority = (Model.Actor)source.Authority;
             result.Voided = source.Voided;
 
             return result;

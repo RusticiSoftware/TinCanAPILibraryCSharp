@@ -13,11 +13,17 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class Extensible
     {
         protected Dictionary<string, object> extensions;
-
+        
         public Dictionary<string, object> Extensions
         {
             get { return extensions; }
             set { extensions = value; }
+        }
+
+        public Extensible() { }
+        public Extensible(Extensible extensible)
+        {
+            this.extensions = extensible.extensions;
         }
     }
 }

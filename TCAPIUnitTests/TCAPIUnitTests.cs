@@ -83,10 +83,14 @@ namespace UnitTests
         [TestMethod()]
         public void StoreStatementTest()
         {
-            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"), TCAPIVersion.TinCan095);
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"), TCAPIVersion.TinCan090);
             target.MaxBatchSize = 1;
             Statement[] statements = new Statement[1];
-            statements[0] = new Statement(new Actor("Jaffer", "mailto:akintundex@gmail.com"), new StatementVerb(PredefinedVerbs.Experienced), new TinCanActivity("http://www.example.com"));
+            TinCanActivity activity = new TinCanActivity("http://www.example.com");
+            activity.Definition = new ActivityDefinition();
+            activity.Definition.Name = new LanguageMap();
+            activity.Definition.Name.Add("en-US", "TCAPI C# 0.95 Library in Compatibility Mode.");
+            statements[0] = new Statement(new Actor("Jaffer", "mailto:akintundex@gmail.com"), new StatementVerb(PredefinedVerbs.Experienced), activity);
             target.StoreStatements(statements);
             Assert.Inconclusive(INCONCLUSIVE);
         }
@@ -113,7 +117,7 @@ namespace UnitTests
             TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Statement actual;
-            actual = target.GetStatement("b6cc80c6-6fb3-47d0-a311-d032a86435e2");
+            actual = target.GetStatement("5495008b-b804-4958-aa2c-8c1f2104e1a1");
             Console.Write(converter.SerializeToJSON(actual));
             Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
