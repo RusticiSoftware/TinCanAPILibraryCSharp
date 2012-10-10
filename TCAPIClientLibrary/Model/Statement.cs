@@ -13,7 +13,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         protected String id;
         protected Actor actor;
         protected StatementVerb verb;
-        protected bool inProgress;
+        private bool inProgress;
         protected StatementTarget _object;
         protected Result result;
         protected Context context;
@@ -23,6 +23,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #endregion
 
         #region Properties
+
+        public bool InProgress
+        {
+            get { return inProgress; }
+            set { inProgress = value; }
+        }
         /// <summary>
         /// String representation of the statement verb
         /// </summary>
