@@ -25,7 +25,11 @@ namespace RusticiSoftware.TinCanAPILibrary
                 return typeof(Group);
             }
             if (String.Compare(typeField, "Statement", true) == 0) {
-                return typeof(TargetedStatement);
+                return typeof(Model.TinCan090.TargetedStatement);
+            }
+            if (String.Compare(typeField, "StatementRef", true) == 0)
+            {
+                return typeof(StatementRef);
             }
             throw new ArgumentException("Invalid type field specified");
         }

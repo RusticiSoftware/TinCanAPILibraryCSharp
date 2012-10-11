@@ -336,7 +336,15 @@ namespace RusticiSoftware.TinCanAPILibrary
             for (int i = 0; i < statementIdsToVoid.Length; i++)
             {
                 Statement voided = new Statement();
-                voided.Object = new TargetedStatement(statementIdsToVoid[i]);
+                switch (version)
+                {
+                    case TCAPIVersion.TinCan090:
+                        voided.Object = new Model.TinCan090.TargetedStatement(statementIdsToVoid[i]);
+                        break;
+                    default:
+                        voided.Object = new StatementRef(statementIdsToVoid[i]);
+                        break;
+                }
                 voided.Verb = new StatementVerb(PredefinedVerbs.Voided);
                 voided.Actor = adminActor;
                 statementsToVoid[i] = voided;
@@ -361,7 +369,15 @@ namespace RusticiSoftware.TinCanAPILibrary
             for (int i = 0; i < statementIdsToVoid.Length; i++)
             {
                 Statement voided = new Statement();
-                voided.Object = new TargetedStatement(statementIdsToVoid[i]);
+                switch (version)
+                {
+                    case TCAPIVersion.TinCan090:
+                        voided.Object = new Model.TinCan090.TargetedStatement(statementIdsToVoid[i]);
+                        break;
+                    default:
+                        voided.Object = new StatementRef(statementIdsToVoid[i]);
+                        break;
+                }
                 voided.Verb = new StatementVerb(PredefinedVerbs.Voided);
                 voided.Actor = adminActor;
                 statements[i] = voided;
@@ -403,8 +419,8 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <returns>A StatementResult with all the statements</returns>
         public StatementResult GetStatements(StatementQueryObject queryObject)
         {
-            NameValueCollection nvc = queryObject.ToNameValueCollection();
-            string resultAsJSON = HttpMethods.GetRequest(nvc, endpoint + STATEMENTS, authentification, null);
+            NameValueCollection nvc = queryObject.ToNameValueCollection(version);
+            string resultAsJSON = HttpMethods.GetRequest(nvc, endpoint + STATEMENTS, authentification, versionString);
             TinCanJsonConverter converter = new TinCanJsonConverter();
             StatementResult result = null;
             switch (version)
@@ -452,8 +468,16 @@ namespace RusticiSoftware.TinCanAPILibrary
             NameValueCollection nvc = new NameValueCollection();
             string getResult;
             Actor result = null;
-                
-            nvc["actor"] = converter.SerializeToJSON(partialActor);
+
+            switch (version)
+            {
+                case TCAPIVersion.TinCan090:
+                    nvc["actor"] = converter.SerializeToJSON((Model.TinCan090.Actor)partialActor);
+                    break;
+                default:
+                    nvc["actor"] = converter.SerializeToJSON(partialActor);
+                    break;
+            }
             getResult = HttpMethods.GetRequest(nvc, endpoint + ACTORS, authentification, versionString);
             switch (version)
             {
@@ -480,7 +504,15 @@ namespace RusticiSoftware.TinCanAPILibrary
             string getResult;
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
-            nvc["actor"] = converter.SerializeToJSON(actor);
+            switch (version)
+            {
+                case TCAPIVersion.TinCan090:
+                    nvc["actor"] = converter.SerializeToJSON((Model.TinCan090.Actor)actor);
+                    break;
+                default:
+                    nvc["actor"] = converter.SerializeToJSON(actor);
+                    break;
+            }
             nvc["profileId"] = profileId;
             WebHeaderCollection whc;
             getResult = HttpMethods.GetRequest(nvc, endpoint + ACTOR_PROFILE, authentification, out whc, versionString);
@@ -515,13 +547,21 @@ namespace RusticiSoftware.TinCanAPILibrary
             NameValueCollection nvc = new NameValueCollection();
             string putData = actorProfile.Body;
             nvc["profileId"] = actorProfile.ProfileId;
-            nvc["actor"] = converter.SerializeToJSON(previousProfile.Actor);
+            switch (version)
+            {
+                case TCAPIVersion.TinCan090:
+                    nvc["actor"] = converter.SerializeToJSON((Model.TinCan090.Actor)previousProfile.Actor);
+                    break;
+                default:
+                    nvc["actor"] = converter.SerializeToJSON(previousProfile.Actor);
+                    break;
+            }
             nvc["overwrite"] = overwrite.ToString();
             string previousSha1 = string.Empty;
             if (previousProfile != null)
                 previousSha1 = BitConverter.ToString(Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previousProfile.Body))).Replace("-", "");
             string contentType = actorProfile.ContentType;
-            HttpMethods.PutRequest(putData, nvc, endpoint + ACTOR_PROFILE, authentification, contentType, previousSha1);
+            HttpMethods.PutRequest(putData, nvc, endpoint + ACTOR_PROFILE, authentification, contentType, previousSha1, versionString);
         }
 
         /// <summary>
@@ -533,7 +573,15 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
-            nvc["actor"] = converter.SerializeToJSON(actor);
+            switch (version)
+            {
+                case TCAPIVersion.TinCan090:
+                    nvc["actor"] = converter.SerializeToJSON((Model.TinCan090.Actor)actor);
+                    break;
+                default:
+                    nvc["actor"] = converter.SerializeToJSON(actor);
+                    break;
+            }
             nvc["profileId"] = profileId;
             HttpMethods.DeleteRequest(nvc, endpoint + ACTOR_PROFILE, authentification, versionString);
         }
@@ -546,7 +594,15 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
-            nvc["actor"] = converter.SerializeToJSON(actor);
+            switch (version)
+            {
+                case TCAPIVersion.TinCan090:
+                    nvc["actor"] = converter.SerializeToJSON((Model.TinCan090.Actor)actor);
+                    break;
+                default:
+                    nvc["actor"] = converter.SerializeToJSON(actor);
+                    break;
+            }
             HttpMethods.DeleteRequest(nvc, endpoint + ACTOR_PROFILE, authentification, versionString);
         }
 
@@ -571,7 +627,15 @@ namespace RusticiSoftware.TinCanAPILibrary
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
             string[] getResult;
-            nvc["actor"] = converter.SerializeToJSON(actor);
+            switch (version)
+            {
+                case TCAPIVersion.TinCan090:
+                    nvc["actor"] = converter.SerializeToJSON((Model.TinCan090.Actor)actor);
+                    break;
+                default:
+                    nvc["actor"] = converter.SerializeToJSON(actor);
+                    break;
+            }
             if (since != null)
                 nvc["since"] = since.Value.ToString(Constants.ISO8601_DATE_FORMAT);
             getResult = (string[])converter.DeserializeJSON(HttpMethods.GetRequest(nvc, endpoint + ACTOR_PROFILE, authentification, versionString), typeof(string[]));
@@ -616,7 +680,15 @@ namespace RusticiSoftware.TinCanAPILibrary
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
             nvc["activityId"] = activityId;
-            nvc["actor"] = converter.SerializeToJSON(actor);
+            switch (version)
+            {
+                case TCAPIVersion.TinCan090:
+                    nvc["actor"] = converter.SerializeToJSON((Model.TinCan090.Actor)actor);
+                    break;
+                default:
+                    nvc["actor"] = converter.SerializeToJSON(actor);
+                    break;
+            }
             if (!string.IsNullOrEmpty(registrationId))
                 nvc["registrationId"] = registrationId;
             if (since != null)
@@ -653,7 +725,15 @@ namespace RusticiSoftware.TinCanAPILibrary
             string getResult;
             ActivityState result = new ActivityState();
             nvc["activityId"] = activityId;
-            nvc["actor"] = converter.SerializeToJSON(actor);
+            switch (version)
+            {
+                case TCAPIVersion.TinCan090:
+                    nvc["actor"] = converter.SerializeToJSON((Model.TinCan090.Actor)actor);
+                    break;
+                default:
+                    nvc["actor"] = converter.SerializeToJSON(actor);
+                    break;
+            }
             nvc["stateId"] = stateId;
             if (!String.IsNullOrEmpty(registrationId))
                 nvc["registrationId"] = registrationId;
@@ -714,13 +794,21 @@ namespace RusticiSoftware.TinCanAPILibrary
             nvc["overwrite"] = overwrite.ToString();
             nvc["activityId"] = activityState.ActivityId;
             nvc["stateId"] = activityState.StateId;
-            nvc["actor"] = converter.SerializeToJSON(activityState.Actor);
+            switch (version)
+            {
+                case TCAPIVersion.TinCan090:
+                    nvc["actor"] = converter.SerializeToJSON((Model.TinCan090.Actor)activityState.Actor);
+                    break;
+                default:
+                    nvc["actor"] = converter.SerializeToJSON(activityState.Actor);
+                    break;
+            }
             if (activityState.RegistrationId != null)
                 nvc["registrationId"] = activityState.RegistrationId;
             if (previousState != null)
                 previousSha1 = BitConverter.ToString(Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previousState.Body))).Replace("-", "");
             string contentType = activityState.ContentType;
-            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_STATE, authentification, contentType, previousSha1);
+            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_STATE, authentification, contentType, previousSha1, versionString);
         }
 
         /// <summary>
@@ -747,7 +835,15 @@ namespace RusticiSoftware.TinCanAPILibrary
             TinCanJsonConverter converter = new TinCanJsonConverter();
             NameValueCollection nvc = new NameValueCollection();
             nvc["activityId"] = activityId;
-            nvc["actor"] = converter.SerializeToJSON(actor);
+            switch (version)
+            {
+                case TCAPIVersion.TinCan090:
+                    nvc["actor"] = converter.SerializeToJSON((Model.TinCan090.Actor)actor);
+                    break;
+                default:
+                    nvc["actor"] = converter.SerializeToJSON(actor);
+                    break;
+            }
             nvc["stateId"] = stateId;
             if (!String.IsNullOrEmpty(registrationId))
                 nvc["registrationId"] = registrationId;
@@ -825,7 +921,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             if (previous != null)
                 previousSha1 = BitConverter.ToString(Encryption.GetSha1Hash(Encoding.UTF8.GetBytes(previous.Body))).Replace("-", "");
             string contentType = profile.ContentType;
-            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_PROFILE, authentification, contentType, previousSha1);
+            HttpMethods.PutRequest(putData, nvc, endpoint + ACTIVITY_PROFILE, authentification, contentType, previousSha1, versionString);
         }
 
         /// <summary>
@@ -985,7 +1081,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             WebHeaderCollection whc;
             StatementQueryObject qo = new StatementQueryObject();
             qo.Limit = 1;
-            NameValueCollection nvc = qo.ToNameValueCollection();
+            NameValueCollection nvc = qo.ToNameValueCollection(version);
             HttpMethods.GetRequest(nvc, endpoint + STATEMENTS, authentification, out whc, "0.95");
             return whc;
         }

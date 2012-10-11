@@ -80,16 +80,16 @@ namespace UnitTests
         ///A test for StoreStatement
         ///</summary>
         ///
-        [TestMethod()]
+        //[TestMethod()]
         public void StoreStatementTest()
         {
-            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"), TCAPIVersion.TinCan090);
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             target.MaxBatchSize = 1;
             Statement[] statements = new Statement[1];
             TinCanActivity activity = new TinCanActivity("http://www.example.com");
             activity.Definition = new ActivityDefinition();
             activity.Definition.Name = new LanguageMap();
-            activity.Definition.Name.Add("en-US", "TCAPI C# 0.95 Library in Compatibility Mode.");
+            activity.Definition.Name.Add("en-US", "TCAPI C# 0.95 Library.");
             statements[0] = new Statement(new Actor("Jaffer", "mailto:akintundex@gmail.com"), new StatementVerb(PredefinedVerbs.Experienced), activity);
             target.StoreStatements(statements);
             Assert.Inconclusive(INCONCLUSIVE);
@@ -103,7 +103,7 @@ namespace UnitTests
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             target.AdminActor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
-            string[] statementIdsToVoid = { "a84cc4d6-69ee-4eb5-ac4c-d3d6a5077070" };
+            string[] statementIdsToVoid = { "c17c9b10-95d4-4579-90d2-d2d4683fb88b" };
             target.VoidStatements(statementIdsToVoid);
             Assert.Inconclusive(INCONCLUSIVE);
         }
@@ -117,7 +117,7 @@ namespace UnitTests
             TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
             Statement actual;
-            actual = target.GetStatement("5495008b-b804-4958-aa2c-8c1f2104e1a1");
+            actual = target.GetStatement("c17c9b10-95d4-4579-90d2-d2d4683fb88b");
             Console.Write(converter.SerializeToJSON(actual));
             Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
@@ -129,12 +129,18 @@ namespace UnitTests
         public void GetStatementsTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
-            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
+            TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"), TCAPIVersion.TinCan090);
             StatementQueryObject queryObject = new StatementQueryObject();
             queryObject.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             StatementResult actual;
             actual = target.GetStatements(queryObject);
             Console.Write(converter.SerializeToJSON(actual));
+            while (!String.IsNullOrEmpty(actual.More))
+            {
+                actual = target.GetStatements(actual.More);
+                Console.Write(converter.SerializeToJSON(actual));
+                //break;
+            }
             Assert.Inconclusive(INCONCLUSIVE_CONSOLE);
         }
 
@@ -152,6 +158,7 @@ namespace UnitTests
             ActorProfile previousProfile = new ActorProfile();
             previousProfile.Actor = new Actor("Jaffer", "mailto:akintundex@gmail.com");
             previousProfile.ProfileId = "Jaffer";
+            previousProfile.Body = "Hello";
             bool overwrite = true;
             target.SaveActorProfile(actorProfile, previousProfile, overwrite);
             Assert.Inconclusive(INCONCLUSIVE);
@@ -380,7 +387,7 @@ namespace UnitTests
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
-            string activityId = "http://scorm.com/pong/beatTj"; // TODO: Initialize to an appropriate value
+            string activityId = "example.com"; // TODO: Initialize to an appropriate value
             Activity actual;
             actual = target.GetActivity(activityId);
             Console.Write(converter.SerializeToJSON(actual));
@@ -463,6 +470,7 @@ namespace UnitTests
             ActorProfile pp = new ActorProfile();
             pp.ProfileId = profileIds[0];
             pp.Actor = actor;
+            pp.Body = profileContents[0];
             target.SaveActorProfile(p1, pp, true);
             actual = target.GetActorProfileIds(actor, since);
 
@@ -579,7 +587,7 @@ namespace UnitTests
         /// <summary>
         /// Tests all the methods associated with Activity Profile
         /// </summary>
-        //[TestMethod()]
+        [TestMethod()]
         public void ActivityProfileTest()
         {
             TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"));
@@ -599,8 +607,12 @@ namespace UnitTests
             profile.ActivityId = activityId;
             profile.ProfileId = profileIds[0];
             profile.Body = profileContents[0];
+            ActivityProfile pp = new ActivityProfile();
+            pp.ActivityId = activityId;
+            pp.ProfileId = profileIds[0];
+            pp.Body = profileContents[0];
 
-            target.SaveActivityProfile(profile);
+            target.SaveActivityProfile(profile, true, pp);
 
             profile.ProfileId = profileIds[1];
             profile.Body = profileContents[1];
@@ -644,7 +656,7 @@ namespace UnitTests
         /// <summary>
         /// Test to ensure ETag collisions are not ignored.
         /// </summary>
-        //TestMethod()]
+        //[TestMethod()]
         public void CollisionTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();

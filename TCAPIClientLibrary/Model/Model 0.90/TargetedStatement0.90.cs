@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using System.Text;
 
-namespace RusticiSoftware.TinCanAPILibrary.Model
+namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
 {
     public class TargetedStatement : StatementTarget
     {

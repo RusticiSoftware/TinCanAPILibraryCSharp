@@ -190,7 +190,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                 throw new ValidationException("Statement " + id + " does not have an object");
             if (verb.IsVoided())
             {
-                bool objectStatementIdentified = (_object is TargetedStatement) && !String.IsNullOrEmpty(((TargetedStatement)_object).Id);
+                // This will test for StatementRef OR TargetedStatement because any statement that is being validated has already been promoted.
+                bool objectStatementIdentified = ((_object is StatementRef) && !String.IsNullOrEmpty(((StatementRef)_object).Id) || 
+                    (_object is Model.TinCan090.TargetedStatement) && !String.IsNullOrEmpty(((Model.TinCan090.TargetedStatement)_object).Id));
                 if (!objectStatementIdentified)
                 {
                     throw new ValidationException("Statement " + id + " has verb 'voided' but does not properly identify a statement as its object");

@@ -37,7 +37,7 @@ namespace RusticiSoftware.TinCanAPILibrary
 
             this.RegisterTypeConverter(typeof(TinCanAPILibrary.Model.StatementTarget), new TinCanStatementTargetJsonConverter());
             this.RegisterDefaultConverter(typeof(TinCanActivity));
-            this.RegisterDefaultConverter(typeof(TargetedStatement));
+            this.RegisterDefaultConverter(typeof(StatementRef));
 
             this.RegisterTypeConverter(typeof(Actor), new TinCanActorJsonConverter());
             this.RegisterDefaultConverter(typeof(TinCanActorJsonConverter.TinCanActor_JsonTarget));
@@ -53,7 +53,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             // TinCan 90
             this.RegisterDefaultConverter(typeof(Model.TinCan090.Actor));
             this.RegisterDefaultConverter(typeof(Model.TinCan090.Person));
-            
+            this.RegisterDefaultConverter(typeof(Model.TinCan090.TargetedStatement));
         }
     }
 }

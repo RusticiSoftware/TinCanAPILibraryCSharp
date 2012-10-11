@@ -76,7 +76,9 @@
     <Compile Include="Model\Model 0.90\Statement0.90.cs" />
     <Compile Include="Model\Model 0.90\StatementResult0.90.cs" />
     <Compile Include="Model\Model 0.90\StatementVerb0.90.cs" />
+    <Compile Include="Model\Model 0.90\TargetedStatement0.90.cs" />
     <Compile Include="Model\Model 0.90\TCAPI0.90.cs" />
+    <Compile Include="Model\StatementRef.cs" />
     <Compile Include="Model\TCAPICallback.cs" />
     <Compile Include="Model\Context.cs" />
     <Compile Include="Model\ContextActivities.cs" />
@@ -103,7 +105,6 @@
     <Compile Include="Model\StatementResult.cs" />
     <Compile Include="Model\StatementTarget.cs" />
     <Compile Include="Model\StatementVerb.cs" />
-    <Compile Include="Model\TargetedStatement.cs" />
     <Compile Include="Model\TinCanActivity.cs" />
     <Compile Include="Model\TinCanActivityType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

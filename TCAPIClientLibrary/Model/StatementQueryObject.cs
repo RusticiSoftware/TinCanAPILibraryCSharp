@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using RusticiSoftware.TinCanAPILibrary.Helper;
 
 namespace RusticiSoftware.TinCanAPILibrary.Model
 {
@@ -123,7 +124,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #endregion
 
         #region Public Methods
-        public NameValueCollection ToNameValueCollection()
+        /// <summary>
+        /// Transforms the Query object into a NameValueCollection, which will be transformed into a query string.
+        /// </summary>
+        /// <param name="version">The TCAPI Version to serialize the statement as.</param>
+        /// <returns></returns>
+        public NameValueCollection ToNameValueCollection(TCAPIVersion version)
         {
             NameValueCollection nvc = new NameValueCollection();
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -136,7 +142,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                 nvc["registration"] = registration;
             nvc["context"] = context.ToString();
             if (actor != null)
-                nvc["actor"] = converter.SerializeToJSON(actor);
+                switch( version)
+                {
+                    case TCAPIVersion.TinCan090:
+                        nvc["actor"] = converter.SerializeToJSON((Model.TinCan090.Actor)actor);
+                        break;
+                    default:
+                        nvc["actor"] = converter.SerializeToJSON(actor);
+                        break;
+                }
             if (since != null)
                 nvc["since"] = converter.SerializeToJSON(since);
             if (until != null)
@@ -150,7 +164,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             if (!String.IsNullOrEmpty(continueToken))
                 nvc["continueToken"] = continueToken;
             nvc["historical"] = historical.ToString();
-            
+
 
             return nvc;
         }

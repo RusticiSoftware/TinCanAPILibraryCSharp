@@ -20,6 +20,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         }
 
         /// <summary>
+        /// Creates a new StatementVerb that is empty.  Used by the JSON Serializer.
+        /// </summary>
+        public StatementVerb()
+        {
+        }
+
+        /// <summary>
         /// Creates a new statement verb with the provided ID and Display fields
         /// </summary>
         /// <param name="id"></param>
