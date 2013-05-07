@@ -304,7 +304,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             result.Id = source.Id;
             result.Actor = (Model.Actor)source.Actor;
             result.Verb = new Model.StatementVerb(source.verb);
-            result.InProgress = source.InProgress;
             result.Object = source.Object;
             result.Result = source.Result;
             result.Context = source.Context;
