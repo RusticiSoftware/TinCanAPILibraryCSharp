@@ -18,8 +18,6 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 
-using System.Text;
-
 namespace RusticiSoftware.TinCanAPILibrary.Model
 {
     /// <summary>
@@ -29,9 +27,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     /// </summary>
     public class Extensible
     {
-        protected Dictionary<string, object> extensions;
+        protected Dictionary<Uri, object> extensions;
         
-        public Dictionary<string, object> Extensions
+        public Dictionary<Uri, object> Extensions
         {
             get { return extensions; }
             set { extensions = value; }
