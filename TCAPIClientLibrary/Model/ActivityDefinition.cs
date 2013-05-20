@@ -50,9 +50,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// The type of activity
         /// </summary>
-        private String type;
+        private Uri type;
 
-        public String Type
+        public Uri Type
         {
             get { return type; }
             set { type = value; }
@@ -80,7 +80,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <param name="type">The Activity Type</param>
         /// <param name="interactionType">The Interaction Type</param>
         public ActivityDefinition(string name, string description,
-            string languageCode, string type,
+            string languageCode, Uri type,
             string interactionType) : this()
         {
             this.name.Add(languageCode, name);
@@ -91,7 +91,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 
         public ActivityDefinition(LanguageMap name,
             LanguageMap description,
-            string type, string interactionType)
+            Uri type, string interactionType)
         {
             this.name = name;
             this.description = description;
