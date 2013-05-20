@@ -37,16 +37,18 @@ namespace RusticiSoftware.TinCanAPILibrary
             //Integration.Implementation.LogAudit("TinCanActor Deserialize called", null);
             IDictionary objMap = converter.DeserializeJSONToMap(value);
             String typeField = null;
-            if (objMap.Contains("type")) {
+            if (objMap.Contains("type"))
+            {
                 typeField = (String)objMap["type"];
             }
 
-            TinCanActivityType activityType = TinCanActivityTypeHelper.Parse(typeField);
+            Uri activityType = new Uri(typeField);
 
             //Avoid infinite loop here, if type is this base class
             Type targetType = typeof(ActivityDefinition_JsonTarget);
 
-            if (activityType == TinCanActivityType.CMI_Interaction){
+            if (activityType.Equals("http://adlnet.gov/expapi/activities/cmi.interaction"))
+            {
                 targetType = typeof(InteractionDefinition);
             }
 
@@ -55,7 +57,7 @@ namespace RusticiSoftware.TinCanAPILibrary
 
         public object Reduce(object value, JsonConverter converter)
         {
-            //Avoid infinite loop here, so we don't ever return just a TinCanActivityDefinition type
+            //Avoid infinite loop here, so we don't ever return just a Uri type
             return new ActivityDefinition_JsonTarget((ActivityDefinition)value);
         }
 

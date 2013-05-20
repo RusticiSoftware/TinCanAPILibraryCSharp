@@ -30,7 +30,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         protected String id;
         protected Actor actor;
         protected StatementVerb verb;
-        protected bool inProgress;
         protected StatementTarget _object;
         protected Result result;
         protected Context context;
@@ -150,14 +149,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             set { voided = value; }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool InProgress
-        {
-            get { return inProgress; }
-            set { inProgress = value; }
-        }
         #endregion
 
         #region Constructor
@@ -307,7 +298,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             result.Id = source.Id;
             result.Actor = (Model.TinCan090.Actor)source.Actor;
             result.Verb = ((Model.TinCan090.StatementVerb)source.GetVerbAsEnum()).ToString().ToLower();
-            result.InProgress = source.InProgress;
+            result.InProgress = false;
             result.Object = source.Object;
             result.Result = source.Result;
             result.Context = source.Context;
