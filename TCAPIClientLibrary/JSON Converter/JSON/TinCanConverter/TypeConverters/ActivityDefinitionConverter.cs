@@ -42,14 +42,17 @@ namespace RusticiSoftware.TinCanAPILibrary
                 typeField = (String)objMap["type"];
             }
 
-            Uri activityType = new Uri(typeField);
-
             //Avoid infinite loop here, if type is this base class
             Type targetType = typeof(ActivityDefinition_JsonTarget);
 
-            if (activityType.Equals("http://adlnet.gov/expapi/activities/cmi.interaction"))
+            if (typeField != null)
             {
-                targetType = typeof(InteractionDefinition);
+                Uri activityType = new Uri((String) objMap["type"]);
+
+                if (activityType.Equals("http://adlnet.gov/expapi/activities/cmi.interaction"))
+                {
+                    targetType = typeof (InteractionDefinition);
+                }
             }
 
             return converter.DeserializeJSON(value, targetType);

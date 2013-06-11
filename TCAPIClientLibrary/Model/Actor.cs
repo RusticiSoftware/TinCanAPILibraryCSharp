@@ -123,8 +123,10 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             set
             {
                 if (value != null)
-                    account.Validate();
-                account = value;
+                {
+                    value.Validate();
+                    account = value;
+                }
             }
         }
 
