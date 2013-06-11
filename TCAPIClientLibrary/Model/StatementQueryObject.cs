@@ -169,9 +169,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                         break;
                 }
             if (since != null)
-                nvc["since"] = converter.SerializeToJSON(since);
+                nvc["since"] = since.Value.ToString();
             if (until != null)
-                nvc["unti"] = converter.SerializeToJSON(until);
+                nvc["until"] = until.Value.ToString();
             nvc["limit"] = limit.ToString();
             nvc["authoritative"] = authoritative.ToString();
             nvc["sparse"] = sparse.ToString();
