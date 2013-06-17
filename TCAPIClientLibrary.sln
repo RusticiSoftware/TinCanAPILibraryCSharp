@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCAPIUnitTests", "TCAPIUnit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinCanAPILibrary", "TinCanAPILibrary\TinCanAPILibrary.csproj", "{165CA993-6BC8-48FF-B7B7-8160EDF1E1A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinCanAPILibraryUnitTests", "TinCanAPILibraryUnitTests\TinCanAPILibraryUnitTests.csproj", "{CEC70695-E131-4768-A561-BE47D18F6513}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{165CA993-6BC8-48FF-B7B7-8160EDF1E1A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{165CA993-6BC8-48FF-B7B7-8160EDF1E1A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{165CA993-6BC8-48FF-B7B7-8160EDF1E1A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEC70695-E131-4768-A561-BE47D18F6513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEC70695-E131-4768-A561-BE47D18F6513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEC70695-E131-4768-A561-BE47D18F6513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEC70695-E131-4768-A561-BE47D18F6513}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
