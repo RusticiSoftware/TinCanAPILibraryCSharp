@@ -65,8 +65,14 @@
     <Compile Include="Helper\Encryption.cs" />
     <Compile Include="Helper\HttpMethods.cs" />
     <Compile Include="Helper\TCAPIVersion.cs" />
+    <Compile Include="Model\BasicHTTPAuth.cs" />
+    <Compile Include="Model\IAuthenticationConfiguration.cs" />
+    <Compile Include="Model\IOfflineStorage.cs" />
     <Compile Include="Model\ITCAPI.cs" />
     <Compile Include="Model\ITCAPICallback.cs" />
+    <Compile Include="Model\Model0.90\TCAPI0.90.cs" />
+    <Compile Include="Model\OAuthAuthentication.cs" />
+    <Compile Include="Model\OfflineStorage.cs" />
     <Compile Include="Model\StatementQueryObject.cs" />
     <Compile Include="Model\TCAPICallback.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -98,6 +104,7 @@
       <Name>TinCanAPILibrary</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
