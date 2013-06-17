@@ -27,19 +27,19 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     /// </summary>
     public class AgentAccount : IValidatable
     {
-        protected String accountServiceHomePage;
-        protected String accountName;
+        protected String homePage;
+        protected String name;
         private String hashString;
 
         /// <summary>
         /// The home page of the agent account
         /// </summary>
-        public String AccountServiceHomePage
+        public String Homepage
         {
-            get { return accountServiceHomePage; }
+            get { return homePage; }
             set
             {
-                accountServiceHomePage = value;
+                homePage = value;
                 hashString = null;
             }
         }
@@ -47,12 +47,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// The username used by the agent to log into this account page
         /// </summary>
-        public String AccountName
+        public String Name
         {
-            get { return accountName; }
+            get { return name; }
             set
             {
-                accountName = value;
+                name = value;
                 hashString = null;
             }
         }
@@ -65,12 +65,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// Creates a new agent account
         /// </summary>
-        /// <param name="homePage">Agent account home page</param>
+        /// <param name="homepage">Agent account home page</param>
         /// <param name="id">Agent acount ID used to log into the page</param>
-        public AgentAccount(string homePage, string id)
+        public AgentAccount(string homepage, string id)
         {
-            accountServiceHomePage = homePage;
-            accountName = id;
+            homePage = homepage;
+            name = id;
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         {
             if (hashString == null)
             {
-                hashString = accountServiceHomePage + accountName;
+                hashString = homePage + name;
             }
             return hashString.GetHashCode();
         }
@@ -92,11 +92,11 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <exception cref="ValidationException">Thrown when either field is null or empty.</exception>
         public void Validate()
         {
-            if (String.IsNullOrEmpty(accountServiceHomePage))
+            if (String.IsNullOrEmpty(homePage))
             {
                 throw new ValidationException("Account service homepage cannot be null");
             }
-            if (String.IsNullOrEmpty(accountName))
+            if (String.IsNullOrEmpty(name))
             {
                 throw new ValidationException("Account name cannot be null");
             }

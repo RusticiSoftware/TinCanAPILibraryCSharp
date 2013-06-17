@@ -49,7 +49,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         #endregion
 
         #region Fields
-        private readonly String endpoint;
+        private readonly Uri endpoint;
         private int statementPostInterval;
         private IAuthenticationConfiguration authentification;
         private readonly IOfflineStorage offlineStorage;
@@ -101,7 +101,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <summary>
         /// URL Endpoint to send statements to
         /// </summary>
-        public String Endpoint
+        public Uri Endpoint
         {
             get { return endpoint; }
         }
@@ -155,7 +155,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// </summary>
         /// <param name="endpoint">The endpoint for the TCAPI</param>
         /// <param name="authentification">The authentification object</param>
-        public TCAPI(string endpoint, IAuthenticationConfiguration authentification)
+        public TCAPI(Uri endpoint, IAuthenticationConfiguration authentification)
         {
             this.endpoint = endpoint;
             this.Authentification = authentification;
@@ -172,7 +172,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <param name="version"></param>
         /// <remarks>Forcing the version is not recommended and should only be used if an issue with the LRS
         /// </remarks>
-        public TCAPI(string endpoint, IAuthenticationConfiguration authentification, TCAPIVersion version)
+        public TCAPI(Uri endpoint, IAuthenticationConfiguration authentification, TCAPIVersion version)
             : this(endpoint, authentification)
         {
             this.version = version;
@@ -185,7 +185,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <param name="authentification">Authentification object</param>
         /// <param name="tcapiCallback">Asynchornous callback object</param>
         /// <param name="offlineStorage">Offline Storage object</param>
-        public TCAPI(string endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage)
+        public TCAPI(Uri endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage)
             : this(endpoint, authentification, tcapiCallback, offlineStorage, 500, 10)
         {
         }
@@ -198,7 +198,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <param name="tcapiCallback">Asynchornous callback object</param>
         /// <param name="offlineStorage">Offline Storage object</param>
         /// <param name="statementPostInterval">Interval for asynchronous operations to take place, in seconds</param>
-        public TCAPI(string endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval)
+        public TCAPI(Uri endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval)
             : this(endpoint, authentification, tcapiCallback, offlineStorage, statementPostInterval, 10)
         {
         }
@@ -211,7 +211,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <param name="tcapiCallback">Asynchornous callback object</param>
         /// <param name="offlineStorage">Offline Storage object</param>
         /// <param name="statementPostInterval">Interval for asynchronous operations to take place, in milliseconds</param>
-        public TCAPI(string endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval, int maxBatchSize)
+        public TCAPI(Uri endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval, int maxBatchSize)
         {
             this.endpoint = endpoint;
             this.authentification = authentification;
@@ -231,7 +231,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             this.version = DetermineVersioning();
         }
 
-        public TCAPI(string endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval, int maxBatchSize, TCAPIVersion version)
+        public TCAPI(Uri endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval, int maxBatchSize, TCAPIVersion version)
             : this(endpoint, authentification, tcapiCallback, offlineStorage, statementPostInterval, maxBatchSize)
         {
             this.version = version;
@@ -459,7 +459,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <returns></returns>
         public StatementResult GetStatements(string moreUrl)
         {
-            string getResult = HttpMethods.GetRequest(null, endpoint + moreUrl, authentification, versionString);
+            string getResult = HttpMethods.GetRequest(null, endpoint.GetLeftPart(UriPartial.Authority) + moreUrl, authentification, versionString);
             TinCanJsonConverter converter = new TinCanJsonConverter();
             StatementResult result = null;
             switch (version)
