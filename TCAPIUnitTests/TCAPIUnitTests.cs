@@ -16,7 +16,6 @@ limitations under the License.
 */
 #endregion
 using RusticiSoftware.TinCanAPILibrary.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Specialized;
 using RusticiSoftware.TinCanAPILibrary;
@@ -25,6 +24,7 @@ using System.IO;
 using RusticiSoftware.TinCanAPILibrary.Helper;
 using System.Text;
 using System.Threading;
+using NUnit.Framework;
 
 namespace UnitTests
 {
@@ -32,72 +32,19 @@ namespace UnitTests
     ///This is a test class for TCAPITest and is intended
     ///to contain all TCAPITest Unit Tests
     ///</summary>
-    [TestClass()]
+    [TestFixture]
     public class TCAPITest
     {
         private const string INCONCLUSIVE = "The results of this test should be viewed on the LRS itself.";
         private const string INCONCLUSIVE_CONSOLE = "The expected results of this test should be compared to the console output.";
-
-        private TestContext testContextInstance;
-        public static TCAPITest instance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        #region Additional test attributes
-        // 
-        //You can use the following additional attributes as you write your tests:
-        //
-        //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
-        //
-        //Use ClassCleanup to run code after all tests in a class have run
-        //[ClassCleanup()]
-        //public static void MyClassCleanup()
-        //{
-        //}
-        //
-        //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
-        //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
-        #endregion
-
-        public TCAPITest()
-        {
-            instance = this;
-        }
 
         #region Individual Unit Tests (No meaningful Asserts)
         /// <summary>
         ///A test for StoreStatement
         ///</summary>
         ///
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void StoreStatementTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
@@ -115,7 +62,8 @@ namespace UnitTests
         /// <summary>
         ///A test for VoidStatements
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void VoidStatementsTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
@@ -128,7 +76,8 @@ namespace UnitTests
         /// <summary>
         ///A test for GetStatement
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void GetStatementTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -142,7 +91,8 @@ namespace UnitTests
         /// <summary>
         ///A test for GetStatements
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void GetStatementsTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -164,7 +114,8 @@ namespace UnitTests
         /// <summary>
         ///A test for SaveActorProfile
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void SaveActorProfileTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
@@ -184,7 +135,8 @@ namespace UnitTests
         /// <summary>
         ///A test for GetActorProfile
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void GetActorProfileTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -200,7 +152,8 @@ namespace UnitTests
         /// <summary>
         ///A test for GetActor
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void GetActorTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -215,7 +168,8 @@ namespace UnitTests
         /// <summary>
         ///A test for GetActorProfileIds
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void GetActorProfileIdsTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -231,7 +185,8 @@ namespace UnitTests
         /// <summary>
         ///A test for DeleteActorProfile
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void DeleteActorProfileTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
@@ -244,7 +199,8 @@ namespace UnitTests
         /// <summary>
         ///A test for DeleteAllActorProfile
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void DeleteAllActorProfileTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
@@ -256,7 +212,8 @@ namespace UnitTests
         /// <summary>
         ///A test for GetActivityStateIds
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void GetActivityStateIdsTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -274,7 +231,8 @@ namespace UnitTests
         /// <summary>
         ///A test for SaveActivityState
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void SaveActivityStateTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
@@ -292,7 +250,8 @@ namespace UnitTests
         /// <summary>
         ///A test for GetActivityState
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void GetActivityStateTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -310,7 +269,8 @@ namespace UnitTests
         /// <summary>
         ///A test for DeleteActivityState
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void DeleteActivityStateTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
@@ -325,7 +285,8 @@ namespace UnitTests
         /// <summary>
         ///A test for SaveActivityProfile
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void SaveActivityProfileTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
@@ -342,7 +303,8 @@ namespace UnitTests
         /// <summary>
         ///A test for GetActivityProfile
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void GetActivityProfileTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -358,7 +320,8 @@ namespace UnitTests
         /// <summary>
         ///A test for GetActivityProfileIds
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void GetActivityProfileIdsTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -374,7 +337,8 @@ namespace UnitTests
         /// <summary>
         ///A test for DeleteActivityProfile
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void DeleteActivityProfileTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
@@ -387,7 +351,8 @@ namespace UnitTests
         /// <summary>
         ///A test for DeleteAllActivityProfile
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void DeleteAllActivityProfileTest()
         {
             TCAPI target = new TCAPI("http://cloud.scorm.com/ScormEngineInterface/TCAPI/public", new BasicHTTPAuth("test", "password"));
@@ -399,7 +364,8 @@ namespace UnitTests
         /// <summary>
         ///A test for GetActivity
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void GetActivityTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -416,7 +382,8 @@ namespace UnitTests
         /// <summary>
         ///A test for StoreStatements
         ///</summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void StoreStatementsAsyncTest()
         {
             TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"), new TCAPICallback(), new OfflineStorage(), 750, 2);
@@ -457,7 +424,8 @@ namespace UnitTests
         /// A test for pushing and storing Actor Profiles, then deleting them.
         /// </summary>
         /// <remarks>This test should use a dummy actor, not a real one!</remarks>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void ActorProfileTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -535,7 +503,8 @@ namespace UnitTests
         /// Tests all the methods associated with Activity State
         /// </summary>
         /// <remarks>Again, use a dummy activity, not a real one.</remarks>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void ActivityStateTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
@@ -604,7 +573,7 @@ namespace UnitTests
         /// <summary>
         /// Tests all the methods associated with Activity Profile
         /// </summary>
-        [TestMethod()]
+        [Test]
         public void ActivityProfileTest()
         {
             TCAPI target = new TCAPI("https://cloud.scorm.com/ScormEngineInterface/TCAPI/CZSWMUZPSE", new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"));
@@ -673,7 +642,8 @@ namespace UnitTests
         /// <summary>
         /// Test to ensure ETag collisions are not ignored.
         /// </summary>
-        //[TestMethod()]
+        [Test]
+        [Ignore]
         public void CollisionTest()
         {
             TinCanJsonConverter converter = new TinCanJsonConverter();
