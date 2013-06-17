@@ -33,7 +33,7 @@ namespace UnitTests
     ///to contain all TCAPITest Unit Tests
     ///</summary>
     [TestFixture]
-    public class TCAPITest
+    public class TCAPIFixture
     {
         private const string INCONCLUSIVE = "The results of this test should be viewed on the LRS itself.";
         private const string INCONCLUSIVE_CONSOLE = "The expected results of this test should be compared to the console output.";
