@@ -62,12 +62,6 @@
     <Content Include="AuthoringTests.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TCAPIClientLibrary\TCAPIClientLibrary.csproj">
-      <Project>{4EAD55E0-ACE5-487C-81A3-23AE31EE389A}</Project>
-      <Name>TCAPIClientLibrary</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
@@ -88,6 +82,16 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TCAPIClientLibrary\TCAPIClientLibrary.csproj">
+      <Project>{4EAD55E0-ACE5-487C-81A3-23AE31EE389A}</Project>
+      <Name>TCAPIClientLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TinCanAPILibrary\TinCanAPILibrary.csproj">
+      <Project>{165CA993-6BC8-48FF-B7B7-8160EDF1E1A1}</Project>
+      <Name>TinCanAPILibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
 </Project>
