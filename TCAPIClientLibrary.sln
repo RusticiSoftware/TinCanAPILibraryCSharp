@@ -1,13 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCAPIClientLibrary", "TCAPIClientLibrary\TCAPIClientLibrary.csproj", "{4EAD55E0-ACE5-487C-81A3-23AE31EE389A}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E7D8DCE0-05D9-4C35-876D-CE40822110CA}"
 	ProjectSection(SolutionItems) = preProject
 		localtestrun.testrunconfig = localtestrun.testrunconfig
 		tcapiclientlibrary2.vsmdi = tcapiclientlibrary2.vsmdi
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCAPIClientLibrary", "TCAPIClientLibrary\TCAPIClientLibrary.csproj", "{4EAD55E0-ACE5-487C-81A3-23AE31EE389A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCAPIUnitTests", "TCAPIUnitTests\TCAPIUnitTests.csproj", "{EAAE85E1-AFCC-4800-BF75-7295A79F8B48}"
 EndProject
