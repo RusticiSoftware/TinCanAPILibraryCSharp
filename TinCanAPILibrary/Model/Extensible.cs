@@ -27,7 +27,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     /// </summary>
     public class Extensible
     {
-        protected Dictionary<Uri, object> extensions;
+        private Dictionary<Uri, object> extensions;
         
         public Dictionary<Uri, object> Extensions
         {

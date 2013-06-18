@@ -23,7 +23,7 @@ using RusticiSoftware.TinCanAPILibrary.Model;
 
 namespace RusticiSoftware.TinCanAPILibrary.TypeConverters
 {
-    public class NullableIntegerJsonConverter : JsonTypeConverter
+    public class NullableIntegerJsonConverter : IJsonTypeConverter
     {
         private Type myType = typeof(NullableInteger);
         public Type GetTargetClass()
@@ -33,7 +33,7 @@ namespace RusticiSoftware.TinCanAPILibrary.TypeConverters
 
         public object Deserialize(string value, JsonConverter converter)
         {
-            return String.IsNullOrEmpty(value) ? null : new NullableInteger(Int32.Parse(value));
+            return string.IsNullOrEmpty(value) ? null : new NullableInteger(Int32.Parse(value));
         }
 
         public object Reduce(object value, JsonConverter converter)

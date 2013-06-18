@@ -30,7 +30,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Json
     public class JsonConverter
     {
         private Hashtable typeConverters = new Hashtable();
-        public void RegisterTypeConverter(Type objectType, JsonTypeConverter typeConverter)
+        public void RegisterTypeConverter(Type objectType, IJsonTypeConverter typeConverter)
         {
             typeConverters[objectType] = typeConverter;
         }
@@ -51,12 +51,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Json
             //Don't serialize any properties that start with two underscores
             PrefixBasedPropertyExcludingContractResolver contractResolver = new PrefixBasedPropertyExcludingContractResolver("__");
             jsonSer.ContractResolver = contractResolver;
-            
+
             //Register our custom type converters
-            foreach (Type objectType in typeConverters.Keys) {
+            foreach (Type objectType in typeConverters.Keys)
+            {
                 jsonSer.Converters.Add(
                     new JsonTypeConverterWrapper(
-                        (JsonTypeConverter)typeConverters[objectType], this));
+                        (IJsonTypeConverter)typeConverters[objectType], this));
             }
 
             //Add a built in converter to do the right thing with dates and enums
@@ -66,12 +67,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Json
             return jsonSer;
         }
 
-        public String SerializeToJSON(Object obj)
+        public string SerializeToJSON(object obj)
         {
             return SerializeToJSON(obj, false);
         }
 
-        public String SerializeToJSON(Object obj, bool prettyPrint)
+        public string SerializeToJSON(object obj, bool prettyPrint)
         {
             JsonSerializer jsonSer = getCustomSerializer();
             using (StringWriter sw = new StringWriter())
@@ -88,35 +89,35 @@ namespace RusticiSoftware.TinCanAPILibrary.Json
             }
         }
 
-        public Object DeserializeJSON(String jsonString, Type objectType)
+        public object DeserializeJSON(string jsonString, Type objectType)
         {
             string typeName = objectType.Name;
             JsonSerializer jsonSer = getCustomSerializer();
             StringReader sr = new StringReader(jsonString);
             JsonReader jsonReader = new JsonTextReader(sr);
-            Object obj = jsonSer.Deserialize(jsonReader, objectType);
+            object obj = jsonSer.Deserialize(jsonReader, objectType);
 
             return PostDeserialize(obj);
         }
 
-        public IDictionary DeserializeJSONToMap(String jsonString)
+        public IDictionary DeserializeJSONToMap(string jsonString)
         {
             return (IDictionary)DeserializeJSON(jsonString, typeof(Hashtable));
         }
 
-        protected virtual Object PostDeserialize(Object obj)
+        protected virtual object PostDeserialize(object obj)
         {
             return obj;
         }
 
     }
 
-    class JsonTypeConverterWrapper : Newtonsoft.Json.JsonConverter
+    public class JsonTypeConverterWrapper : Newtonsoft.Json.JsonConverter
     {
-        private JsonTypeConverter typeConverter;
+        private IJsonTypeConverter typeConverter;
         private JsonConverter jsonConverter;
 
-        public JsonTypeConverterWrapper(JsonTypeConverter typeConverter, JsonConverter jsonConverter)
+        public JsonTypeConverterWrapper(IJsonTypeConverter typeConverter, JsonConverter jsonConverter)
         {
             this.typeConverter = typeConverter;
             this.jsonConverter = jsonConverter;
@@ -129,17 +130,21 @@ namespace RusticiSoftware.TinCanAPILibrary.Json
         {
             //HttpUtil.WriteToWebLog("INFO", "reader.TokenType = " + reader.TokenType.ToString() + ", reader.Value = " + reader.Value + ", reader.ValueType = " + reader.ValueType + ", objectType = " + objectType);
 
-            String valueAsString = null;
-            if (reader.TokenType.Equals(JsonToken.StartObject)) {
+            string valueAsString = null;
+            if (reader.TokenType.Equals(JsonToken.StartObject))
+            {
                 valueAsString = jsonConverter.SerializeToJSON(serializer.Deserialize(reader, typeof(JObject)));
             }
-            else if (reader.TokenType.Equals(JsonToken.StartArray)) {
+            else if (reader.TokenType.Equals(JsonToken.StartArray))
+            {
                 valueAsString = jsonConverter.SerializeToJSON(serializer.Deserialize(reader, typeof(JObject)));
             }
-            else if (reader.TokenType.Equals(JsonToken.Null)) {
+            else if (reader.TokenType.Equals(JsonToken.Null))
+            {
                 return null;
             }
-            else {
+            else
+            {
                 valueAsString = reader.Value.ToString();
             }
             //HttpUtil.WriteToWebLog("INFO", "valueAsString = " + valueAsString);
@@ -147,7 +152,8 @@ namespace RusticiSoftware.TinCanAPILibrary.Json
         }
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (value == null) {
+            if (value == null)
+            {
                 writer.WriteNull();
                 return;
             }
@@ -159,23 +165,24 @@ namespace RusticiSoftware.TinCanAPILibrary.Json
         }
     }
 
-    class CamelCasingJsonTextWriter : JsonTextWriter
+    public class CamelCasingJsonTextWriter : JsonTextWriter
     {
-        public CamelCasingJsonTextWriter(TextWriter tw) : base(tw)
+        public CamelCasingJsonTextWriter(TextWriter tw)
+            : base(tw)
         {
         }
 
         public override void WritePropertyName(string name)
         {
-            String newName = name[0].ToString().ToLower() + name.Substring(1);
+            string newName = name[0].ToString().ToLower() + name.Substring(1);
             base.WritePropertyName(newName);
         }
     }
 
     public class PrefixBasedPropertyExcludingContractResolver : DefaultContractResolver
     {
-        private readonly String prefixToExclude;
-        public PrefixBasedPropertyExcludingContractResolver(String prefixToExclude)
+        private readonly string prefixToExclude;
+        public PrefixBasedPropertyExcludingContractResolver(string prefixToExclude)
         {
             this.prefixToExclude = prefixToExclude;
         }
@@ -188,8 +195,10 @@ namespace RusticiSoftware.TinCanAPILibrary.Json
             /*properties = 
               properties.Where(p => p.PropertyName.StartsWith(_startingWithChar.ToString())).ToList();*/
             IList<JsonProperty> filtered = new List<JsonProperty>();
-            foreach (JsonProperty prop in properties) {
-                if (!prop.PropertyName.StartsWith(prefixToExclude)) {
+            foreach (JsonProperty prop in properties)
+            {
+                if (!prop.PropertyName.StartsWith(prefixToExclude))
+                {
                     filtered.Add(prop);
                 }
             }

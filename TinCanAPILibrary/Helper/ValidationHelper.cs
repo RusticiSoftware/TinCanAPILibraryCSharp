@@ -27,7 +27,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// </summary>
         /// <param name="email">The email to validate</param>
         /// <returns>True if valid, otherwise false</returns>
-        public static bool IsValidEmailAddress(String email)
+        public static bool IsValidEmailAddress(string email)
         {
             return Regex.IsMatch(email, "^([a-zA-Z0-9_\\.\\-\\+])+\\@(([a-zA-Z0-9\\-])+\\.)+([a-zA-Z0-9]{2,4})+$");
         }
@@ -37,7 +37,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// </summary>
         /// <param name="potential">The string to test</param>
         /// <returns>True if valid, otherwise false</returns>
-        public static bool IsValidUUID(String potential)
+        public static bool IsValidUUID(string potential)
         {
             if (potential == null)
             {

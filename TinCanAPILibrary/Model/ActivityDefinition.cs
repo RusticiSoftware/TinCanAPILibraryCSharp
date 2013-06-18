@@ -58,9 +58,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             set { type = value; }
         }
 
-        private String interactionType;
+        private string interactionType;
 
-        public virtual String InteractionType
+        public virtual string InteractionType
         {
             get { return interactionType; }
             set { interactionType = value; }

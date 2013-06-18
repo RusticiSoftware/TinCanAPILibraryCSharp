@@ -28,7 +28,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         {
             this.Value = value;
         }
-        public NullableScormTimeSpan(String value)
+        public NullableScormTimeSpan(string value)
         {
             this.Value = new ScormTimeSpan(value);
         }

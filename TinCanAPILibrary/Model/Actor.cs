@@ -26,7 +26,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class Actor : StatementTarget, IValidatable
     {
         #region Constants
-        protected static readonly String OBJECT_TYPE = "Agent";
+        protected static readonly string OBJECT_TYPE = "Agent";
 
         private const string account_key = "account";
         private const string mbox_key = "mbox";
@@ -35,18 +35,18 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #endregion
 
         #region Fields
-        protected String name;
-        protected String mbox;
-        protected String mbox_sha1sum;
-        protected String openid;
-        protected AgentAccount account;
+        private string name;
+        private string mbox;
+        private string mbox_sha1sum;
+        private string openid;
+        private AgentAccount account;
         #endregion
 
         #region Properties
         /// <summary>
         /// ObjectType accessor
         /// </summary>
-        public override String ObjectType
+        public override string ObjectType
         {
             get { return OBJECT_TYPE; }
         }
@@ -54,7 +54,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// Array of names for the actor
         /// </summary>
-        public String Name
+        public string Name
         {
             get { return name; }
             set
@@ -66,13 +66,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// Array of mailboxes for the actor
         /// </summary>
-        public String Mbox
+        public string Mbox
         {
             get { return mbox; }
             set
             {
-                String mboxPrefix = "mailto:";
-                String normalized = value.ToLower();
+                string mboxPrefix = "mailto:";
+                string normalized = value.ToLower();
                 if (normalized != null)
                 {
                     if (!normalized.StartsWith(mboxPrefix))
@@ -93,7 +93,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// Array of email sha1sums for the actor
         /// </summary>
-        public String Mbox_sha1sum
+        public string Mbox_sha1sum
         {
             get { return mbox_sha1sum; }
             set
@@ -105,7 +105,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// Array of OpenIDs for the actor
         /// </summary>
-        public String Openid
+        public string Openid
         {
             get { return openid; }
             set
@@ -124,7 +124,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             {
                 if (value != null)
                 {
-
                     // TODO - reconsider whether to deep-validate in setters
                     var failures = new List<ValidationFailure>(value.Validate(earlyReturnOnFailure: true));
                     if (failures.Count > 0)
@@ -169,15 +168,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         public virtual IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
             int properties = 0;
-            if (!String.IsNullOrEmpty(mbox))
+            if (!string.IsNullOrEmpty(mbox))
             {
                 properties++;
             }
-            if (!String.IsNullOrEmpty(mbox_sha1sum))
+            if (!string.IsNullOrEmpty(mbox_sha1sum))
             {
                 properties++;
             }
-            if (!String.IsNullOrEmpty(openid))
+            if (!string.IsNullOrEmpty(openid))
             {
                 properties++;
             }
@@ -200,7 +199,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// Actor object, the properties of a Hash cannot be fulfilled, so it is
         /// not recommended to use this object in a HashTable.
         /// </summary>
-        /// <returns>0.  Object is not effectively hashable</returns>
+        /// <returns>0.  object is not effectively hashable</returns>
         public override int GetHashCode()
         {
             return 0;

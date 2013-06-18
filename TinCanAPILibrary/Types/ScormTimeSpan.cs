@@ -30,7 +30,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     [Serializable]
     public struct ScormTimeSpan
     {
-
         //Note - This doesn't use the internal .NET TimeSpan type because it that is only equipped to handle values up to a days, not months and years as well
 
         /// <summary>
@@ -129,11 +128,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 
         private void Parse(string timeSpanValue)
         {
-            if (String.IsNullOrEmpty(timeSpanValue))
+            if (string.IsNullOrEmpty(timeSpanValue))
             {
-                throw new InvalidArgumentException("Could not parse TimeSpan -- String was empty");
+                throw new InvalidArgumentException("Could not parse TimeSpan -- string was empty");
             }
             else
+            {
                 try
                 {
                     if (timeSpanValue.StartsWith("P"))
@@ -159,6 +159,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                     }
 
                 }
+            }
             this.Description = new LanguageString();
         }
 
@@ -169,39 +170,38 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <returns>String representation of the class</returns>
         public string ToIso8601String()
         {
-
-            string isoTimeSpanValue = "";
+            string isoTimeSpanValue = string.Empty;
 
             if (this.Value == ScormTimeSpan.UNDEFINED)
             {
-                return "";
+                return string.Empty;
             }
 
-            long hundredthsOfASecond;	//decrementing counter - work at the hundreths of a second level because that is all the precision that is required
+            long hundredthsOfASecond; //decrementing counter - work at the hundreths of a second level because that is all the precision that is required
 
-            long seconds;	// 100 hundreths of a seconds
-            long minutes;		// 60 seconds
-            long hours;			// 60 minutes
-            long days;			// 24 hours
-            long months;		// assumed to be an "average" month (figures a leap year every 4 years) = ((365*4) + 1) / 48 days - 30.4375 days per month
-            long years;			// assumed to be 12 "average" months
+            long seconds;       // 100 hundreths of a seconds
+            long minutes;       // 60 seconds
+            long hours;         // 60 minutes
+            long days;          // 24 hours
+            long months;        // assumed to be an "average" month (figures a leap year every 4 years) = ((365*4) + 1) / 48 days - 30.4375 days per month
+            long years;         // assumed to be 12 "average" months
 
             hundredthsOfASecond = this.Value;
 
             years = (long)Math.Floor((double)(hundredthsOfASecond / HUNDREDTHS_PER_YEAR));
-            hundredthsOfASecond -= (years * HUNDREDTHS_PER_YEAR);
+            hundredthsOfASecond -= years * HUNDREDTHS_PER_YEAR;
 
             months = (long)Math.Floor((double)(hundredthsOfASecond / HUNDREDTHS_PER_MONTH));
-            hundredthsOfASecond -= (months * HUNDREDTHS_PER_MONTH);
+            hundredthsOfASecond -= months * HUNDREDTHS_PER_MONTH;
 
             days = (long)Math.Floor((double)(hundredthsOfASecond / HUNDREDTHS_PER_DAY));
-            hundredthsOfASecond -= (days * HUNDREDTHS_PER_DAY);
+            hundredthsOfASecond -= days * HUNDREDTHS_PER_DAY;
 
             hours = (long)Math.Floor((double)(hundredthsOfASecond / HUNDREDTHS_PER_HOUR));
-            hundredthsOfASecond -= (hours * HUNDREDTHS_PER_HOUR);
+            hundredthsOfASecond -= hours * HUNDREDTHS_PER_HOUR;
 
             minutes = (long)Math.Floor((double)(hundredthsOfASecond / HUNDREDTHS_PER_MINUTE));
-            hundredthsOfASecond -= (minutes * HUNDREDTHS_PER_MINUTE);
+            hundredthsOfASecond -= minutes * HUNDREDTHS_PER_MINUTE;
 
             seconds = (long)Math.Floor((double)(hundredthsOfASecond / HUNDREDTHS_PER_SECOND));
             hundredthsOfASecond -= (Int64)(seconds * HUNDREDTHS_PER_SECOND);
@@ -223,7 +223,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             //check to see if we have any time before adding the "T"
             if ((hundredthsOfASecond + seconds + minutes + hours) > 0)
             {
-
                 isoTimeSpanValue += "T";
 
                 if (hours > 0)
@@ -268,17 +267,16 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <returns>String representation of the class</returns>
         public string ToCmiString()
         {
-
             if (this.Value == ScormTimeSpan.UNDEFINED)
             {
-                return "";
+                return string.Empty;
             }
 
-            long hundredthsOfASecond;	//decrementing counter - work at the hundreths of a second level because that is all the precision that is required
+            long hundredthsOfASecond;   //decrementing counter - work at the hundreths of a second level because that is all the precision that is required
 
-            long seconds;	// 100 hundreths of a seconds
-            long minutes;		// 60 seconds
-            long hours;			// 60 minutes
+            long seconds;   // 100 hundreths of a seconds
+            long minutes;   // 60 seconds
+            long hours;     // 60 minutes
 
             hundredthsOfASecond = this.Value;
 
@@ -314,7 +312,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 
         private static long ParseCmiTimeSpan(string timeSpanValue)
         {
-
             int hours = 0;
             int minutes = 0;
             double seconds = 0;
@@ -330,7 +327,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 
             minutes = Convert.ToInt32(aryTimes[1]);
 
-            seconds = Double.Parse(aryTimes[2], NumberFormatInfo.InvariantInfo);
+            seconds = double.Parse(aryTimes[2], NumberFormatInfo.InvariantInfo);
 
             return (HUNDREDTHS_PER_HOUR * hours) + (HUNDREDTHS_PER_MINUTE * minutes) + Convert.ToInt32(HUNDREDTHS_PER_SECOND * seconds);
         }
@@ -338,7 +335,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 
         private static bool IsValidCmiTimeSpan(string timeSpanValue)
         {
-
             //In this implementation, we're allowing only 1 hours digit, technically the runtime requires 2 hours digits, but
             //some metadata elements may only have one
             //TODO: The metadata elements can technically be any IS08601 format, extend this class to make sure that those are supported
@@ -355,7 +351,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 
         private static long ParseIso8601TimeSpan(string timeSpanValue)
         {
-
             //loop through the string
             //keep track of the current string of digits
             //if a letter is found, check for a valid letter delimiter
@@ -384,9 +379,8 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 
             foreach (char currentChar in chars)
             {
-
                 //if is numeric or double 
-                if (Char.IsDigit(currentChar) || currentChar == '.')
+                if (char.IsDigit(currentChar) || currentChar == '.')
                 {
                     currentDigits.Append(currentChar);
                 }
@@ -422,7 +416,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                             hours = Convert.ToInt32(currentDigits.ToString());
                             break;
                         case ('S'):
-                            seconds = Double.Parse(currentDigits.ToString(), NumberFormatInfo.InvariantInfo);
+                            seconds = double.Parse(currentDigits.ToString(), NumberFormatInfo.InvariantInfo);
                             seconds = Math.Round(seconds, 2);
                             break;
                     }
@@ -459,7 +453,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 
         private static bool Iso8601TimeSpan(string timeSpanValue)
         {
-
             //if just = "P" or if ends with "T" time interval is invalid
             if (timeSpanValue == "P" || (timeSpanValue.LastIndexOf("T") == (timeSpanValue.Length - 1)))
             {

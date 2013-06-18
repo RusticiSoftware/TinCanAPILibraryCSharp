@@ -27,14 +27,14 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     /// </summary>
     public class AgentAccount : IValidatable
     {
-        protected String homePage;
-        protected String name;
-        private String hashString;
+        private string homePage;
+        private string name;
+        private string hashString;
 
         /// <summary>
         /// The home page of the agent account
         /// </summary>
-        public String Homepage
+        public string Homepage
         {
             get { return homePage; }
             set
@@ -47,7 +47,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// The username used by the agent to log into this account page
         /// </summary>
-        public String Name
+        public string Name
         {
             get { return name; }
             set
@@ -92,7 +92,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         public IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
             var failures = new List<ValidationFailure>();
-            if (String.IsNullOrEmpty(homePage))
+            if (string.IsNullOrEmpty(homePage))
             {
                 failures.Add(new ValidationFailure("Account service homepage cannot be null"));
                 if (earlyReturnOnFailure)
@@ -100,7 +100,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                     return failures;
                 }
             }
-            if (String.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
                 failures.Add(new ValidationFailure("Account name cannot be null"));
                 if (earlyReturnOnFailure)

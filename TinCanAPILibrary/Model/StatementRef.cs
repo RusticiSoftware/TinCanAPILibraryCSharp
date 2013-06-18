@@ -24,15 +24,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class StatementRef : StatementTarget
     {
         #region Constants
-        protected static readonly String OBJECT_TYPE = "StatementRef";
+        protected static readonly string OBJECT_TYPE = "StatementRef";
         #endregion
 
         #region Fields
-        private String id;
+        private string id;
         #endregion
 
         #region Properties
-        public String Id
+        public string Id
         {
             get { return id; }
             set { id = value; }

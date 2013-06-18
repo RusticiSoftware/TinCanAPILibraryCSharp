@@ -24,7 +24,7 @@ using RusticiSoftware.TinCanAPILibrary.Model;
 
 namespace RusticiSoftware.TinCanAPILibrary
 {
-    public class LanguageMapConverter : JsonTypeConverter
+    public class LanguageMapConverter : IJsonTypeConverter
     {
         private Type myType = typeof(LanguageMap);
 

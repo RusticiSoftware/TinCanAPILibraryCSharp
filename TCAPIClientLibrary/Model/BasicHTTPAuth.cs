@@ -24,13 +24,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class BasicHTTPAuth : IAuthenticationConfiguration
     {
         #region Fields
-        private String username;
-        private String password;
-        private String authHeaderValue;
+        private string username;
+        private string password;
+        private string authHeaderValue;
         #endregion
 
         #region Properties
-        public String Username
+        public string Username
         {
             get { return username; }
             set
@@ -40,7 +40,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             }
         }
 
-        public String Password
+        public string Password
         {
             get { return password; }
             set 
@@ -50,7 +50,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             }
         }
 
-        public String AuthHeaderValue
+        public string AuthHeaderValue
         {
             get { return authHeaderValue; }
         }
@@ -63,7 +63,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         public BasicHTTPAuth() { }
         
         /// <summary>
-        /// Creates an HTTP Auth Object with the necessary parameters
+        /// Creates an HTTP Auth object with the necessary parameters
         /// </summary>
         /// <param name="username">Authentication Username</param>
         /// <param name="password">Authentication Password</param>

@@ -30,31 +30,31 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class Context : Extensible, IValidatable
     {
         #region Fields
-        protected String registration;
-        protected Actor instructor;
-        protected Actor team;
-        protected ContextActivities contextActivities;
-        protected String revision;
-        protected String platform;
-        protected Statement statement;
+        private string registration;
+        private Actor instructor;
+        private Actor team;
+        private ContextActivities contextActivities;
+        private string revision;
+        private string platform;
+        private Statement statement;
         #endregion
 
         #region Properties
         /// <summary>
         /// The Registration UUID
         /// </summary>
-        public String Registration
+        public string Registration
         {
             get { return registration; }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     registration = null;
                 }
                 else
                 {
-                    String normalized = value.ToLower();
+                    string normalized = value.ToLower();
                     if (!ValidationHelper.IsValidUUID(normalized))
                     {
                         throw new InvalidArgumentException("Registration must be UUID");
@@ -94,7 +94,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// The revision
         /// </summary>
-        public String Revision
+        public string Revision
         {
             get { return revision; }
             set { revision = value; }
@@ -103,7 +103,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// The platform
         /// </summary>
-        public String Platform
+        public string Platform
         {
             get { return platform; }
             set { platform = value; }
@@ -129,10 +129,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// </summary>
         public IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
-            Object[] children = new Object[] { registration, instructor, team, 
-                contextActivities, revision, platform, statement };
+            object[] children = new object[] 
+            { 
+                registration, instructor, team, 
+                contextActivities, revision, platform, statement 
+            };
             var failures = new List<ValidationFailure>();
-            foreach (Object o in children)
+            foreach (object o in children)
             {
                 if (o != null && o is IValidatable)
                 {

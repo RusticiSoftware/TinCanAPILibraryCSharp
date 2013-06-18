@@ -24,7 +24,7 @@ using RusticiSoftware.TinCanAPILibrary.Model;
 
 namespace RusticiSoftware.TinCanAPILibrary
 {
-    public class TinCanActorJsonConverter : JsonTypeConverter
+    public class TinCanActorJsonConverter : IJsonTypeConverter
     {
         private Type myType = typeof(Actor);
         public Type GetTargetClass()
@@ -36,16 +36,18 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             //Integration.Implementation.LogAudit("TinCanActor Deserialize called", null);
             IDictionary objMap = converter.DeserializeJSONToMap(value);
-            String typeField = null;
-            if (objMap.Contains("objectType")) {
-                typeField = (String)objMap["objectType"];
+            string typeField = null;
+            if (objMap.Contains("objectType"))
+            {
+                typeField = (string)objMap["objectType"];
             }
 
             TypeFieldJsonHelper typeFieldHelper = new TypeFieldJsonHelper();
             Type targetType = typeFieldHelper.GetTypeFromString(typeField, typeof(Actor));
 
             //Avoid infinite loop here, if type is this base class
-            if (targetType.Equals(typeof(Actor))) {
+            if (targetType.Equals(typeof(Actor)))
+            {
                 targetType = typeof(TinCanActor_JsonTarget);
             }
 
@@ -55,21 +57,21 @@ namespace RusticiSoftware.TinCanAPILibrary
         public object Reduce(object value, JsonConverter converter)
         {
             //Avoid infinite loop here, so we don't ever return just a TinCanActor type
-            return new TinCanActor_JsonTarget((Actor) value);
+            return new TinCanActor_JsonTarget((Actor)value);
         }
 
         // since TinCanActor is now a concrete class, 
         // provide this to reduce to so serialization doesn't get in an infinite loop
         public class TinCanActor_JsonTarget : Actor
         {
-            public TinCanActor_JsonTarget(){}
-            public TinCanActor_JsonTarget(Actor actor) : base(actor) {}
+            public TinCanActor_JsonTarget() { }
+            public TinCanActor_JsonTarget(Actor actor) : base(actor) { }
         }
 
         public class TinCan090Actor_JsonTarget : Model.TinCan090.Actor
         {
-            public TinCan090Actor_JsonTarget(){}
-            public TinCan090Actor_JsonTarget(Model.TinCan090.Actor actor) : base(actor){}
+            public TinCan090Actor_JsonTarget() { }
+            public TinCan090Actor_JsonTarget(Model.TinCan090.Actor actor) : base(actor) { }
         }
     }
 }

@@ -22,8 +22,8 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 {
     public class StatementVerb
     {
-        string id;
-        LanguageMap display;
+        private string id;
+        private LanguageMap display;
 
         public string Id
         {
@@ -68,7 +68,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         }
 
         /// <summary>
-        /// Creates a new statement verb given a URI String that is validated and a language map with a single entry
+        /// Creates a new statement verb given a URI string that is validated and a language map with a single entry
         /// </summary>
         /// <param name="id"></param>
         /// <param name="locale"></param>
@@ -76,9 +76,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         public StatementVerb(string id, string locale, string name)
         {
             if (IsUri(id))
+            {
                 this.id = id;
+            }
             else
+            {
                 throw new ValidationException("The URI " + id + " is malformed.");
+            }
             display = new LanguageMap();
             display[locale] = name;
         }
@@ -105,12 +109,14 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         {
         }
 
-        private bool IsUri(string source) {
-          if(!string.IsNullOrEmpty(source) && Uri.IsWellFormedUriString(source, UriKind.RelativeOrAbsolute)){
+        private bool IsUri(string source)
+        {
+            if (!string.IsNullOrEmpty(source) && Uri.IsWellFormedUriString(source, UriKind.RelativeOrAbsolute))
+            {
                 Uri tempValue;
-                return (Uri.TryCreate(source, UriKind.RelativeOrAbsolute, out tempValue));
+                return Uri.TryCreate(source, UriKind.RelativeOrAbsolute, out tempValue);
             }
-            return (false);
+            return false;
         }
 
         public bool IsVoided()
@@ -118,7 +124,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             foreach (string s in display.Values)
             {
                 if (s.ToLower().Equals("voided"))
-                return true;
+                {
+                    return true;
+                }
             }
             return false;
         }

@@ -23,7 +23,7 @@ using RusticiSoftware.TinCanAPILibrary.Model;
 
 namespace RusticiSoftware.TinCanAPILibrary.TypeConverters
 {
-    public class NullableScormTimeSpanJsonConverter : JsonTypeConverter
+    public class NullableScormTimeSpanJsonConverter : IJsonTypeConverter
     {
         private Type myType = typeof(NullableScormTimeSpan);
         public Type GetTargetClass()
@@ -33,7 +33,7 @@ namespace RusticiSoftware.TinCanAPILibrary.TypeConverters
 
         public object Deserialize(string value, JsonConverter converter)
         {
-            return String.IsNullOrEmpty(value) ? null : new NullableScormTimeSpan(value);
+            return string.IsNullOrEmpty(value) ? null : new NullableScormTimeSpan(value);
         }
 
         public object Reduce(object value, JsonConverter converter)

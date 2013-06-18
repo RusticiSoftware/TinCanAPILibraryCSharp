@@ -104,7 +104,7 @@ namespace UnitTests
             actual = target.GetStatements(queryObject);
             limit = actual.Statements.Length;
             Console.Write(converter.SerializeToJSON(actual));
-            while (limit <= 50 && !String.IsNullOrEmpty(actual.More))
+            while (limit <= 50 && !string.IsNullOrEmpty(actual.More))
             {
                 actual = target.GetStatements(actual.More);
                 Console.Write(converter.SerializeToJSON(actual));
@@ -435,8 +435,8 @@ namespace UnitTests
             TCAPI target = new TCAPI(new Uri("http://cloud.scorm.com/tc/public"), new BasicHTTPAuth("CZSWMUZPSE", "vwiuflgsY22FDXpHA4lwwe5hrnUXvcyJjW3fDrpH"));
             Actor actor = new Actor("Mufasa", "mailto:mufasa@gmail.com");
 
-            String[] profileIds = { "The Lion King", "The Fallen King", "The New King" };
-            String[] profileContents = { 
+            string[] profileIds = { "The Lion King", "The Fallen King", "The New King" };
+            string[] profileContents = { 
                 "Mufasa rules his country as a proud and fair king of lions, celebrating his recently newborn son Simba.",
                 "Scar kills Mufasa, simply muttering the words 'Long Live the King'", 
                 "Simba finally realizes he must follow in his fathers footsteps to save the kingdom from the evil Scar." };

@@ -25,15 +25,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 {
     public class InteractionDefinition : ActivityDefinition
     {
-        protected List<string> correctResponsesPattern;
+        private List<string> correctResponsesPattern;
         private InteractionType interactionType = new InteractionType(InteractionTypeValue.Undefined);
 
         //Each of these is optional, depending on the type of interaction
-        protected List<InteractionComponent> choices;
-        protected List<InteractionComponent> scale;
-        protected List<InteractionComponent> source;
-        protected List<InteractionComponent> target;
-        protected List<InteractionComponent> steps;
+        private List<InteractionComponent> choices;
+        private List<InteractionComponent> scale;
+        private List<InteractionComponent> source;
+        private List<InteractionComponent> target;
+        private List<InteractionComponent> steps;
 
         public InteractionDefinition() { }
 
@@ -176,27 +176,47 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         public List<InteractionComponent> Choices
         {
             get { return ProtectedGet(InteractionComponentName.Choices, choices); }
-            set { CheckComponentSet(InteractionComponentName.Choices, value); choices = value; }
+            set
+            {
+                CheckComponentSet(InteractionComponentName.Choices, value);
+                choices = value;
+            }
         }
         public List<InteractionComponent> Scale
         {
             get { return ProtectedGet(InteractionComponentName.Scale, scale); }
-            set { CheckComponentSet(InteractionComponentName.Scale, value); scale = value; }
+            set
+            {
+                CheckComponentSet(InteractionComponentName.Scale, value);
+                scale = value;
+            }
         }
         public List<InteractionComponent> Source
         {
             get { return ProtectedGet(InteractionComponentName.Source, source); }
-            set { CheckComponentSet(InteractionComponentName.Source, value); source = value; }
+            set
+            {
+                CheckComponentSet(InteractionComponentName.Source, value);
+                source = value;
+            }
         }
         public List<InteractionComponent> Target
         {
             get { return ProtectedGet(InteractionComponentName.Target, target); }
-            set { CheckComponentSet(InteractionComponentName.Target, value); target = value; }
+            set
+            {
+                CheckComponentSet(InteractionComponentName.Target, value);
+                target = value;
+            }
         }
         public List<InteractionComponent> Steps
         {
             get { return ProtectedGet(InteractionComponentName.Steps, steps); }
-            set { CheckComponentSet(InteractionComponentName.Steps, value); steps = value; }
+            set
+            {
+                CheckComponentSet(InteractionComponentName.Steps, value);
+                steps = value;
+            }
         }
 
         #endregion

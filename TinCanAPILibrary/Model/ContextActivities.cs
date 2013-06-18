@@ -25,9 +25,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class ContextActivities : IValidatable
     {
         #region Fields
-        protected TinCanActivity parent;
-        protected TinCanActivity grouping;
-        protected TinCanActivity other;
+        private TinCanActivity parent;
+        private TinCanActivity grouping;
+        private TinCanActivity other;
         #endregion
 
         #region Properties
@@ -57,9 +57,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         public IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
             //Validate children
-            Object[] children = new Object[] { parent, grouping, other };
+            object[] children = new object[] { parent, grouping, other };
             var failures = new List<ValidationFailure>();
-            foreach (Object child in children)
+            foreach (object child in children)
             {
                 if (child != null && child is IValidatable)
                 {

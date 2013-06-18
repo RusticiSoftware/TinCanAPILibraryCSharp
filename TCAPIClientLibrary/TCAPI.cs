@@ -31,7 +31,7 @@ using RusticiSoftware.TinCanAPILibrary.Model;
 namespace RusticiSoftware.TinCanAPILibrary
 {
     /// <summary>
-    /// The TCAPI Object which handles the bulk of the logic and communication
+    /// The TCAPI object which handles the bulk of the logic and communication
     /// Note the read only properties, which must be assigned in the constructor
     /// are the asynchronous support variables.  If a TCAPI with no AsyncSupport is created,
     /// batching statements for async launch will just populate the offlinestorage indefinitely,
@@ -58,7 +58,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         private int maxBatchSize = 50;
         private Timer asyncPostTimer;
         private AsyncPostCallback asyncPostCallback;
-        private Object flushLock = new Object();
+        private object flushLock = new Object();
         private bool isAsyncFlushing;
         private string versionString
         {
@@ -247,7 +247,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             WebHeaderCollection whc = GetWebHeaders();
             string version = null;
             version = whc["X-Experience-API-Version"];
-            if (String.IsNullOrEmpty(version))
+            if (string.IsNullOrEmpty(version))
             {
             }
             else if (version.Equals("0.95") || version.Equals(".95"))
@@ -762,7 +762,7 @@ namespace RusticiSoftware.TinCanAPILibrary
                     break;
             }
             nvc["stateId"] = stateId;
-            if (!String.IsNullOrEmpty(registrationId))
+            if (!string.IsNullOrEmpty(registrationId))
                 nvc["registrationId"] = registrationId;
             WebHeaderCollection whc;
             getResult = HttpMethods.GetRequest(nvc, endpoint + ACTIVITY_STATE, authentification, out whc, versionString);
@@ -872,7 +872,7 @@ namespace RusticiSoftware.TinCanAPILibrary
                     break;
             }
             nvc["stateId"] = stateId;
-            if (!String.IsNullOrEmpty(registrationId))
+            if (!string.IsNullOrEmpty(registrationId))
                 nvc["registrationId"] = registrationId;
             HttpMethods.DeleteRequest(nvc, endpoint + ACTIVITY_STATE, authentification, versionString);
         }

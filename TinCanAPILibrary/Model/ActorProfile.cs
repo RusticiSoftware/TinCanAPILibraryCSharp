@@ -24,10 +24,10 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 {
     public class ActorProfile
     {
-        Actor actor;
-        string profileId;
-        string body;
-        string contentType;
+        private Actor actor;
+        private string profileId;
+        private string body;
+        private string contentType;
 
         public string ContentType
         {

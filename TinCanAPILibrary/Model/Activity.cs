@@ -25,8 +25,8 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     {
         private const string OBJECT_TYPE = "activity";
 
-        string id;
-        ActivityDefinition definition;
+        private string id;
+        private ActivityDefinition definition;
 
         /// <summary>
         /// The activity ID
@@ -49,7 +49,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// The object type for statement posts
         /// </summary>
-        public override String ObjectType
+        public override string ObjectType
         {
             get { return OBJECT_TYPE; }
         }

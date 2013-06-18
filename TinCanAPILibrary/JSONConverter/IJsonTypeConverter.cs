@@ -21,7 +21,7 @@ using System.Text;
 
 namespace RusticiSoftware.TinCanAPILibrary.Json
 {
-    public interface JsonTypeConverter
+    public interface IJsonTypeConverter
     {
         Type GetTargetClass();
         object Deserialize(string value, JsonConverter converter);

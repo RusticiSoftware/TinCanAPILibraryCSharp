@@ -26,10 +26,10 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class Score : IValidatable
     {
         #region Fields
-        protected NullableDouble scaled;
-        protected NullableDouble raw;
-        protected NullableDouble min;
-        protected NullableDouble max;
+        private NullableDouble scaled;
+        private NullableDouble raw;
+        private NullableDouble min;
+        private NullableDouble max;
         #endregion
 
         #region Properties

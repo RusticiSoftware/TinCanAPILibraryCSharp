@@ -26,21 +26,21 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class TinCanActivity : StatementTarget, IValidatable
     {
         #region Constants
-        protected static readonly String OBJECT_TYPE = "Activity";
+        protected static readonly string OBJECT_TYPE = "Activity";
         #endregion
 
         #region Fields
-        protected String id;
-        protected ActivityDefinition definition;
+        private string id;
+        private ActivityDefinition definition;
         #endregion
 
         #region Properties
-        public override String ObjectType
+        public override string ObjectType
         {
             get { return OBJECT_TYPE; }
         }
 
-        public String Id
+        public string Id
         {
             get { return id; }
             set { id = value; }
@@ -56,12 +56,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #region Constructor
         public TinCanActivity() { }
 
-        public TinCanActivity(String id)
+        public TinCanActivity(string id)
         {
             this.id = id;
         }
 
-        public TinCanActivity(String id, ActivityDefinition definition)
+        public TinCanActivity(string id, ActivityDefinition definition)
         {
             this.id = id;
             this.definition = definition;

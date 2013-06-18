@@ -43,7 +43,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         }
         public override int GetHashCode()
         {
-            return (int) (Value % int.MaxValue);
+            return (int)(Value % int.MaxValue);
         }
 
         public static implicit operator NullableDouble(double d)

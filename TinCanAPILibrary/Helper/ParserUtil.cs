@@ -33,12 +33,11 @@ namespace RusticiSoftware.ScormContentPlayer.Util
         /// <exception cref="System.FormatException">If the string does not represent a valid date.</exception>
         public static DateTime GetDateTimeFromIsoTimeString(string isoTimeValue)
         {
-
             DateTimeFormatInfo currentCultureFormat = CultureInfo.InvariantCulture.DateTimeFormat;
 
             //note, help on formatting is under DateTimeFormatInfoClass
 
-            String[] iso8601Formats = new String[14];
+            string[] iso8601Formats = new string[14];
             iso8601Formats[0] = "yyyy-MM-ddTHH:mm:ss.FFFFFFF'Z'";
             iso8601Formats[1] = "yyyy-MM-ddTHH:mm:ss.FFFFFFFzzz";
             iso8601Formats[2] = "yyyy-MM-ddTHH:mm:ss.FFFFFFFzz";
@@ -62,7 +61,7 @@ namespace RusticiSoftware.ScormContentPlayer.Util
             }
             catch (FormatException fe)
             {
-                throw new FormatException("'" + isoTimeValue + "' is an invalid String representation of a DateTime value.", fe);
+                throw new FormatException("'" + isoTimeValue + "' is an invalid string representation of a DateTime value.", fe);
             }
 
         }
@@ -80,19 +79,19 @@ namespace RusticiSoftware.ScormContentPlayer.Util
             }
             catch (FormatException fe)
             {
-                throw new FormatException("'" + s + "' is an invalid String representation of a DateTime value.", fe);
+                throw new FormatException("'" + s + "' is an invalid string representation of a DateTime value.", fe);
             }
         }
 
         /// <summary>
-        /// Determines if a string represents a valid Double data type
+        /// Determines if a string represents a valid double data type
         /// </summary>
         /// <param name="s">String to check</param>
         /// <returns>Boolean indicating validity</returns>
         public static bool IsValidDouble(string s)
         {
             double d;
-            return Double.TryParse(s, NumberStyles.Any, new NumberFormatInfo(), out d);
+            return double.TryParse(s, NumberStyles.Any, new NumberFormatInfo(), out d);
         }
 
         /// <summary>
@@ -105,17 +104,17 @@ namespace RusticiSoftware.ScormContentPlayer.Util
         public static bool IsValidDouble(string s, NumberStyles style, NumberFormatInfo info)
         {
             double d;
-            return Double.TryParse(s, style, info, out d);
+            return double.TryParse(s, style, info, out d);
         }
 
         /// <summary>
-        /// Converts a string into a Double data type
+        /// Converts a string into a double data type
         /// </summary>
         /// <param name="s">String to convert</param>
         /// <returns>Converted double data type</returns>
         public static double ParseDouble(string s)
         {
-            return Double.Parse(s, NumberStyles.Any, new NumberFormatInfo());
+            return double.Parse(s, NumberStyles.Any, new NumberFormatInfo());
         }
     }
 }

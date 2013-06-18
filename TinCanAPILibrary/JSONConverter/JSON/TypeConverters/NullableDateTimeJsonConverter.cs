@@ -26,7 +26,7 @@ using RusticiSoftware.ScormContentPlayer.Util;
 
 namespace RusticiSoftware.TinCanAPILibrary.TypeConverters
 {
-    public class NullableDateTimeJsonConverter : JsonTypeConverter
+    public class NullableDateTimeJsonConverter : IJsonTypeConverter
     {
         private Type myType = typeof(NullableDateTime);
         public Type GetTargetClass()
@@ -36,7 +36,7 @@ namespace RusticiSoftware.TinCanAPILibrary.TypeConverters
 
         public object Deserialize(string value, JsonConverter converter)
         {
-            return String.IsNullOrEmpty(value) ? null : new NullableDateTime(ParserUtil.GetDateTimeFromIsoTimeString(value));
+            return string.IsNullOrEmpty(value) ? null : new NullableDateTime(ParserUtil.GetDateTimeFromIsoTimeString(value));
         }
 
         public object Reduce(object value, JsonConverter converter)

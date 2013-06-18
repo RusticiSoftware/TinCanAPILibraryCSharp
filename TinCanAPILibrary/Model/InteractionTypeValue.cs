@@ -82,7 +82,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     [Serializable]
     public struct InteractionType
     {
-
         /// <summary>
         /// The current value of the interaction type
         /// </summary>
@@ -103,7 +102,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <param name="value">The value to instantiate this class with</param>
         public InteractionType(int value)
         {
-
             if (Enum.IsDefined(typeof(InteractionTypeValue), value))
             {
                 this.Value = (InteractionTypeValue)value;
@@ -199,12 +197,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <returns>String representation of the class</returns>
         public override string ToString()
         {
-            String ret;
+            string ret;
 
             switch (this.Value)
             {
                 case InteractionTypeValue.Undefined:
-                    ret = "";
+                    ret = string.Empty;
                     break;
                 case InteractionTypeValue.TrueFalse:
                     ret = "true-false";
@@ -253,9 +251,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         public static explicit operator int(InteractionType it)
         {
             if (it.Value == InteractionTypeValue.Undefined)
+            {
                 return NullConstants.NullInt;
+            }
             else
+            {
                 return (int)it.Value;
+            }
         }
     }
 }

@@ -32,7 +32,7 @@ using RusticiSoftware.TCAPIClientLibrary.Helper;
 namespace RusticiSoftware.TinCanAPILibrary.TinCan090
 {
     /// <summary>
-    /// The TCAPI Object which handles the bulk of the logic and communication
+    /// The TCAPI object which handles the bulk of the logic and communication
     /// Note the read only properties, which must be assigned in the constructor
     /// are the asynchronous support variables.  If a TCAPI with no AsyncSupport is created,
     /// batching statements for async launch will just populate the offlinestorage indefinitely,
@@ -50,7 +50,7 @@ namespace RusticiSoftware.TinCanAPILibrary.TinCan090
         #endregion
 
         #region Fields
-        private readonly String endpoint;
+        private readonly string endpoint;
         private int statementPostInterval;
         private IAuthenticationConfiguration authentification;
         private readonly IOfflineStorage offlineStorage;
@@ -59,7 +59,7 @@ namespace RusticiSoftware.TinCanAPILibrary.TinCan090
         private int maxBatchSize = 50;
         private Timer asyncPostTimer;
         private AsyncPostCallback asyncPostCallback;
-        private Object flushLock = new Object();
+        private object flushLock = new Object();
         private bool isAsyncFlushing;
         #endregion
 
@@ -85,7 +85,7 @@ namespace RusticiSoftware.TinCanAPILibrary.TinCan090
         /// <summary>
         /// URL Endpoint to send statements to
         /// </summary>
-        public String Endpoint
+        public string Endpoint
         {
             get { return endpoint; }
         }
@@ -567,7 +567,7 @@ namespace RusticiSoftware.TinCanAPILibrary.TinCan090
             nvc["activityId"] = activityId;
             nvc["actor"] = converter.SerializeToJSON(actor);
             nvc["stateId"] = stateId;
-            if (!String.IsNullOrEmpty(registrationId))
+            if (!string.IsNullOrEmpty(registrationId))
                 nvc["registrationId"] = registrationId;
             WebHeaderCollection whc;
             getResult = HttpMethods.GetRequest(nvc, endpoint + ACTIVITY_STATE, authentification, out whc);
@@ -661,7 +661,7 @@ namespace RusticiSoftware.TinCanAPILibrary.TinCan090
             nvc["activityId"] = activityId;
             nvc["actor"] = converter.SerializeToJSON(actor);
             nvc["stateId"] = stateId;
-            if (!String.IsNullOrEmpty(registrationId))
+            if (!string.IsNullOrEmpty(registrationId))
                 nvc["registrationId"] = registrationId;
             HttpMethods.DeleteRequest(nvc, endpoint + ACTIVITY_STATE, authentification);
         }

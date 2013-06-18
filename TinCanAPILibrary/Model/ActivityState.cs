@@ -23,12 +23,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 {
     public class ActivityState : State
     {
-        string activityId;
-        Actor actor;
-        string registrationId;
-        string body;
-        string contentType;
-        string stateId;
+        private string activityId;
+        private Actor actor;
+        private string registrationId;
+        private string body;
+        private string contentType;
+        private string stateId;
 
         public const string DEFAULT_HEADER = "text/plain";
 
@@ -69,11 +69,11 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         }
 
         public ActivityState()
-        {}
+        { }
 
         public ActivityState(string activityId, string stateId, Actor actor, string body)
             : this(activityId, stateId, actor, body, DEFAULT_HEADER)
-        {}
+        { }
 
         public ActivityState(string activityId, string stateId, Actor actor, string body, string contentType)
             : this(activityId, stateId, actor, body, contentType, null)

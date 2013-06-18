@@ -26,15 +26,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class Group : Actor
     {
         #region Constants
-        protected new static readonly String OBJECT_TYPE = "Group";
+        protected static new readonly string OBJECT_TYPE = "Group";
         #endregion
 
         #region Fields
-        protected Actor[] member;
+        private Actor[] member;
         #endregion
 
         #region Properties
-        public override String ObjectType
+        public override string ObjectType
         {
             get { return OBJECT_TYPE; }
         }

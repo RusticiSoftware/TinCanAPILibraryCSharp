@@ -27,20 +27,20 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class Statement : IValidatable
     {
         #region Fields
-        protected String id;
-        protected Actor actor;
-        protected StatementVerb verb;
-        protected StatementTarget _object;
-        protected Result result;
-        protected Context context;
-        protected NullableDateTime timestamp;
-        protected Actor authority;
-        protected NullableBoolean voided;
+        private string id;
+        private Actor actor;
+        private StatementVerb verb;
+        private StatementTarget _object;
+        private Result result;
+        private Context context;
+        private NullableDateTime timestamp;
+        private Actor authority;
+        private NullableBoolean voided;
         #endregion
 
         #region Properties
         /// <summary>
-        /// String representation of the statement verb
+        /// string representation of the statement verb
         /// </summary>
         public virtual StatementVerb Verb
         {
@@ -56,18 +56,18 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// The statements ID
         /// </summary>
-        public String Id
+        public string Id
         {
             get { return id; }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     id = null;
                 }
                 else
                 {
-                    String normalized = value.ToLower();
+                    string normalized = value.ToLower();
                     if (!ValidationHelper.IsValidUUID(normalized))
                     {
                         throw new InvalidArgumentException("Statement ID must be UUID");
@@ -210,8 +210,8 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             else if (verb.IsVoided())
             {
                 // This will test for StatementRef OR TargetedStatement because any statement that is being validated has already been promoted.
-                bool objectStatementIdentified = ((_object is StatementRef) && !String.IsNullOrEmpty(((StatementRef)_object).Id) ||
-                    (_object is Model.TinCan090.TargetedStatement) && !String.IsNullOrEmpty(((Model.TinCan090.TargetedStatement)_object).Id));
+                bool objectStatementIdentified = ((_object is StatementRef) && !string.IsNullOrEmpty(((StatementRef)_object).Id) ||
+                    (_object is Model.TinCan090.TargetedStatement) && !string.IsNullOrEmpty(((Model.TinCan090.TargetedStatement)_object).Id));
                 if (!objectStatementIdentified)
                 {
                     failures.Add(new ValidationFailure("Statement " + id + " has verb 'voided' but does not properly identify a statement as its object"));
@@ -231,8 +231,8 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             }
             
 
-            Object[] children = new Object[] { actor, verb, _object, result, context, timestamp, authority };
-            foreach (Object o in children)
+            object[] children = new object[] { actor, verb, _object, result, context, timestamp, authority };
+            foreach (object o in children)
             {
                 if (o != null && o is IValidatable)
                 {
@@ -282,7 +282,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <param name="verb">The statement verb</param>
         /// <param name="expectedSuccess">The expected success value</param>
         /// <param name="expectedCompletion">The expected completion value</param>
-        protected void VerifySuccessAndCompletionValues(Result result, String verb, bool expectedSuccess, bool expectedCompletion)
+        protected void VerifySuccessAndCompletionValues(Result result, string verb, bool expectedSuccess, bool expectedCompletion)
         {
             VerifySuccessValue(result, verb, expectedSuccess);
             VerifyCompletionValue(result, verb, expectedCompletion);
@@ -293,7 +293,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <param name="result">The result object</param>
         /// <param name="verb">The verb for the statement</param>
         /// <param name="expectedSuccess">What value the success should be</param>
-        protected void VerifySuccessValue(Result result, String verb, bool expectedSuccess)
+        protected void VerifySuccessValue(Result result, string verb, bool expectedSuccess)
         {
             if (result.Success != null && result.Success.Value != expectedSuccess)
             {
@@ -307,7 +307,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <param name="result">The result object</param>
         /// <param name="verb">The statement verb</param>
         /// <param name="expectedCompletion">What value the completion should be</param>
-        protected void VerifyCompletionValue(Result result, String verb, bool expectedCompletion)
+        protected void VerifyCompletionValue(Result result, string verb, bool expectedCompletion)
         {
             if (result.Completion != null && result.Completion.Value != expectedCompletion)
             {
@@ -337,7 +337,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             result.Context = source.Context;
             result.Timestamp = source.Timestamp;
             if (source.Authority != null)
+            {
                 result.Authority = (Model.TinCan090.Actor)source.Authority;
+            }
             result.Voided = source.Voided;
 
             return result;

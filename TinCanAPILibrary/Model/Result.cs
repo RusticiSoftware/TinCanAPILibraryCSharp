@@ -25,11 +25,11 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class Result : Extensible, IValidatable
     {
         #region Fields
-        protected Score score;
-        protected NullableBoolean success;
-        protected NullableBoolean completion;
-        protected String response;
-        protected NullableScormTimeSpan duration;
+        private Score score;
+        private NullableBoolean success;
+        private NullableBoolean completion;
+        private string response;
+        private NullableScormTimeSpan duration;
         #endregion
 
         #region Properties
@@ -51,7 +51,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             set { completion = value; }
         }
 
-        public String Response
+        public string Response
         {
             get { return response; }
             set { response = value; }
@@ -71,9 +71,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #region Public Methods
         public IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
-            Object[] children = new Object[] { score };
+            object[] children = new object[] { score };
             var failures = new List<ValidationFailure>();
-            foreach (Object o in children)
+            foreach (object o in children)
             {
                 if (o != null && o is IValidatable)
                 {

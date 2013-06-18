@@ -30,13 +30,17 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// </summary>
         /// <param name="array">The array to edit</param>
         /// <returns>A new array with all lower cased entries</returns>
-        public static String[] ArrayToLower(String[] array)
+        public static string[] ArrayToLower(string[] array)
         {
             if (array == null)
+            {
                 return null;
-            String[] lower = new String[array.Length];
+            }
+            string[] lower = new string[array.Length];
             for (int i = 0; i < array.Length; i++)
+            {
                 lower[i] = array[i].ToLower();
+            }
             return lower;
         }
 
@@ -53,7 +57,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
 
             foreach (K key in dict1.Keys)
             {
-                if (!(dict2.ContainsKey(key) && Object.Equals(dict1[key], dict2[key])))
+                if (!(dict2.ContainsKey(key) && object.Equals(dict1[key], dict2[key])))
                 {
                     return false;
                 }

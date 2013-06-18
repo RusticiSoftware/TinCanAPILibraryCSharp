@@ -24,10 +24,10 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 {
     public class ActivityProfile : State
     {
-        string activityId;
-        string profileId;
-        string body;
-        string contentType;
+        private string activityId;
+        private string profileId;
+        private string body;
+        private string contentType;
 
         public string ContentType
         {

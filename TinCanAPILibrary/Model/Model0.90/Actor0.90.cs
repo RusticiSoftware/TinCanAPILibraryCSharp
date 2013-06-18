@@ -26,7 +26,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
     public class Actor : StatementTarget, IValidatable
     {
         #region Constants
-        protected static readonly String OBJECT_TYPE = "Agent";
+        protected static readonly string OBJECT_TYPE = "Agent";
 
         private const string account_key = "account";
         private const string mbox_key = "mbox";
@@ -35,18 +35,18 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         #endregion
 
         #region Fields
-        protected String[] name;
-        protected String[] mbox;
-        protected String[] mbox_sha1sum;
-        protected String[] openid;
-        protected AgentAccount[] account;
+        private string[] name;
+        private string[] mbox;
+        private string[] mbox_sha1sum;
+        private string[] openid;
+        private AgentAccount[] account;
         #endregion
 
         #region Properties
         /// <summary>
         /// ObjectType accessor
         /// </summary>
-        public override String ObjectType
+        public override string ObjectType
         {
             get { return OBJECT_TYPE; }
         }
@@ -54,7 +54,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// <summary>
         /// Array of names for the actor
         /// </summary>
-        public String[] Name
+        public string[] Name
         {
             get { return name; }
             set
@@ -66,16 +66,16 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// <summary>
         /// Array of mailboxes for the actor
         /// </summary>
-        public String[] Mbox
+        public string[] Mbox
         {
             get { return mbox; }
             set
             {
-                String mboxPrefix = "mailto:";
-                String[] normalized = CommonFunctions.ArrayToLower(value);
+                string mboxPrefix = "mailto:";
+                string[] normalized = CommonFunctions.ArrayToLower(value);
                 if (normalized != null)
                 {
-                    foreach (String s in normalized)
+                    foreach (string s in normalized)
                     {
                         if (!s.StartsWith(mboxPrefix))
                         {
@@ -96,7 +96,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// <summary>
         /// Array of email sha1sums for the actor
         /// </summary>
-        public String[] Mbox_sha1sum
+        public string[] Mbox_sha1sum
         {
             get { return mbox_sha1sum; }
             set
@@ -108,7 +108,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// <summary>
         /// Array of OpenIDs for the actor
         /// </summary>
-        public String[] Openid
+        public string[] Openid
         {
             get { return openid; }
             set
@@ -131,15 +131,18 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
                     var failures = new List<ValidationFailure>();
                     foreach (AgentAccount a in value)
                     {
-                        if (a == null) { 
+                        if (a == null)
+                        {
                             throw new ArgumentException("Invalid null AgentAccount member supplied to Account");
-                        } else{
+                        }
+                        else
+                        {
                             failures.AddRange(a.Validate(earlyReturnOnFailure: true));
                             if (failures.Count > 0)
                             {
                                 throw new ArgumentException(failures[0].Error);
                             }
-                        };
+                        }
                     }
                 }
                 account = value;
@@ -164,13 +167,21 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         protected Actor(string mbox, string mbox_sha1sum, string openid, AgentAccount account)
         {
             if (mbox != null)
-                this.Mbox = new String[] { mbox };
+            {
+                this.Mbox = new string[] { mbox };
+            }
             if (mbox_sha1sum != null)
-                this.Mbox_sha1sum = new String[] { mbox_sha1sum };
+            {
+                this.Mbox_sha1sum = new string[] { mbox_sha1sum };
+            }
             if (openid != null)
-                this.Openid = new String[] { openid };
+            {
+                this.Openid = new string[] { openid };
+            }
             if (account != null)
+            {
                 this.Account = new AgentAccount[] { account };
+            }
         }
         /// <summary>
         /// Constructor invoked by the Person Subclass
@@ -179,14 +190,14 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// <param name="mbox_sha1sum"></param>
         /// <param name="openid"></param>
         /// <param name="account"></param>
-        protected Actor(String[] mbox, String[] mbox_sha1sum, String[] openid, AgentAccount[] account)
+        protected Actor(string[] mbox, string[] mbox_sha1sum, string[] openid, AgentAccount[] account)
         {
             this.mbox = mbox;
             this.mbox_sha1sum = mbox_sha1sum;
             this.openid = openid;
             this.account = account;
             // TODO - Strongly reconsider deep validation on construction
-            var failures = new List<ValidationFailure>(this.Validate(earlyReturnOnFailure : true));
+            var failures = new List<ValidationFailure>(this.Validate(earlyReturnOnFailure: true));
             if (failures.Count > 0)
             {
                 throw new ArgumentException(failures[0].Error);
@@ -202,19 +213,19 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// <param name="account">Actors agent account (inverse functional property)</param>
         public Actor(string name, string mbox, string mbox_sha1sum, string openid, AgentAccount account)
         {
-            this.name = new String[] { name };
+            this.name = new string[] { name };
             // Properties are used to force validation and normalization
             if (mbox != null)
             {
-                this.Mbox = new String[] { mbox };
+                this.Mbox = new string[] { mbox };
             }
             if (mbox_sha1sum != null)
             {
-                this.Mbox_sha1sum = new String[] { mbox_sha1sum };
+                this.Mbox_sha1sum = new string[] { mbox_sha1sum };
             }
             if (openid != null)
             {
-                this.Openid = new String[] { openid };
+                this.Openid = new string[] { openid };
             }
             if (account != null)
             {
@@ -245,7 +256,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// <param name="mbox_sha1sum">Actor mbox_sha1sum array</param>
         /// <param name="openid">Actor openid array</param>
         /// <param name="account">Actor account array</param>
-        public Actor(String[] name, String[] mbox, String[] mbox_sha1sum, String[] openid, AgentAccount[] account)
+        public Actor(string[] name, string[] mbox, string[] mbox_sha1sum, string[] openid, AgentAccount[] account)
         {
             this.name = name;
             this.mbox = mbox;
@@ -294,7 +305,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// Actor object, the properties of a Hash cannot be fulfilled, so it is
         /// not recommended to use this object in a HashTable.
         /// </summary>
-        /// <returns>0.  Object is not effectively hashable</returns>
+        /// <returns>0.  object is not effectively hashable</returns>
         public override int GetHashCode()
         {
             return 0;
@@ -311,17 +322,25 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         private bool ValidateArray(object[] array)
         {
             if (array == null)
-                return false;
-            for (int i = 0; i < array.Length; i++)
-                if (array[i] == null)
-                    return false;
-            if (array is String[])
             {
-                array = (array as String[]);
-                foreach (String s in array)
+                return false;
+            }
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == null)
                 {
-                    if (String.IsNullOrEmpty(s))
+                    return false;
+                }
+            }
+            if (array is string[])
+            {
+                array = array as string[];
+                foreach (string s in array)
+                {
+                    if (string.IsNullOrEmpty(s))
+                    {
                         return false;
+                    }
                 }
             }
             return true;

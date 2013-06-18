@@ -25,14 +25,14 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
     public class Person : Actor
     {
         #region Constants
-        protected new static readonly String OBJECT_TYPE = "Person";
+        protected static new readonly string OBJECT_TYPE = "Person";
         #endregion
 
         #region Fields
-        protected String[] familyName;
-        protected String[] givenName;
-        protected String[] lastName;
-        protected String[] firstName;
+        private string[] familyName;
+        private string[] givenName;
+        private string[] lastName;
+        private string[] firstName;
         #endregion
 
         #region Constructor
@@ -66,17 +66,17 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         {
             if (!isFirstLastName)
             {
-                this.lastName = new String[] { lastName };
-                this.firstName = new String[] { firstName };
+                this.lastName = new string[] { lastName };
+                this.firstName = new string[] { firstName };
             }
             else
             {
-                this.familyName = new String[] { lastName };
-                this.givenName = new String[] { firstName };
+                this.familyName = new string[] { lastName };
+                this.givenName = new string[] { firstName };
             }
         }
 
-        public Person(bool isFirstLastName, String[] firstName, String[] lastName, String[] mbox, String[] mbox_sha1sum, String[] openid, AgentAccount[] account)
+        public Person(bool isFirstLastName, string[] firstName, string[] lastName, string[] mbox, string[] mbox_sha1sum, string[] openid, AgentAccount[] account)
             : base(mbox, mbox_sha1sum, openid, account)
         {
             if (!isFirstLastName)
@@ -93,30 +93,30 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         #endregion
 
         #region Properties
-        public override String ObjectType
+        public override string ObjectType
         {
             get { return OBJECT_TYPE; }
         }
 
-        public String[] FamilyName
+        public string[] FamilyName
         {
             get { return familyName; }
             set { familyName = value; }
         }
 
-        public String[] GivenName
+        public string[] GivenName
         {
             get { return givenName; }
             set { givenName = value; }
         }
 
-        public String[] LastName
+        public string[] LastName
         {
             get { return lastName; }
             set { lastName = value; }
         }
 
-        public String[] FirstName
+        public string[] FirstName
         {
             get { return firstName; }
             set { firstName = value; }

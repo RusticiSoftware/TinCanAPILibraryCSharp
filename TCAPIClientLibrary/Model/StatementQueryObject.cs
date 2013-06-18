@@ -24,9 +24,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class StatementQueryObject
     {
         #region Fields
-        protected String verb;
+        protected string verb;
         protected StatementTarget targetObject;
-        protected String registration;
+        protected string registration;
         protected bool context;
         protected Actor actor;
         protected NullableDateTime since;
@@ -36,7 +36,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         protected bool sparse;
         protected Actor instructor;
         protected bool ascending;
-        protected String continueToken;
+        protected string continueToken;
         protected bool historical;
         #endregion
 
@@ -45,7 +45,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #endregion
 
         #region Properties
-        public String Verb
+        public string Verb
         { 
             get 
             { 
@@ -67,7 +67,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                 targetObject = value; 
             } 
         }
-        public String Registration
+        public string Registration
         {
             get { return registration; }
             set { registration = value; }
@@ -126,7 +126,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             set { ascending = value; }
         }
 
-        public String ContinueToken
+        public string ContinueToken
         {
             get { return continueToken; }
             set { continueToken = value; }
@@ -151,11 +151,11 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             NameValueCollection nvc = new NameValueCollection();
             TinCanJsonConverter converter = new TinCanJsonConverter();
 
-            if (!String.IsNullOrEmpty(verb))
+            if (!string.IsNullOrEmpty(verb))
                 nvc["verb"] = verb.ToLower();
             if (targetObject != null)
                 nvc["object"] = converter.SerializeToJSON(targetObject);
-            if (!String.IsNullOrEmpty(registration))
+            if (!string.IsNullOrEmpty(registration))
                 nvc["registration"] = registration;
             nvc["context"] = context.ToString();
             if (actor != null)
@@ -178,7 +178,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             if (instructor != null)
                 nvc["instructor"] = converter.SerializeToJSON(instructor);
             nvc["ascending"] = ascending.ToString();
-            if (!String.IsNullOrEmpty(continueToken))
+            if (!string.IsNullOrEmpty(continueToken))
                 nvc["continueToken"] = continueToken;
             nvc["historical"] = historical.ToString();
 

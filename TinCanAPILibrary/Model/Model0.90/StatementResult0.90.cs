@@ -25,9 +25,9 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
     public class StatementResult
     {
         #region Fields
-        protected Statement[] statements = new Statement[0];
-        protected String continueToken;
-        protected String more;
+        private Statement[] statements = new Statement[0];
+        private string continueToken;
+        private string more;
         #endregion
 
         #region Properties
@@ -37,13 +37,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             set { statements = value; }
         }
 
-        public String ContinueToken
+        public string ContinueToken
         {
             get { return continueToken; }
             set { continueToken = value; }
         }
 
-        public String More
+        public string More
         {
             get { return more; }
             set { more = value; }

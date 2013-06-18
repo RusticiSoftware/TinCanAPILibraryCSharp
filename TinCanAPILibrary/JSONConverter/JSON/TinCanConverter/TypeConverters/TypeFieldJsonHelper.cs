@@ -24,27 +24,33 @@ namespace RusticiSoftware.TinCanAPILibrary
 {
     public class TypeFieldJsonHelper
     {
-        public Type GetTypeFromString(String typeField, Type defaultType)
+        public Type GetTypeFromString(string typeField, Type defaultType)
         {
-            if (String.IsNullOrEmpty(typeField)) {
+            if (string.IsNullOrEmpty(typeField))
+            {
                 return defaultType;
             }
-            if (String.Compare(typeField, "Activity", true) == 0){
+            if (string.Compare(typeField, "Activity", true) == 0)
+            {
                 return typeof(TinCanActivity);
             }
-            if (String.Compare(typeField, "Agent", true) == 0) {
+            if (string.Compare(typeField, "Agent", true) == 0)
+            {
                 return typeof(Actor);
             }
-            if (String.Compare(typeField, "Person", true) == 0) {
+            if (string.Compare(typeField, "Person", true) == 0)
+            {
                 return typeof(Model.TinCan090.Person);
             }
-            if (String.Compare(typeField, "Group", true) == 0) {
+            if (string.Compare(typeField, "Group", true) == 0)
+            {
                 return typeof(Group);
             }
-            if (String.Compare(typeField, "Statement", true) == 0) {
+            if (string.Compare(typeField, "Statement", true) == 0)
+            {
                 return typeof(Model.TinCan090.TargetedStatement);
             }
-            if (String.Compare(typeField, "StatementRef", true) == 0)
+            if (string.Compare(typeField, "StatementRef", true) == 0)
             {
                 return typeof(StatementRef);
             }

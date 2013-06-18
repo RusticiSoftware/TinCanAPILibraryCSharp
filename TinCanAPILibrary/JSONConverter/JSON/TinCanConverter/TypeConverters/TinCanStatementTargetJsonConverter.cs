@@ -24,7 +24,7 @@ using RusticiSoftware.TinCanAPILibrary.Model;
 
 namespace RusticiSoftware.TinCanAPILibrary
 {
-    public class TinCanStatementTargetJsonConverter : JsonTypeConverter
+    public class TinCanStatementTargetJsonConverter : IJsonTypeConverter
     {
         private Type myType = typeof(TinCanAPILibrary.Model.StatementTarget);
         public Type GetTargetClass()
@@ -36,9 +36,10 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             //Integration.Implementation.LogAudit("TinCanStatementTarget Deserialize called", null);
             IDictionary objMap = converter.DeserializeJSONToMap(value);
-            String typeField = null;
-            if (objMap.Contains("objectType")) {
-                typeField = (String)objMap["objectType"];
+            string typeField = null;
+            if (objMap.Contains("objectType"))
+            {
+                typeField = (string)objMap["objectType"];
             }
 
             TypeFieldJsonHelper typeFieldHelper = new TypeFieldJsonHelper();

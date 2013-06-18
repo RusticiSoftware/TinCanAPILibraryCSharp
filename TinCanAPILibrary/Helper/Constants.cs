@@ -43,7 +43,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
         /// </summary>
         public const long NullLong = long.MinValue;
         /// <summary>
-        /// A constant value that the application uses internally to represent a Double value that is NULL
+        /// A constant value that the application uses internally to represent a double value that is NULL
         /// </summary>
         public const double NullDouble = double.MinValue;
         /// <summary>

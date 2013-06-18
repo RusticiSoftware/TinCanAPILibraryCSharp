@@ -44,7 +44,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         }
 
         public LanguageString(string text)
-            : this(text, "") { }
+            : this(text, string.Empty) { }
 
         public LanguageString(string text, string language)
         {
@@ -76,7 +76,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         {
             if (this.text == null)
             {
-                return "";
+                return string.Empty;
             }
             else
             {

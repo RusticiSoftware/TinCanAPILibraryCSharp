@@ -23,10 +23,10 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 {
     public class InteractionComponent
     {
-        protected String id;
-        protected LanguageMap description;
+        private string id;
+        private LanguageMap description;
 
-        public String Id
+        public string Id
         {
             get { return id; }
             set { id = value; }

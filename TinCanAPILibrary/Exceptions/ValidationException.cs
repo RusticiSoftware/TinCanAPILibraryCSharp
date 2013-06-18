@@ -22,7 +22,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Exceptions
     /// <summary>
     /// Exception Class for validation errors.
     /// </summary>
-    class ValidationException : Exception
+    public class ValidationException : Exception
     {
         /// <summary>
         /// Throws a ValidationException.
@@ -32,6 +32,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Exceptions
         /// Throws a ValidationException with the provided message.
         /// </summary>
         /// <param name="message">Message explaining the exception</param>
-        public ValidationException(String message) : base(message) { }
+        public ValidationException(string message) : base(message) { }
     }
 }
