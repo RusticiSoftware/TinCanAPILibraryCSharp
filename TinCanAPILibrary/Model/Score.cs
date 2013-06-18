@@ -88,27 +88,45 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #endregion
 
         #region Public Methods
-        public void Validate()
+        public IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
+            var failures = new List<ValidationFailure>();
             if (scaled != null && (scaled.Value < 0.0 || scaled.Value > 1.0))
             {
-                throw new ValidationException("Scaled score must be between 0.0 and 1.0");
+                failures.Add(new ValidationFailure("Scaled score must be between 0.0 and 1.0"));
+                if (earlyReturnOnFailure)
+                {
+                    return failures;
+                }
             }
             if ((min != null && max != null) && (max.Value < min.Value))
             {
-                throw new ValidationException("Max score cannot be lower than min score");
+                failures.Add(new ValidationFailure("Max score cannot be lower than min score"));
+                if (earlyReturnOnFailure)
+                {
+                    return failures;
+                }
             }
             if (raw != null)
             {
                 if (max != null && raw.Value > max.Value)
                 {
-                    throw new ValidationException("Raw score cannot be greater than max score");
+                    failures.Add(new ValidationFailure("Raw score cannot be greater than max score"));
+                    if (earlyReturnOnFailure)
+                    {
+                        return failures;
+                    }
                 }
                 if (min != null && raw.Value < min.Value)
                 {
-                    throw new ValidationException("Raw score cannot be less than min score");
+                    failures.Add(new ValidationFailure("Raw score cannot be less than min score"));
+                    if (earlyReturnOnFailure)
+                    {
+                        return failures;
+                    }
                 }
             }
+            return failures;
         }
         #endregion
     }

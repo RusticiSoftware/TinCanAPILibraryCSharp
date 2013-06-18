@@ -69,12 +69,26 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #endregion
 
         #region Public Methods
-        public void Validate()
+        public IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
+            var failures = new List<ValidationFailure>();
             if (id == null)
-                throw new ValidationException("Activity does not have an identifier");
+            {
+                failures.Add(new ValidationFailure("Activity does not have an identifier"));
+                if (earlyReturnOnFailure)
+                {
+                    return failures;
+                }
+            }
             if (definition != null && definition is IValidatable)
-                ((IValidatable)definition).Validate();
+            {
+                failures.AddRange(((IValidatable)definition).Validate(earlyReturnOnFailure));
+                if (earlyReturnOnFailure && failures.Count > 0)
+                {
+                    return failures;
+                }
+            }
+            return failures;
         }
         #endregion
     }

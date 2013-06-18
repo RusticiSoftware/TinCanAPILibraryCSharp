@@ -24,6 +24,6 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 {
     public interface IValidatable
     {
-        void Validate();
+        IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure);
     }
 }

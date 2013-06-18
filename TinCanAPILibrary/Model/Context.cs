@@ -127,17 +127,23 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// Validates the context
         /// </summary>
-        public void Validate()
+        public IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
             Object[] children = new Object[] { registration, instructor, team, 
                 contextActivities, revision, platform, statement };
+            var failures = new List<ValidationFailure>();
             foreach (Object o in children)
             {
                 if (o != null && o is IValidatable)
                 {
-                    ((IValidatable)o).Validate();
+                    failures.AddRange(((IValidatable)o).Validate(earlyReturnOnFailure));
+                    if (failures.Count > 0)
+                    {
+                        return failures;
+                    }
                 }
             }
+            return failures;
         }
         #endregion
     }

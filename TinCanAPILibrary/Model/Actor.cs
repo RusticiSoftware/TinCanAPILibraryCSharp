@@ -124,7 +124,13 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             {
                 if (value != null)
                 {
-                    value.Validate();
+
+                    // TODO - reconsider whether to deep-validate in setters
+                    var failures = new List<ValidationFailure>(value.Validate(earlyReturnOnFailure: true));
+                    if (failures.Count > 0)
+                    {
+                        throw new ArgumentException(failures[0].Error);
+                    }
                     account = value;
                 }
             }
@@ -160,7 +166,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// Validates that the object abides by its rules
         /// </summary>
-        public virtual void Validate()
+        public virtual IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
             int properties = 0;
             if (!String.IsNullOrEmpty(mbox))
@@ -168,13 +174,25 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                 properties++;
             }
             if (!String.IsNullOrEmpty(mbox_sha1sum))
+            {
                 properties++;
+            }
             if (!String.IsNullOrEmpty(openid))
+            {
                 properties++;
+            }
             if (account != null)
+            {
                 properties++;
+            }
             if (properties != 1)
-                throw new ValidationException("Exactly 1 inverse functional properties must be defined.  However, " + properties + " are defined.");
+            {
+                return new List<ValidationFailure>() 
+                { 
+                    new ValidationFailure("Exactly 1 inverse functional properties must be defined.  However, " + properties + " are defined.") 
+                };
+            }
+            return new List<ValidationFailure>();
         }
 
         /// <summary>

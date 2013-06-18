@@ -93,6 +93,7 @@
     <Compile Include="Model\StatementTarget.cs" />
     <Compile Include="Model\StatementVerb.cs" />
     <Compile Include="Model\TinCanActivity.cs" />
+    <Compile Include="Model\ValidationFailure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\LanguageString.cs" />
     <Compile Include="Types\NullableTypes\NullableBoolean.cs" />

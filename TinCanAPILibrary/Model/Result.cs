@@ -69,12 +69,22 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #endregion
 
         #region Public Methods
-        public void Validate()
+        public IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
             Object[] children = new Object[] { score };
+            var failures = new List<ValidationFailure>();
             foreach (Object o in children)
+            {
                 if (o != null && o is IValidatable)
-                    ((IValidatable)o).Validate();
+                {
+                    failures.AddRange(((IValidatable)o).Validate(earlyReturnOnFailure));
+                    if (earlyReturnOnFailure && failures.Count > 0)
+                    {
+                        return failures;
+                    }
+                }
+            }
+            return failures;
         }
         #endregion
     }

@@ -86,7 +86,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         public int StatementPostInterval
         {
             get { return statementPostInterval; }
-            set 
+            set
             {
                 asyncPostTimer.Stop();
                 statementPostInterval = value;
@@ -303,7 +303,13 @@ namespace RusticiSoftware.TinCanAPILibrary
             for (int round = 0; round < batches.Length; round++)
             {
                 foreach (Statement s in batches[round])
-                    s.Validate();
+                {
+                    var failures = new List<ValidationFailure>(s.Validate(earlyReturnOnFailure: true));
+                    if (failures.Count > 0)
+                    {
+                        throw new ArgumentException(failures[0].Error, "statements");
+                    }
+                }
                 TinCanJsonConverter converter = new TinCanJsonConverter();
                 string postData;
                 switch (version)
@@ -337,7 +343,11 @@ namespace RusticiSoftware.TinCanAPILibrary
             }
             foreach (Statement s in statements)
             {
-                s.Validate();
+                var failures = new List<ValidationFailure>(s.Validate(earlyReturnOnFailure: true));
+                if (failures.Count > 0)
+                {
+                    throw new ArgumentException(failures[0].Error, "statements");
+                }
             }
             offlineStorage.AddToStatementQueue(statements);
         }
@@ -422,8 +432,8 @@ namespace RusticiSoftware.TinCanAPILibrary
                 case TCAPIVersion.TinCan090:
                     statementResult = (Statement)((Model.TinCan090.Statement)converter.DeserializeJSON(result, typeof(Model.TinCan090.Statement)));
                     break;
-                case TCAPIVersion.TinCan095: 
-                    statementResult = (Statement)converter.DeserializeJSON(result, typeof(Statement)); 
+                case TCAPIVersion.TinCan095:
+                    statementResult = (Statement)converter.DeserializeJSON(result, typeof(Statement));
                     break;
             }
             return statementResult;
@@ -726,7 +736,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             return GetActivityState(activityId, actor, stateId, null);
         }
-        
+
         /// <summary>
         /// Retrieves a specific activity state
         /// </summary>
@@ -794,7 +804,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         {
             SaveActivityState(activityState, true, previousState);
         }
-                
+
         /// <summary>
         /// Saves the activity state
         /// </summary>
@@ -1094,7 +1104,7 @@ namespace RusticiSoftware.TinCanAPILibrary
         }
 
         private WebHeaderCollection GetWebHeaders()
-        {   
+        {
             WebHeaderCollection whc;
             StatementQueryObject qo = new StatementQueryObject();
             qo.Limit = 1;
@@ -1148,7 +1158,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             private event AsyncPostFailed eventPostFailed;
             private event AsyncPostConnectionFailure eventConnectionFailed;
             private Statement[] statements;
-            
+
             public Statement[] Statements
             {
                 get { return statements; }

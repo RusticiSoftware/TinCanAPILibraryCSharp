@@ -126,8 +126,22 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             set
             {
                 if (value != null)
+                {
+                    // TODO - reconsider whether to deep-validate in setters
+                    var failures = new List<ValidationFailure>();
                     foreach (AgentAccount a in value)
-                        a.Validate();
+                    {
+                        if (a == null) { 
+                            throw new ArgumentException("Invalid null AgentAccount member supplied to Account");
+                        } else{
+                            failures.AddRange(a.Validate(earlyReturnOnFailure: true));
+                            if (failures.Count > 0)
+                            {
+                                throw new ArgumentException(failures[0].Error);
+                            }
+                        };
+                    }
+                }
                 account = value;
             }
         }
@@ -171,7 +185,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             this.mbox_sha1sum = mbox_sha1sum;
             this.openid = openid;
             this.account = account;
-            Validate();
+            // TODO - Strongly reconsider deep validation on construction
+            var failures = new List<ValidationFailure>(this.Validate(earlyReturnOnFailure : true));
+            if (failures.Count > 0)
+            {
+                throw new ArgumentException(failures[0].Error);
+            }
         }
         /// <summary>
         /// Creates a new actor.
@@ -186,14 +205,27 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             this.name = new String[] { name };
             // Properties are used to force validation and normalization
             if (mbox != null)
+            {
                 this.Mbox = new String[] { mbox };
+            }
             if (mbox_sha1sum != null)
+            {
                 this.Mbox_sha1sum = new String[] { mbox_sha1sum };
+            }
             if (openid != null)
+            {
                 this.Openid = new String[] { openid };
+            }
             if (account != null)
+            {
                 this.Account = new AgentAccount[] { account };
-            Validate();
+            }
+            // TODO - Strongly reconsider deep validation on construction
+            var failures = new List<ValidationFailure>(this.Validate(earlyReturnOnFailure: true));
+            if (failures.Count > 0)
+            {
+                throw new ArgumentException(failures[0].Error);
+            }
         }
         /// <summary>
         /// Creates a new actor.
@@ -220,7 +252,12 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             this.mbox_sha1sum = mbox_sha1sum;
             this.openid = openid;
             this.account = account;
-            Validate();
+            // TODO - Strongly reconsider deep validation on construction
+            var failures = new List<ValidationFailure>(this.Validate(earlyReturnOnFailure: true));
+            if (failures.Count > 0)
+            {
+                throw new ArgumentException(failures[0].Error);
+            }
         }
 
         /// <summary>
@@ -241,14 +278,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         /// <summary>
         /// Validates that the object abides by its rules
         /// </summary>
-        public virtual void Validate()
+        public virtual IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
             if (!ValidateArray(name) && !ValidateArray(mbox) &&
                 !ValidateArray(mbox_sha1sum) && !ValidateArray(openid) &&
                 !ValidateArray(account))
             {
-                throw new ValidationException("At least once inverse functional property must be defined");
+                return new List<ValidationFailure>() { new ValidationFailure("At least once inverse functional property must be defined") };
             }
+            return new List<ValidationFailure>();
         }
 
         /// <summary>

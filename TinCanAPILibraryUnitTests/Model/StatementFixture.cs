@@ -13,12 +13,6 @@ namespace TinCanAPILibraryUnitTests.Model
 
         private Statement statement;
 
-        [SetUp]
-        public void SetUp()
-        {
-
-        }
-
         [TearDown]
         public void TearDown()
         {
@@ -48,6 +42,28 @@ namespace TinCanAPILibraryUnitTests.Model
         {
             statement = new Statement();
             Assert.Throws<InvalidArgumentException>(() => statement.Id = "Not a proper UUID");
+        }
+
+        [Test]
+        public void Validate_returns_non_null_enumerable_with_failure_results_when_invalid()
+        {
+            statement = new Statement();
+            IEnumerable<ValidationFailure> failures = statement.Validate(earlyReturnOnFailure : false);
+            Assert.NotNull(failures);
+            Assert.GreaterOrEqual(new List<ValidationFailure>(failures).Count, 1, "Expect several errors due to lack of supplied statement information");
+        }
+
+        [Test]
+        public void Validate_returns_non_null_empty_enumerable_when_valid()
+        {
+            var activity = new TinCanActivity("http://www.example.com");
+            activity.Definition = new ActivityDefinition();
+            activity.Definition.Name = new LanguageMap();
+            activity.Definition.Name.Add("en-US", "TCAPI C# 0.95 Library.");
+            statement = new Statement(new Actor("Example", "mailto:test@example.com"), new StatementVerb(PredefinedVerbs.Experienced), activity);
+            IEnumerable<ValidationFailure> failures = statement.Validate(earlyReturnOnFailure: false);
+            Assert.NotNull(failures);
+            Assert.AreEqual(new List<ValidationFailure>(failures).Count, 0);
         }
     }
 }

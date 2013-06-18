@@ -51,16 +51,29 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         #endregion
 
         #region Public Methods
-        public override void Validate()
+        public override IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
+            var failures = new List<ValidationFailure>();
             if (member == null || member.Length == 0)
             {
-                throw new ValidationException("Group must be populated");
+                failures.Add(new ValidationFailure("Group must be populated"));
+                if (earlyReturnOnFailure)
+                {
+                    return failures;
+                }
             }
-            foreach (Actor a in member)
+            else
             {
-                a.Validate();
+                foreach (Actor a in member)
+                {
+                    failures.AddRange(a.Validate(earlyReturnOnFailure));
+                    if (earlyReturnOnFailure && failures.Count != 0)
+                    {
+                        return failures;
+                    }
+                }
             }
+            return failures;
         }
         #endregion
     }

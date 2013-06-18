@@ -188,29 +188,62 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// and any necessary information (such as a result for specific verbs)
         /// is provided and valid.
         /// </summary>
-        public virtual void Validate()
+        public virtual IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
+            var failures = new List<ValidationFailure>();
             if (actor == null && verb != null && !verb.IsVoided())
-                throw new ValidationException("Statement " + id + " does not have an actor");
+            {
+                failures.Add(new ValidationFailure("Statement " + id + " does not have an actor"));
+                if (earlyReturnOnFailure)
+                {
+                    return failures;
+                }
+            }
             if (Verb == null)
-                throw new ValidationException("Statement " + id + " does not have a verb");
-            if (_object == null)
-                throw new ValidationException("Statement " + id + " does not have an object");
-            if (verb.IsVoided())
+            {
+                failures.Add(new ValidationFailure("Statement " + id + " does not have a verb"));
+                if (earlyReturnOnFailure)
+                {
+                    return failures;
+                }
+            }
+            else if (verb.IsVoided())
             {
                 // This will test for StatementRef OR TargetedStatement because any statement that is being validated has already been promoted.
-                bool objectStatementIdentified = ((_object is StatementRef) && !String.IsNullOrEmpty(((StatementRef)_object).Id) || 
+                bool objectStatementIdentified = ((_object is StatementRef) && !String.IsNullOrEmpty(((StatementRef)_object).Id) ||
                     (_object is Model.TinCan090.TargetedStatement) && !String.IsNullOrEmpty(((Model.TinCan090.TargetedStatement)_object).Id));
                 if (!objectStatementIdentified)
                 {
-                    throw new ValidationException("Statement " + id + " has verb 'voided' but does not properly identify a statement as its object");
+                    failures.Add(new ValidationFailure("Statement " + id + " has verb 'voided' but does not properly identify a statement as its object"));
+                    if (earlyReturnOnFailure)
+                    {
+                        return failures;
+                    }
                 }
             }
+            if (_object == null)
+            {
+                failures.Add(new ValidationFailure("Statement " + id + " does not have an object"));
+                if (earlyReturnOnFailure)
+                {
+                    return failures;
+                }
+            }
+            
 
             Object[] children = new Object[] { actor, verb, _object, result, context, timestamp, authority };
             foreach (Object o in children)
+            {
                 if (o != null && o is IValidatable)
-                    ((IValidatable)o).Validate();
+                {
+                    failures.AddRange(((IValidatable)o).Validate(earlyReturnOnFailure));
+                    if (earlyReturnOnFailure && failures.Count > 0)
+                    {
+                        return failures;
+                    }
+                }
+            }
+            return failures;
         }
         #endregion
 

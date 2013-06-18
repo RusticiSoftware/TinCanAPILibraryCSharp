@@ -89,17 +89,26 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         /// <summary>
         /// Validates the object.
         /// </summary>
-        /// <exception cref="ValidationException">Thrown when either field is null or empty.</exception>
-        public void Validate()
+        public IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
         {
+            var failures = new List<ValidationFailure>();
             if (String.IsNullOrEmpty(homePage))
             {
-                throw new ValidationException("Account service homepage cannot be null");
+                failures.Add(new ValidationFailure("Account service homepage cannot be null"));
+                if (earlyReturnOnFailure)
+                {
+                    return failures;
+                }
             }
             if (String.IsNullOrEmpty(name))
             {
-                throw new ValidationException("Account name cannot be null");
+                failures.Add(new ValidationFailure("Account name cannot be null"));
+                if (earlyReturnOnFailure)
+                {
+                    return failures;
+                }
             }
+            return failures;
         }
     }
 }
