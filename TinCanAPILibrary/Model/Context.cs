@@ -20,7 +20,6 @@ using System.Collections.Generic;
 
 using System.Text;
 using RusticiSoftware.TinCanAPILibrary.Helper;
-using RusticiSoftware.TinCanAPILibrary.Exceptions;
 
 namespace RusticiSoftware.TinCanAPILibrary.Model
 {
@@ -57,7 +56,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                     string normalized = value.ToLower();
                     if (!ValidationHelper.IsValidUUID(normalized))
                     {
-                        throw new InvalidArgumentException("Registration must be UUID");
+                        throw new ArgumentException("Registration must be UUID", "value");
                     }
                     registration = normalized;
                 }

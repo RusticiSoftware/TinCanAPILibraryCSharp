@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 
 using System.Text;
-using RusticiSoftware.TinCanAPILibrary.Exceptions;
 using RusticiSoftware.TinCanAPILibrary.Helper;
 
 namespace RusticiSoftware.TinCanAPILibrary.Model
@@ -70,7 +69,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                     string normalized = value.ToLower();
                     if (!ValidationHelper.IsValidUUID(normalized))
                     {
-                        throw new InvalidArgumentException("Statement ID must be UUID");
+                        throw new ArgumentException("Statement ID must be UUID", "value");
                     }
                     id = normalized;
                 }
@@ -229,7 +228,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                     return failures;
                 }
             }
-            
+
 
             object[] children = new object[] { actor, verb, _object, result, context, timestamp, authority };
             foreach (object o in children)
@@ -297,7 +296,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         {
             if (result.Success != null && result.Success.Value != expectedSuccess)
             {
-                throw new InvalidArgumentException("Specified verb \"" + verb + "\" but with a result success value of " + result.Success.Value);
+                throw new ArgumentException("Specified verb \"" + verb + "\" but with a result success value of " + result.Success.Value, "verb");
             }
         }
 
@@ -311,7 +310,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         {
             if (result.Completion != null && result.Completion.Value != expectedCompletion)
             {
-                throw new InvalidArgumentException("Specified verb \"" + verb + "\" but with a result completion value of " + result.Completion.Value);
+                throw new ArgumentException("Specified verb \"" + verb + "\" but with a result completion value of " + result.Completion.Value, "verb");
             }
         }
         #endregion

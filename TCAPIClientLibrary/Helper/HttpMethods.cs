@@ -608,7 +608,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                     switch (((HttpWebResponse)httpResponse).StatusCode)
                     {
                         case HttpStatusCode.BadRequest:
-                            throw new InvalidArgumentException("Error 400 " + response);
+                            throw new ArgumentException("Error 400 " + response);
                         case HttpStatusCode.Unauthorized:
                             throw new UnauthorizedException("Error 401" + response);
                         case HttpStatusCode.NotFound:

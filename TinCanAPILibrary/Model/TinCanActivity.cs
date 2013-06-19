@@ -17,9 +17,7 @@ limitations under the License.
 #endregion
 using System;
 using System.Collections.Generic;
-
 using System.Text;
-using RusticiSoftware.TinCanAPILibrary.Exceptions;
 
 namespace RusticiSoftware.TinCanAPILibrary.Model
 {

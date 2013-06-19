@@ -20,7 +20,6 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Text;
 using RusticiSoftware.TinCanAPILibrary.Helper;
-using RusticiSoftware.TinCanAPILibrary.Exceptions;
 
 namespace RusticiSoftware.TinCanAPILibrary.Model
 {
@@ -130,7 +129,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         {
             if (string.IsNullOrEmpty(timeSpanValue))
             {
-                throw new InvalidArgumentException("Could not parse TimeSpan -- string was empty");
+                throw new ArgumentException("Could not parse TimeSpan -- string was empty", "timeSpanValue");
             }
             else
             {
@@ -145,7 +144,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                         this.Value = ParseCmiTimeSpan(timeSpanValue);
                     }
                 }
-                catch (InvalidArgumentException)
+                catch (ArgumentException)
                 {
                     // Be kind and give them one last shot with the built-in parser,
                     // even though it's not strictly SCORM
@@ -155,7 +154,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                     }
                     catch
                     {
-                        throw new InvalidArgumentException("Could not parse ScormTimeSpan, invalid format");
+                        throw new ArgumentException("Could not parse ScormTimeSpan, invalid format", "timeSpanValue");
                     }
 
                 }
@@ -318,7 +317,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
 
             if (!IsValidCmiTimeSpan(timeSpanValue))
             {
-                throw new InvalidArgumentException("The time interval specified " + timeSpanValue + "is not a valid CMI Time Interval. The string format is invalid.");
+                throw new ArgumentException("The time interval specified " + timeSpanValue + "is not a valid CMI Time Interval. The string format is invalid.", "timeSpanValue");
             }
 
             string[] aryTimes = timeSpanValue.Split(":".ToCharArray());
@@ -372,7 +371,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             //validate the string format
             if (!Iso8601TimeSpan(timeSpanValue))
             {
-                throw new InvalidArgumentException("The time interval specified " + timeSpanValue + "is not in the correct format.");
+                throw new ArgumentException("The time interval specified " + timeSpanValue + "is not in the correct format.", "timeSpanValue");
             }
 
             char[] chars = timeSpanValue.ToCharArray();
@@ -446,7 +445,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             }
             catch (System.OverflowException)
             {
-                throw new InvalidArgumentException("The time interval specified " + timeSpanValue + "exceeds the maximum value that can be stored in the system. This maximum value is almost 3 billion years so something is whacky here.");
+                throw new ArgumentException("The time interval specified " + timeSpanValue + "exceeds the maximum value that can be stored in the system. This maximum value is almost 3 billion years so something is whacky here.", "timeSpanValue");
             }
         }
 

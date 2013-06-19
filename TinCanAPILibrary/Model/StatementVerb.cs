@@ -16,7 +16,6 @@ limitations under the License.
 */
 #endregion
 using System;
-using RusticiSoftware.TinCanAPILibrary.Exceptions;
 
 namespace RusticiSoftware.TinCanAPILibrary.Model
 {
@@ -81,7 +80,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             }
             else
             {
-                throw new ValidationException("The URI " + id + " is malformed.");
+                throw new ArgumentException("The URI " + id + " is malformed.", "id");
             }
             display = new LanguageMap();
             display[locale] = name;
@@ -146,7 +145,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             }
             catch (ArgumentException)
             {
-                throw new InvalidArgumentException("The verb " + verb.display["en-US"] + " has no 0.90 verb representation.");
+                throw new ArgumentException("The verb " + verb.display["en-US"] + " has no 0.90 verb representation.", "verb");
             }
         }
     }

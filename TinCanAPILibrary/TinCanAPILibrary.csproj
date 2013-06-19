@@ -40,8 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\InvalidArgumentException.cs" />
-    <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Helper\CommonFunctions.cs" />
     <Compile Include="Helper\Constants.cs" />
     <Compile Include="Helper\ParserUtil.cs" />

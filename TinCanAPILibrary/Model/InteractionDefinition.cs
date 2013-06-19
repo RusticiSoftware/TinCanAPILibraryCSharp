@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using RusticiSoftware.TinCanAPILibrary.Helper;
-using RusticiSoftware.TinCanAPILibrary.Exceptions;
 
 namespace RusticiSoftware.TinCanAPILibrary.Model
 {
@@ -155,7 +154,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             }
             if (!IsValidComponent(this.interactionType.Value, componentName))
             {
-                throw new InvalidArgumentException(componentName.ToString().ToLower() + " is not a valid interaction component for the given interactionType");
+                throw new ArgumentException(componentName.ToString().ToLower() + " is not a valid interaction component for the given interactionType", "componentName");
             }
         }
 

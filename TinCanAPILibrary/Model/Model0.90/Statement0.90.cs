@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 
 using System.Text;
-using RusticiSoftware.TinCanAPILibrary.Exceptions;
 using RusticiSoftware.TinCanAPILibrary.Helper;
 
 namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
@@ -53,7 +52,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
             {
                 if (value == null)
                 {
-                    throw new InvalidArgumentException("Verb may not be null");
+                    throw new ArgumentException("Verb may not be null", "value");
                 }
                 string normalized = value.ToLower();
                 try
@@ -62,7 +61,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
                 }
                 catch (Exception)
                 {
-                    throw new InvalidArgumentException("Verb " + normalized + " is not valid");
+                    throw new ArgumentException("Verb " + normalized + " is not valid", "value");
                 }
             }
         }
@@ -83,7 +82,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
                     string normalized = value.ToLower();
                     if (!ValidationHelper.IsValidUUID(normalized))
                     {
-                        throw new InvalidArgumentException("Statement ID must be UUID");
+                        throw new ArgumentException("Statement ID must be UUID", "value");
                     }
                     id = normalized;
                 }
@@ -304,7 +303,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         {
             if (result.Success != null && result.Success.Value != expectedSuccess)
             {
-                throw new InvalidArgumentException("Specified verb \"" + verb + "\" but with a result success value of " + result.Success.Value);
+                throw new ArgumentException("Specified verb \"" + verb + "\" but with a result success value of " + result.Success.Value, "verb");
             }
         }
 
@@ -318,7 +317,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model.TinCan090
         {
             if (result.Completion != null && result.Completion.Value != expectedCompletion)
             {
-                throw new InvalidArgumentException("Specified verb \"" + verb + "\" but with a result completion value of " + result.Completion.Value);
+                throw new ArgumentException("Specified verb \"" + verb + "\" but with a result completion value of " + result.Completion.Value, "verb");
             }
         }
         #endregion

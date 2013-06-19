@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using RusticiSoftware.TinCanAPILibrary.Model;
-using RusticiSoftware.TinCanAPILibrary.Exceptions;
 
 namespace TinCanAPILibraryUnitTests.Model
 {
@@ -41,7 +40,7 @@ namespace TinCanAPILibraryUnitTests.Model
         public void Id_setter_throws_exception_for_non_uuid_string()
         {
             statement = new Statement();
-            Assert.Throws<InvalidArgumentException>(() => statement.Id = "Not a proper UUID");
+            Assert.Throws<ArgumentException>(() => statement.Id = "Not a proper UUID");
         }
 
         [Test]

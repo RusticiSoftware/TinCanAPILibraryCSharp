@@ -18,7 +18,6 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using RusticiSoftware.TinCanAPILibrary.Exceptions;
 using RusticiSoftware.TinCanAPILibrary.Helper;
 
 namespace RusticiSoftware.TinCanAPILibrary.Model
@@ -108,7 +107,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
             }
             else
             {
-                throw new InvalidArgumentException("The value " + value + " is not a valid Interaction Type");
+                throw new ArgumentException("The value " + value + " is not a valid Interaction Type", "value");
             }
         }
 
@@ -184,7 +183,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                             break;
 
                         default:
-                            throw new InvalidArgumentException("The value " + vocab + " is not valid.");
+                            throw new ArgumentException("The value " + vocab + " is not valid.", "vocab");
                     }
                     break;
             }
@@ -235,7 +234,8 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                     ret = "other";
                     break;
                 default:
-                    throw new InvalidArgumentException("The value " + this.Value + " is not a valid Interaction Type");
+                    ret = String.Empty; // Effectively equivalent to Undefined
+                    break;
             }
 
             return ret;

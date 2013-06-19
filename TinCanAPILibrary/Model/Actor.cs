@@ -18,7 +18,6 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using RusticiSoftware.TinCanAPILibrary.Exceptions;
 using RusticiSoftware.TinCanAPILibrary.Helper;
 
 namespace RusticiSoftware.TinCanAPILibrary.Model
@@ -77,13 +76,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
                 {
                     if (!normalized.StartsWith(mboxPrefix))
                     {
-                        throw new InvalidArgumentException(
-                            "Mbox value " + normalized + " must begin with mailto: prefix");
+                        throw new ArgumentException(
+                            "Mbox value " + normalized + " must begin with mailto: prefix",
+                            "value");
                     }
                     if (!ValidationHelper.IsValidEmailAddress(normalized.Substring(mboxPrefix.Length)))
                     {
-                        throw new InvalidArgumentException(
-                            "Mbox value " + normalized + " is not a valid email address.");
+                        throw new ArgumentException(
+                            "Mbox value " + normalized + " is not a valid email address.",
+                            "value");
                     }
                 }
                 mbox = normalized;

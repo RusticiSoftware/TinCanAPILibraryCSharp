@@ -16,7 +16,6 @@ limitations under the License.
 */
 #endregion
 using System;
-
 namespace RusticiSoftware.TinCanAPILibrary.Exceptions
 {
     class ConnectionFailedException : Exception
