@@ -27,7 +27,8 @@ namespace RusticiSoftware.TinCanAPILibrary
 {
     public class TinCanJsonConverter : JsonConverterBase
     {
-        private static JsonConverter instance = null;
+        private static volatile JsonConverter instance = null;
+        private static object instanceLock = new object();
 
         public static JsonConverter Instance
         {
@@ -35,7 +36,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             {
                 if (instance == null)
                 {
-                    lock (typeof(TinCanJsonConverter))
+                    lock (instanceLock)
                     {
                         if (instance == null)
                         {
