@@ -16,11 +16,16 @@ limitations under the License.
 */
 #endregion
 using System;
-namespace RusticiSoftware.TinCanAPILibrary.Exceptions
+using System.Collections.Generic;
+using System.Text;
+
+namespace RusticiSoftware.TinCanAPILibrary.Json
 {
-    class ConnectionFailedException : Exception
+    public interface IJsonTypeConverter
     {
-        public ConnectionFailedException() : base() { }
-        public ConnectionFailedException(string message) : base(message) { }
+        Type GetTargetClass();
+        object Deserialize(string value, JsonConverter converter);
+        //Instead of serializing directly, just reduce to something serializable
+        object Reduce(object value, JsonConverter converter); 
     }
 }

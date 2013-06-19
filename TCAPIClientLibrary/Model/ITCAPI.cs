@@ -26,15 +26,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     {
         void StoreStatement(Statement statement);
         void StoreStatements(Statement[] statements);
-        void VoidStatements(String[] statementIdsToVoid);
+        void VoidStatements(string[] statementIdsToVoid);
         void StoreStatement(Statement statement, bool synchronous);
         void StoreStatements(Statement[] statements, bool synchronous);
-        void VoidStatements(String[] statementIdsToVoid, bool synchronous);
+        void VoidStatements(string[] statementIdsToVoid, bool synchronous);
         void Flush();
 
-        Statement GetStatement(String statementId);
+        Statement GetStatement(string statementId);
         StatementResult GetStatements(StatementQueryObject queryObject);
-        StatementResult GetStatements(String moreUrl);
+        StatementResult GetStatements(string moreUrl);
 
         ActivityProfile GetActivityProfile(string activityId, string profileId);
         void SaveActivityProfile(ActivityProfile profile, bool overwrite, ActivityProfile previous);
@@ -43,19 +43,19 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         string[] GetActivityProfileIds(string activityId, NullableDateTime since);
         Activity GetActivity(string activityId);
 
-        ActivityState GetActivityState(String activityId, Actor actor, String stateId, String registrationId);
+        ActivityState GetActivityState(string activityId, Actor actor, string stateId, string registrationId);
         void SaveActivityState(ActivityState activityState, bool overwrite, ActivityState previousState);
-        void DeleteActivityState(String activityId, Actor actor, String stateId, String registrationId);
-        String[] GetActivityStateIds(String activityId, Actor actor, String registrationId, NullableDateTime since);
+        void DeleteActivityState(string activityId, Actor actor, string stateId, string registrationId);
+        string[] GetActivityStateIds(string activityId, Actor actor, string registrationId, NullableDateTime since);
 
-        ActorProfile GetActorProfile(Actor actor, String profileId);
+        ActorProfile GetActorProfile(Actor actor, string profileId);
         void SaveActorProfile(ActorProfile actorProfile, ActorProfile previousProfile, bool overwrite);
-        void DeleteActorProfile(Actor actor, String profileId);
+        void DeleteActorProfile(Actor actor, string profileId);
         void DeleteAllActorProfile(Actor actor);
-        String[] GetActorProfileIds(Actor actor, NullableDateTime since);
+        string[] GetActorProfileIds(Actor actor, NullableDateTime since);
         Actor GetActor(Actor partialActor);
 
-        String GetOAuthAuthorizationUrl(String redirectUrl);
-        OAuthAuthentication UpdateOAuthTokenCredentials(String temporaryCredentialsId, String verifierCode);
+        string GetOAuthAuthorizationUrl(string redirectUrl);
+        OAuthAuthentication UpdateOAuthTokenCredentials(string temporaryCredentialsId, string verifierCode);
     }
 }

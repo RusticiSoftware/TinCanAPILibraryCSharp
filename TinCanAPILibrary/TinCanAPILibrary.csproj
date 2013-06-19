@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{165CA993-6BC8-48FF-B7B7-8160EDF1E1A1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TinCanAPILibrary</RootNamespace>
+    <AssemblyName>TinCanAPILibrary</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Helper\CommonFunctions.cs" />
+    <Compile Include="Helper\Constants.cs" />
+    <Compile Include="Helper\ParserUtil.cs" />
+    <Compile Include="Helper\ValidationHelper.cs" />
+    <Compile Include="JSONConverter\IJsonTypeConverter.cs" />
+    <Compile Include="JSONConverter\JsonConverter.cs" />
+    <Compile Include="JSONConverter\JSON\JsonConverterBase.cs" />
+    <Compile Include="JSONConverter\JSON\TinCanConverter\TinCanJsonConverter.cs" />
+    <Compile Include="JSONConverter\JSON\TinCanConverter\TypeConverters\ActivityDefinitionConverter.cs" />
+    <Compile Include="JSONConverter\JSON\TinCanConverter\TypeConverters\LanguageMapConverter.cs" />
+    <Compile Include="JSONConverter\JSON\TinCanConverter\TypeConverters\TinCanActorJsonConverter.cs" />
+    <Compile Include="JSONConverter\JSON\TinCanConverter\TypeConverters\TinCanStatementTargetJsonConverter.cs" />
+    <Compile Include="JSONConverter\JSON\TinCanConverter\TypeConverters\TypeFieldJsonHelper.cs" />
+    <Compile Include="JSONConverter\JSON\TypeConverters\NullableBooleanJsonConverter.cs" />
+    <Compile Include="JSONConverter\JSON\TypeConverters\NullableDateTimeJsonConverter.cs" />
+    <Compile Include="JSONConverter\JSON\TypeConverters\NullableDoubleJsonConverter.cs" />
+    <Compile Include="JSONConverter\JSON\TypeConverters\NullableIntegerJsonConverter.cs" />
+    <Compile Include="JSONConverter\JSON\TypeConverters\NullableScormTimeSpanJsonConverter.cs" />
+    <Compile Include="Model\Activity.cs" />
+    <Compile Include="Model\ActivityDefinition.cs" />
+    <Compile Include="Model\ActivityProfile.cs" />
+    <Compile Include="Model\ActivityState.cs" />
+    <Compile Include="Model\Actor.cs" />
+    <Compile Include="Model\ActorProfile.cs" />
+    <Compile Include="Model\AgentAccount.cs" />
+    <Compile Include="Model\Context.cs" />
+    <Compile Include="Model\ContextActivities.cs" />
+    <Compile Include="Model\Extensible.cs" />
+    <Compile Include="Model\Group.cs" />
+    <Compile Include="Model\Interaction.cs" />
+    <Compile Include="Model\InteractionComponentName.cs" />
+    <Compile Include="Model\InteractionComponents.cs" />
+    <Compile Include="Model\InteractionDefinition.cs" />
+    <Compile Include="Model\InteractionTypeValue.cs" />
+    <Compile Include="Model\IValidatable.cs" />
+    <Compile Include="Model\LanguageMap.cs" />
+    <Compile Include="Model\Model0.90\Actor0.90.cs" />
+    <Compile Include="Model\Model0.90\Person0.90.cs" />
+    <Compile Include="Model\Model0.90\Statement0.90.cs" />
+    <Compile Include="Model\Model0.90\StatementResult0.90.cs" />
+    <Compile Include="Model\Model0.90\StatementVerb0.90.cs" />
+    <Compile Include="Model\Model0.90\TargetedStatement0.90.cs" />
+    <Compile Include="Model\Result.cs" />
+    <Compile Include="Model\Score.cs" />
+    <Compile Include="Model\State.cs" />
+    <Compile Include="Model\Statement.cs" />
+    <Compile Include="Model\StatementRef.cs" />
+    <Compile Include="Model\StatementResult.cs" />
+    <Compile Include="Model\StatementTarget.cs" />
+    <Compile Include="Model\StatementVerb.cs" />
+    <Compile Include="Model\ValidationFailure.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types\LanguageString.cs" />
+    <Compile Include="Types\NullableTypes\NullableBoolean.cs" />
+    <Compile Include="Types\NullableTypes\NullableDateTime.cs" />
+    <Compile Include="Types\NullableTypes\NullableDouble.cs" />
+    <Compile Include="Types\NullableTypes\NullableInteger.cs" />
+    <Compile Include="Types\NullableTypes\NullableScormTimeSpan.cs" />
+    <Compile Include="Types\ScormTimeSpan.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

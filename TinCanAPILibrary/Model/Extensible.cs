@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 /*
 Copyright 2012 Rustici Software
 
@@ -17,14 +17,28 @@ limitations under the License.
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace RusticiSoftware.TinCanAPILibrary.Helper
+namespace RusticiSoftware.TinCanAPILibrary.Model
 {
-    public enum TCAPIVersion
+    /// <summary>
+    /// Definition of any extensible TinCanAPI Statement.
+    /// Allows for arbitrary key/value pairs to be attached to
+    /// an object.
+    /// </summary>
+    public class Extensible
     {
-        TinCan090 = 1,
-        TinCan095 = 2,
-        TinCan1p0p0 = 4
+        private Dictionary<Uri, object> extensions;
+        
+        public Dictionary<Uri, object> Extensions
+        {
+            get { return extensions; }
+            set { extensions = value; }
+        }
+
+        public Extensible() { }
+        public Extensible(Extensible extensible)
+        {
+            this.extensions = extensible.extensions;
+        }
     }
 }

@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 /*
 Copyright 2012 Rustici Software
 
@@ -16,11 +16,14 @@ limitations under the License.
 */
 #endregion
 using System;
-namespace RusticiSoftware.TinCanAPILibrary.Exceptions
+using System.Collections.Generic;
+
+using System.Text;
+
+namespace RusticiSoftware.TinCanAPILibrary.Model
 {
-    class ConnectionFailedException : Exception
+    public interface IValidatable
     {
-        public ConnectionFailedException() : base() { }
-        public ConnectionFailedException(string message) : base(message) { }
+        IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure);
     }
 }
