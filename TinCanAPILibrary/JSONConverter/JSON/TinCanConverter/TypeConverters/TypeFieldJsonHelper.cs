@@ -32,7 +32,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             }
             if (string.Compare(typeField, "Activity", true) == 0)
             {
-                return typeof(TinCanActivity);
+                return typeof(Activity);
             }
             if (string.Compare(typeField, "Agent", true) == 0)
             {

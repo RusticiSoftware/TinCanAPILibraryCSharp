@@ -43,7 +43,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             }
 
             TypeFieldJsonHelper typeFieldHelper = new TypeFieldJsonHelper();
-            Type targetType = typeFieldHelper.GetTypeFromString(typeField, typeof(TinCanActivity));
+            Type targetType = typeFieldHelper.GetTypeFromString(typeField, typeof(Activity));
             return converter.DeserializeJSON(value, targetType);
         }
 
@@ -55,8 +55,8 @@ namespace RusticiSoftware.TinCanAPILibrary
             /*Integration.Implementation.LogAudit("TinCanStatementTarget Reduce called", null);
 
             Type targetType = value.GetType();
-            if (targetType.IsAssignableFrom(typeof(TinCanActivity))){
-                return (TinCanActivity)value;
+            if (targetType.IsAssignableFrom(typeof(Activity))){
+                return (Activity)value;
             }
             else if (targetType.IsAssignableFrom(typeof(TinCanActor))){
                 return (TinCanActor)value;

@@ -21,37 +21,73 @@ using System.Text;
 
 namespace RusticiSoftware.TinCanAPILibrary.Model
 {
-    public class Activity : StatementTarget
+    public class Activity : StatementTarget, IValidatable
     {
-        private const string OBJECT_TYPE = "activity";
+        #region Constants
+        protected static readonly string OBJECT_TYPE = "Activity";
+        #endregion
 
+        #region Fields
         private string id;
         private ActivityDefinition definition;
+        #endregion
 
-        /// <summary>
-        /// The activity ID
-        /// </summary>
+        #region Properties
+        public override string ObjectType
+        {
+            get { return OBJECT_TYPE; }
+        }
+
         public string Id
         {
             get { return id; }
             set { id = value; }
         }
 
-        /// <summary>
-        /// The Activity Definition
-        /// </summary>
         public ActivityDefinition Definition
         {
             get { return definition; }
             set { definition = value; }
         }
+        #endregion
 
-        /// <summary>
-        /// The object type for statement posts
-        /// </summary>
-        public override string ObjectType
+        #region Constructor
+        public Activity() { }
+
+        public Activity(string id)
         {
-            get { return OBJECT_TYPE; }
+            this.id = id;
         }
+
+        public Activity(string id, ActivityDefinition definition)
+        {
+            this.id = id;
+            this.definition = definition;
+        }
+        #endregion
+
+        #region Public Methods
+        public IEnumerable<ValidationFailure> Validate(bool earlyReturnOnFailure)
+        {
+            var failures = new List<ValidationFailure>();
+            if (id == null)
+            {
+                failures.Add(new ValidationFailure("Activity does not have an identifier"));
+                if (earlyReturnOnFailure)
+                {
+                    return failures;
+                }
+            }
+            if (definition != null && definition is IValidatable)
+            {
+                failures.AddRange(((IValidatable)definition).Validate(earlyReturnOnFailure));
+                if (earlyReturnOnFailure && failures.Count > 0)
+                {
+                    return failures;
+                }
+            }
+            return failures;
+        }
+        #endregion
     }
 }

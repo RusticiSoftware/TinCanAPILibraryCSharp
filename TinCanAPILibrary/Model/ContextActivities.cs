@@ -25,25 +25,25 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class ContextActivities : IValidatable
     {
         #region Fields
-        private TinCanActivity parent;
-        private TinCanActivity grouping;
-        private TinCanActivity other;
+        private Activity parent;
+        private Activity grouping;
+        private Activity other;
         #endregion
 
         #region Properties
-        public TinCanActivity Parent
+        public Activity Parent
         {
             get { return parent; }
             set { parent = value; }
         }
 
-        public TinCanActivity Grouping
+        public Activity Grouping
         {
             get { return grouping; }
             set { grouping = value; }
         }
 
-        public TinCanActivity Other
+        public Activity Other
         {
             get { return other; }
             set { other = value; }

@@ -54,7 +54,7 @@ namespace RusticiSoftware.TinCanAPILibrary
             //interfaces and abstract classes registered with a custom converter
 
             this.RegisterTypeConverter(typeof(TinCanAPILibrary.Model.StatementTarget), new TinCanStatementTargetJsonConverter());
-            this.RegisterDefaultConverter(typeof(TinCanActivity));
+            this.RegisterDefaultConverter(typeof(Activity));
             this.RegisterDefaultConverter(typeof(StatementRef));
 
             this.RegisterTypeConverter(typeof(Actor), new TinCanActorJsonConverter());

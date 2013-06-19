@@ -55,7 +55,7 @@ namespace TinCanAPILibraryUnitTests.Model
         [Test]
         public void Validate_returns_non_null_empty_enumerable_when_valid()
         {
-            var activity = new TinCanActivity("http://www.example.com");
+            var activity = new Activity("http://www.example.com");
             activity.Definition = new ActivityDefinition();
             activity.Definition.Name = new LanguageMap();
             activity.Definition.Name.Add("en-US", "TCAPI C# 0.95 Library.");
