@@ -33,6 +33,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         private Result result;
         private Context context;
         private NullableDateTime timestamp;
+        private NullableDateTime stored;
         private Actor authority;
         private NullableBoolean voided;
         #endregion
@@ -128,6 +129,15 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         {
             get { return timestamp; }
             set { timestamp = value; }
+        }
+
+        /// <summary>
+        /// The time at which a Statement is stored by the LRS.
+        /// </summary>
+        public NullableDateTime Stored
+        {
+            get { return stored; }
+            set { stored = value; }
         }
 
         /// <summary>
