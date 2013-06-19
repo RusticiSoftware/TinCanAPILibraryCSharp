@@ -23,7 +23,8 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
 {
     public enum TCAPIVersion
     {
-        TinCan090,
-        TinCan095,
+        TinCan090 = 1,
+        TinCan095 = 2,
+        TinCan1p0p0 = 4
     }
 }
