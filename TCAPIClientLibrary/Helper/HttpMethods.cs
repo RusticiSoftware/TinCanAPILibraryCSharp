@@ -39,7 +39,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
             WebRequest request;
             Stream dataStream;
             ITCAPICallback tcapiCallback;
-            String postData;
+            string postData;
             TCAPI.AsyncPostCallback asyncPostCallback;
 
             /// <summary>
@@ -54,7 +54,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
             /// <summary>
             /// The original post request
             /// </summary>
-            public String PostData
+            public string PostData
             {
                 get { return postData; }
                 set { postData = value; }
@@ -312,7 +312,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                 request.ContentType = contentType;
                 request.ContentLength = putDataByteArray.Length;
                 AddExperienceVersionHeader(request.Headers, x_experience_api_version);
-                if (!String.IsNullOrEmpty(eTag))
+                if (!string.IsNullOrEmpty(eTag))
                     request.Headers["If-Match"] = "\"" + eTag + "\"";
                 AddAuthHeader(request.Headers, authentification);
 
@@ -572,7 +572,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
 
         private static void AddExperienceVersionHeader(WebHeaderCollection whc, string x_experience_api_version)
         {
-            if (!String.IsNullOrEmpty(x_experience_api_version))
+            if (!string.IsNullOrEmpty(x_experience_api_version))
             {
                 whc["X-Experience-API-Version"] = x_experience_api_version;
             }
@@ -608,7 +608,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Helper
                     switch (((HttpWebResponse)httpResponse).StatusCode)
                     {
                         case HttpStatusCode.BadRequest:
-                            throw new InvalidArgumentException("Error 400 " + response);
+                            throw new ArgumentException("Error 400 " + response);
                         case HttpStatusCode.Unauthorized:
                             throw new UnauthorizedException("Error 401" + response);
                         case HttpStatusCode.NotFound:

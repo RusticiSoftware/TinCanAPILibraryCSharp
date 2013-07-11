@@ -25,32 +25,32 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
     public class OAuthAuthentication : IAuthenticationConfiguration
     {
         #region Fields
-        private String consumerKey;
-        private String consumerSecret;
-        private String tokenId;
-        private String tokenSecret;
+        private string consumerKey;
+        private string consumerSecret;
+        private string tokenId;
+        private string tokenSecret;
         #endregion
 
         #region Properties
-        public String ConsumerKey
+        public string ConsumerKey
         {
             get { return consumerKey; }
             set { consumerKey = value; }
         }
 
-        public String ConsumerSecret
+        public string ConsumerSecret
         {
             get { return consumerSecret; }
             set { consumerSecret = value; }
         }
 
-        public String TokenId
+        public string TokenId
         {
             get { return tokenId; }
             set { tokenId = value; }
         }
 
-        public String TokenSecret
+        public string TokenSecret
         {
             get { return tokenSecret; }
             set { tokenSecret = value; }
