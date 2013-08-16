@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>1.0.0.4</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/RusticiSoftware/TinCanAPILibraryCSharp</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Initial NuGet release.</releaseNotes>
+    <copyright>Copyright © 2012 Rustici Software</copyright>
+    <summary>
+      This library provides the TCAPI class which allows you to communicate with an LRS (specified as an endpoint).
+    </summary>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="[4.0.5.0]"/>
+    </dependencies>
+    <tags>TinCanAPI xAPI SCORM</tags>
+  </metadata>
+</package>
