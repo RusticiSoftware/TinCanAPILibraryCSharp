@@ -46,7 +46,7 @@ namespace RusticiSoftware.TinCanAPILibrary.Model
         public NullableDouble Min
         {
             get { return min; }
-            set { max = value; }
+            set { min = value; }
         }
 
         public NullableDouble Max
