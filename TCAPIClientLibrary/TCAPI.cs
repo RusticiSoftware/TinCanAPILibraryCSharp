@@ -156,12 +156,8 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <param name="endpoint">The endpoint for the TCAPI</param>
         /// <param name="authentification">The authentification object</param>
         public TCAPI(Uri endpoint, IAuthenticationConfiguration authentification)
+            : this(endpoint, authentification, DetermineVersioning(endpoint, authentification, TCAPIVersion.TinCan090))
         {
-            this.endpoint = endpoint;
-            this.Authentification = authentification;
-            this.tcapiCallback = null;
-            this.offlineStorage = null;
-            this.version = DetermineVersioning();
         }
 
         /// <summary>
@@ -173,8 +169,11 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <remarks>Forcing the version is not recommended and should only be used if an issue with the LRS
         /// </remarks>
         public TCAPI(Uri endpoint, IAuthenticationConfiguration authentification, TCAPIVersion version)
-            : this(endpoint, authentification)
         {
+            this.endpoint = endpoint;
+            this.Authentification = authentification;
+            this.tcapiCallback = null;
+            this.offlineStorage = null;
             this.version = version;
         }
 
@@ -212,6 +211,11 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// <param name="offlineStorage">Offline Storage object</param>
         /// <param name="statementPostInterval">Interval for asynchronous operations to take place, in milliseconds</param>
         public TCAPI(Uri endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval, int maxBatchSize)
+            : this(endpoint, authentification, tcapiCallback, offlineStorage, statementPostInterval, maxBatchSize, DetermineVersioning(endpoint, authentification, TCAPIVersion.TinCan090))
+        {
+        }
+
+        public TCAPI(Uri endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval, int maxBatchSize, TCAPIVersion version)
         {
             this.endpoint = endpoint;
             this.authentification = authentification;
@@ -228,12 +232,6 @@ namespace RusticiSoftware.TinCanAPILibrary
             asyncPostTimer.Interval = this.statementPostInterval;
             asyncPostTimer.Enabled = this.statementPostInterval > 0;
             asyncPostTimer.AutoReset = true;
-            this.version = DetermineVersioning();
-        }
-
-        public TCAPI(Uri endpoint, IAuthenticationConfiguration authentification, ITCAPICallback tcapiCallback, IOfflineStorage offlineStorage, int statementPostInterval, int maxBatchSize, TCAPIVersion version)
-            : this(endpoint, authentification, tcapiCallback, offlineStorage, statementPostInterval, maxBatchSize)
-        {
             this.version = version;
         }
 
@@ -242,15 +240,15 @@ namespace RusticiSoftware.TinCanAPILibrary
         /// and reading the versioning header.  This allows proper serialization when communicating with the server.
         /// </summary>
         /// <returns></returns>
-        private TCAPIVersion DetermineVersioning()
+        private static TCAPIVersion DetermineVersioning(Uri endPoint, IAuthenticationConfiguration authentication, TCAPIVersion version)
         {
-            WebHeaderCollection whc = GetWebHeaders();
-            string version = null;
-            version = whc["X-Experience-API-Version"];
-            if (string.IsNullOrEmpty(version))
+            WebHeaderCollection whc = GetWebHeaders(endPoint, authentication, version);
+            string versionString = null;
+            versionString = whc["X-Experience-API-Version"];
+            if (string.IsNullOrEmpty(versionString))
             {
             }
-            else if (version.Equals("0.95") || version.Equals(".95"))
+            else if (versionString.Equals("0.95") || versionString.Equals(".95"))
             {
                 return TCAPIVersion.TinCan095;
             }
@@ -1103,13 +1101,12 @@ namespace RusticiSoftware.TinCanAPILibrary
             }
         }
 
-        private WebHeaderCollection GetWebHeaders()
+        private static WebHeaderCollection GetWebHeaders(Uri endPoint, IAuthenticationConfiguration authentication, TCAPIVersion version)
         {
             WebHeaderCollection whc;
-            StatementQueryObject qo = new StatementQueryObject();
-            qo.Limit = 1;
+            var qo = new StatementQueryObject { Limit = 1 };
             NameValueCollection nvc = qo.ToNameValueCollection(version);
-            HttpMethods.GetRequest(nvc, endpoint + STATEMENTS, authentification, out whc, "0.95");
+            HttpMethods.GetRequest(nvc, endPoint + STATEMENTS, authentication, out whc, "0.95");
             return whc;
         }
 
